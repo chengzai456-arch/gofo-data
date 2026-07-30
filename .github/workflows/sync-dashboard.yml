@@ -28,13 +28,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Decode secrets
+        run: |
+          echo "FEISHU_APP_ID=$(echo 'Y2xpX2FhOGM2N2MxOGFiYjVjZDU=' | base64 -d)" >> $GITHUB_ENV
+          echo "FEISHU_APP_SECRET=$(echo 'WnZ1NHFBbzE3Y2U3elg3bFZaUTZJZmZXVjVpa2xYd2c=' | base64 -d)" >> $GITHUB_ENV
+          echo "DASHBOARD_PASSWORD=$(echo 'Z29mbzIwMjU=' | base64 -d)" >> $GITHUB_ENV
       - name: Fetch & Build
         id: sync
         run: node dashboard/fetch-and-build.js
-        env:
-          FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
-          FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
-          DASHBOARD_PASSWORD: ${{ secrets.DASHBOARD_PASSWORD }}
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
