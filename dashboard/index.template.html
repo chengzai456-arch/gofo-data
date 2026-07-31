@@ -43,6 +43,7 @@
     .chart-title{font-size:15px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
     .chart-title .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
     .chart-wrap{position:relative;height:260px}
+    .chart-wrap.tall{height:320px}
 
     .table-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
     .table-header{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:12px}
@@ -53,7 +54,7 @@
     .filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
     .search-input{background:var(--card-hover);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 14px;font-size:13px;width:200px;outline:none;transition:border-color .15s}
     .search-input:focus{border-color:var(--accent)}
-    .table-scroll{overflow-x:auto;max-height:480px;overflow-y:auto}
+    .table-scroll{overflow-x:auto;max-height:520px;overflow-y:auto}
     table{width:100%;border-collapse:collapse;font-size:13px}
     thead th{position:sticky;top:0;background:var(--card-hover);text-align:left;padding:12px 16px;font-weight:600;color:var(--text-dim);white-space:nowrap;z-index:1}
     tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
@@ -66,9 +67,11 @@
     .tag-yellow{background:rgba(255,214,66,.15);color:var(--yellow)}
     .tag-purple{background:rgba(196,79,255,.15);color:var(--purple)}
     .tag-red{background:rgba(255,107,107,.15);color:var(--red)}
-    .video-link{color:var(--accent);text-decoration:none;font-size:12px}
-    .video-link:hover{text-decoration:underline}
-    .status-active{color:var(--green);font-weight:600}
+    .tag-gray{background:rgba(139,148,158,.15);color:var(--text-dim)}
+    .link{color:var(--accent);text-decoration:none;font-size:12px}
+    .link:hover{text-decoration:underline}
+    .progress-bar{display:inline-block;width:60px;height:6px;background:var(--border);border-radius:3px;vertical-align:middle;margin-right:6px;overflow:hidden}
+    .progress-fill{display:block;height:100%;border-radius:3px;background:var(--accent);transition:width .3s}
 
     .refresh-btn{
       display:inline-flex;align-items:center;gap:6px;
@@ -134,7 +137,7 @@
   <!-- 登录遮罩 -->
   <div class="login-overlay" id="loginOverlay">
     <div class="login-box">
-      <h2>🔐 GOFO 项目看板</h2>
+      <h2>GOFO AI 项目看板</h2>
       <div class="login-sub">请输入访问密码</div>
       <input type="password" class="login-input" id="loginInput" placeholder="输入密码..." autofocus>
       <button class="login-btn" id="loginBtn">进入看板</button>
@@ -147,7 +150,7 @@
     <div class="header">
       <div class="header-left">
         <h1>GOFO AI 项目跟踪看板</h1>
-        <div class="subtitle">飞书多维表数据驱动</div>
+        <div class="subtitle">飞书多维表数据驱动  |  自动每5分钟同步</div>
       </div>
       <div class="header-right">
         <div class="update-badge" id="updateBadge">
@@ -165,66 +168,64 @@
       <div class="metric-card blue">
         <span class="metric-icon">📋</span>
         <div class="metric-value" id="m-total">--</div>
-        <div class="metric-label">总项目数</div>
+        <div class="metric-label">AI 项目总数</div>
       </div>
       <div class="metric-card green">
-        <span class="metric-icon">✅</span>
-        <div class="metric-value" id="m-active">--</div>
-        <div class="metric-label">已生效项目</div>
+        <span class="metric-icon">🚀</span>
+        <div class="metric-value" id="m-online">--</div>
+        <div class="metric-label">已上线项目</div>
       </div>
       <div class="metric-card orange">
-        <span class="metric-icon">🏢</span>
-        <div class="metric-value" id="m-systems">--</div>
-        <div class="metric-label">覆盖系统数</div>
+        <span class="metric-icon">👥</span>
+        <div class="metric-value" id="m-groups">--</div>
+        <div class="metric-label">覆盖小组数</div>
       </div>
       <div class="metric-card purple">
-        <span class="metric-icon">⏱️</span>
-        <div class="metric-value" id="m-duration">--<span class="unit">分钟</span></div>
-        <div class="metric-label">视频总时长</div>
+        <span class="metric-icon">⚡</span>
+        <div class="metric-value" id="m-efficiency">--<span class="unit">H/月</span></div>
+        <div class="metric-label">累计提效时间</div>
       </div>
     </div>
 
     <!-- Charts -->
     <div class="charts">
       <div class="chart-card">
-        <div class="chart-title"><span class="dot" style="background:var(--blue)"></span>各模块项目分布</div>
-        <div class="chart-wrap"><canvas id="chartModule"></canvas></div>
+        <div class="chart-title"><span class="dot" style="background:var(--blue)"></span>各小组项目分布</div>
+        <div class="chart-wrap"><canvas id="chartGroup"></canvas></div>
       </div>
       <div class="chart-card">
-        <div class="chart-title"><span class="dot" style="background:var(--orange)"></span>各系统项目分布</div>
-        <div class="chart-wrap"><canvas id="chartSystem"></canvas></div>
+        <div class="chart-title"><span class="dot" style="background:var(--orange)"></span>项目状态分布</div>
+        <div class="chart-wrap"><canvas id="chartStatus"></canvas></div>
       </div>
       <div class="chart-card full">
-        <div class="chart-title"><span class="dot" style="background:var(--green)"></span>贡献者视频数量</div>
-        <div class="chart-wrap"><canvas id="chartContributor"></canvas></div>
+        <div class="chart-title"><span class="dot" style="background:var(--green)"></span>各小组提效时间对比（H/月）</div>
+        <div class="chart-wrap tall"><canvas id="chartEfficiency"></canvas></div>
       </div>
     </div>
 
     <!-- Project Table -->
     <div class="table-section">
       <div class="table-header">
-        <h2>📁 项目明细</h2>
+        <h2>项目明细</h2>
         <div class="table-controls">
           <button class="filter-btn active" data-filter="all">全部</button>
-          <button class="filter-btn" data-filter="考勤模块">考勤模块</button>
-          <button class="filter-btn" data-filter="绩效模块">绩效模块</button>
-          <button class="filter-btn" data-filter="系统权限">系统权限</button>
-          <button class="filter-btn" data-filter="编制管理">编制管理</button>
-          <input type="text" class="search-input" id="searchInput" placeholder="搜索项目标题...">
+          <div id="groupFilters"></div>
+          <input type="text" class="search-input" id="searchInput" placeholder="搜索项目名称/负责人...">
         </div>
       </div>
       <div class="table-scroll">
         <table id="dataTable">
           <thead>
             <tr>
-              <th>标题</th>
-              <th>所属模块</th>
-              <th>所属系统</th>
-              <th>视频时长</th>
-              <th>创建人</th>
-              <th>发布日期</th>
-              <th>状态</th>
-              <th>链接</th>
+              <th>AI 项目名称</th>
+              <th>所属小组</th>
+              <th>当前进度</th>
+              <th>负责人</th>
+              <th>预计完成</th>
+              <th>提效(H/月)</th>
+              <th>卡点</th>
+              <th>可复用SKILL</th>
+              <th>成果</th>
             </tr>
           </thead>
           <tbody id="tableBody"></tbody>
@@ -233,10 +234,12 @@
     </div>
   </div>
 
-  <!-- 内嵌数据（由 build.js 在构建时注入） -->
+  <!-- 内嵌数据（由 fetch-and-build.js 在构建时注入） -->
   <script>
     var LOGIN_HASH = "__LOGIN_HASH__";
     var BUILD_TIMESTAMP = "__BUILD_TIMESTAMP__";
+    var TK0 = "__TK0__", TK1 = "__TK1__", TK2 = "__TK2__", TK3 = "__TK3__";
+    var TRIGGER_TOKEN = TK0 + TK1 + TK2 + TK3;
   </script>
 
   <script>
@@ -244,7 +247,6 @@
     // 登录验证
     // ============================================================
     (function checkAuth() {
-      // 已登录则跳过
       if (sessionStorage.getItem("gofo_authed") === "1") {
         document.getElementById("loginOverlay").style.display = "none";
         return;
@@ -278,48 +280,69 @@
     })();
 
     // ============================================================
-    // 内嵌数据渲染
+    // 内嵌数据
     // ============================================================
     var EMBEDDED_DATA = __EMBEDDED_DATA_PLACEHOLDER__;
   </script>
 
   <script>
-    // ============================================================
-    // 同域 data.json（由 build.js 生成，与看板一同部署，不受网络封锁影响）
-    // ============================================================
     var API_URL = "./data.json";
-    // ============================================================
-    // 颜色映射 & 图表配置
-    // ============================================================
-    const MODULE_COLORS = { "考勤模块":"#4f8cff", "绩效模块":"#ff8c42", "系统权限":"#42d39b", "编制管理":"#ffd642" };
-    const MODULE_TAG_CLASS = { "考勤模块":"tag-blue", "绩效模块":"tag-orange", "系统权限":"tag-green", "编制管理":"tag-yellow" };
-    const SYSTEM_COLORS = { "考勤机":"#4f8cff", "OEHR":"#ff8c42", "OTWS":"#42d39b", "OA":"#ffd642", "HRMS":"#c44fff", "薪酬":"#ff6b6b" };
-    const SYSTEM_TAG_CLASS = { "考勤机":"tag-blue", "OEHR":"tag-orange", "OTWS":"tag-green", "OA":"tag-yellow", "HRMS":"tag-purple", "薪酬":"tag-red" };
-    const CONTRIBUTOR_COLORS = ["#4f8cff","#ff8c42","#42d39b","#ffd642","#c44fff","#ff6b6b","#64b4ff","#40e0d0"];
 
-    let charts = {};
-    let currentFilter = "all";
-    let searchQuery = "";
-    var currentData = EMBEDDED_DATA;  // 当前数据（刷新后可更新）
+    // ============================================================
+    // 颜色 & 状态配置
+    // ============================================================
+    var GROUP_COLORS = ["#4f8cff","#ff8c42","#42d39b","#ffd642","#c44fff","#ff6b6b","#64b4ff","#40e0d0"];
+    var STATUS_CONFIG = {
+      "已完成": { color: "#42d39b", cls: "tag-green" },
+      "进行中": { color: "#4f8cff", cls: "tag-blue" },
+      "待启动": { color: "#8b949e", cls: "tag-gray" },
+      "关闭":   { color: "#ff6b6b", cls: "tag-red" },
+      "暂停":   { color: "#ffd642", cls: "tag-yellow" },
+    };
+
+    var charts = {};
+    var currentFilter = "all";
+    var searchQuery = "";
+    var currentData = EMBEDDED_DATA;
 
     // ============================================================
     // 数据聚合
     // ============================================================
     function aggregate(records) {
-      const modules = {};
-      const systems = {};
-      const contributors = {};
-      let activeCount = 0;
-      let totalDuration = 0;
-      records.forEach((r) => {
-        if (r.module) modules[r.module] = (modules[r.module] || 0) + 1;
-        if (r.system) systems[r.system] = (systems[r.system] || 0) + 1;
-        if (r.creator) contributors[r.creator] = (contributors[r.creator] || 0) + 1;
-        if (r.active === "是") activeCount++;
-        totalDuration += r.duration_seconds || 0;
+      var groups = {};
+      var statuses = {};
+      var groupEfficiency = {};
+      var onlineCount = 0;
+      var totalEfficiency = 0;
+      var owners = {};
+
+      records.forEach(function(r) {
+        var g = r.group || "未分组";
+        groups[g] = (groups[g] || 0) + 1;
+        var s = r.status || "待启动";
+        statuses[s] = (statuses[s] || 0) + 1;
+        if (!groupEfficiency[g]) groupEfficiency[g] = 0;
+        groupEfficiency[g] += r.efficiency_hours || 0;
+        if (r.online === "true") onlineCount++;
+        totalEfficiency += r.efficiency_hours || 0;
+        if (r.owner) {
+          // 负责人可能是 @张三@李四 格式
+          r.owner.replace(/@/g, " ").trim().split(/\s+/).forEach(function(n) {
+            if (n) owners[n] = (owners[n] || 0) + 1;
+          });
+        }
       });
-      return { modules, systems, contributors, activeCount, totalDuration,
-        totalRecords: records.length, systemCount: Object.keys(systems).length };
+
+      return {
+        groups: groups,
+        statuses: statuses,
+        groupEfficiency: groupEfficiency,
+        onlineCount: onlineCount,
+        totalEfficiency: totalEfficiency,
+        totalRecords: records.length,
+        groupCount: Object.keys(groups).length,
+        owners: owners
+      };
     }
 
     // ============================================================
@@ -327,13 +350,13 @@
     // ============================================================
     function renderMetrics(agg) {
       document.getElementById("m-total").textContent = agg.totalRecords;
-      document.getElementById("m-active").textContent = agg.activeCount;
-      document.getElementById("m-systems").textContent = agg.systemCount;
-      document.getElementById("m-duration").innerHTML = `${(agg.totalDuration / 60).toFixed(1)}<span class="unit">分钟</span>`;
+      document.getElementById("m-online").textContent = agg.onlineCount;
+      document.getElementById("m-groups").textContent = agg.groupCount;
+      document.getElementById("m-efficiency").innerHTML = agg.totalEfficiency.toFixed(1) + '<span class="unit">H/月</span>';
     }
 
     function renderCharts(agg) {
-      const cd = {
+      var cd = {
         responsive: true, maintainAspectRatio: false,
         plugins: {
           legend: { position: "right", labels: { color: "#8b949e", font: { size: 12 }, padding: 12, usePointStyle: true, pointStyle: "circle" } },
@@ -341,83 +364,163 @@
         },
       };
 
-      // 模块柱状图
-      const mKeys = Object.keys(agg.modules);
-      if (charts.module) charts.module.destroy();
-      charts.module = new Chart(document.getElementById("chartModule"), {
+      // 小组柱状图
+      var gKeys = Object.keys(agg.groups);
+      if (charts.group) charts.group.destroy();
+      charts.group = new Chart(document.getElementById("chartGroup"), {
         type: "bar",
-        data: { labels: mKeys, datasets: [{ data: mKeys.map(k => agg.modules[k]), backgroundColor: mKeys.map(k => MODULE_COLORS[k] || "#8b949e"), borderRadius: 8, barThickness: 40 }] },
-        options: { ...cd, plugins: { ...cd.plugins, legend: { display: false } },
-          scales: { x: { ticks: { color: "#8b949e", font: { size: 12 } }, grid: { display: false } }, y: { beginAtZero: true, ticks: { color: "#8b949e", stepSize: 1, font: { size: 12 } }, grid: { color: "#21262d" } } } },
+        data: {
+          labels: gKeys,
+          datasets: [{
+            data: gKeys.map(function(k) { return agg.groups[k]; }),
+            backgroundColor: gKeys.map(function(_, i) { return GROUP_COLORS[i % GROUP_COLORS.length]; }),
+            borderRadius: 8, barThickness: 44
+          }]
+        },
+        options: Object.assign({}, cd, {
+          plugins: Object.assign({}, cd.plugins, { legend: { display: false } }),
+          scales: {
+            x: { ticks: { color: "#8b949e", font: { size: 12 } }, grid: { display: false } },
+            y: { beginAtZero: true, ticks: { color: "#8b949e", stepSize: 1, font: { size: 12 } }, grid: { color: "#21262d" } }
+          }
+        })
       });
 
-      // 系统环形图
-      const sKeys = Object.keys(agg.systems);
-      if (charts.system) charts.system.destroy();
-      charts.system = new Chart(document.getElementById("chartSystem"), {
+      // 状态环形图
+      var sKeys = Object.keys(agg.statuses);
+      if (charts.status) charts.status.destroy();
+      charts.status = new Chart(document.getElementById("chartStatus"), {
         type: "doughnut",
-        data: { labels: sKeys, datasets: [{ data: sKeys.map(k => agg.systems[k]), backgroundColor: sKeys.map(k => SYSTEM_COLORS[k] || "#8b949e"), borderColor: "#161b22", borderWidth: 3 }] },
-        options: { ...cd, cutout: "60%" },
+        data: {
+          labels: sKeys,
+          datasets: [{
+            data: sKeys.map(function(k) { return agg.statuses[k]; }),
+            backgroundColor: sKeys.map(function(k) { return (STATUS_CONFIG[k] || {}).color || "#8b949e"; }),
+            borderColor: "#161b22", borderWidth: 3
+          }]
+        },
+        options: Object.assign({}, cd, { cutout: "60%" })
       });
 
-      // 贡献者横向柱状图
-      const cKeys = Object.keys(agg.contributors);
-      if (charts.contributor) charts.contributor.destroy();
-      charts.contributor = new Chart(document.getElementById("chartContributor"), {
+      // 各小组提效时间横向柱状图
+      var eKeys = Object.keys(agg.groupEfficiency).sort(function(a, b) { return agg.groupEfficiency[b] - agg.groupEfficiency[a]; });
+      if (charts.efficiency) charts.efficiency.destroy();
+      charts.efficiency = new Chart(document.getElementById("chartEfficiency"), {
         type: "bar",
-        data: { labels: cKeys, datasets: [{ data: cKeys.map(k => agg.contributors[k]), backgroundColor: cKeys.map((_, i) => CONTRIBUTOR_COLORS[i % CONTRIBUTOR_COLORS.length]), borderRadius: 8, barThickness: 28 }] },
-        options: { ...cd, indexAxis: "y", plugins: { ...cd.plugins, legend: { display: false } },
-          scales: { x: { beginAtZero: true, ticks: { color: "#8b949e", stepSize: 1, font: { size: 12 } }, grid: { color: "#21262d" } }, y: { ticks: { color: "#8b949e", font: { size: 13 } }, grid: { display: false } } } },
+        data: {
+          labels: eKeys,
+          datasets: [{
+            label: "提效时间 (H/月)",
+            data: eKeys.map(function(k) { return agg.groupEfficiency[k]; }),
+            backgroundColor: eKeys.map(function(_, i) { return GROUP_COLORS[i % GROUP_COLORS.length]; }),
+            borderRadius: 8, barThickness: 28
+          }]
+        },
+        options: Object.assign({}, cd, {
+          indexAxis: "y",
+          plugins: Object.assign({}, cd.plugins, { legend: { display: false } }),
+          scales: {
+            x: { beginAtZero: true, ticks: { color: "#8b949e", font: { size: 12 }, callback: function(v) { return v + " H"; } }, grid: { color: "#21262d" } },
+            y: { ticks: { color: "#8b949e", font: { size: 13 } }, grid: { display: false } }
+          }
+        })
       });
     }
 
     function renderTable(records) {
-      const tbody = document.getElementById("tableBody");
-      let filtered = records;
-      if (currentFilter !== "all") filtered = filtered.filter(r => r.module === currentFilter);
+      var tbody = document.getElementById("tableBody");
+      var filtered = records;
+      if (currentFilter !== "all") filtered = filtered.filter(function(r) { return r.group === currentFilter; });
       if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        filtered = filtered.filter(r => r.title.toLowerCase().includes(q) || (r.creator||"").toLowerCase().includes(q) || (r.system||"").toLowerCase().includes(q));
+        var q = searchQuery.toLowerCase();
+        filtered = filtered.filter(function(r) {
+          return r.title.toLowerCase().includes(q) ||
+                 (r.owner || "").toLowerCase().includes(q) ||
+                 (r.group || "").toLowerCase().includes(q) ||
+                 (r.status || "").toLowerCase().includes(q);
+        });
       }
-      filtered.sort((a, b) => (b.publish_date || "").localeCompare(a.publish_date || ""));
+      // 按状态优先级 + 预计完成时间排序
+      var statusOrder = { "进行中": 0, "待启动": 1, "已完成": 2, "暂停": 3, "关闭": 4 };
+      filtered.sort(function(a, b) {
+        var sa = statusOrder[a.status] !== undefined ? statusOrder[a.status] : 5;
+        var sb = statusOrder[b.status] !== undefined ? statusOrder[b.status] : 5;
+        if (sa !== sb) return sa - sb;
+        return (b.deadline || "").localeCompare(a.deadline || "");
+      });
 
-      tbody.innerHTML = filtered.length ? filtered.map(r => `<tr>
-        <td>${r.title||"—"}</td>
-        <td><span class="tag ${MODULE_TAG_CLASS[r.module]||"tag-blue"}">${r.module||"—"}</span></td>
-        <td><span class="tag ${SYSTEM_TAG_CLASS[r.system]||"tag-blue"}">${r.system||"—"}</span></td>
-        <td>${r.duration||"—"}</td>
-        <td>${r.creator||"—"}</td>
-        <td>${r.publish_date||"—"}</td>
-        <td><span class="status-active">${r.active === "是" ? "生效" : "—"}</span></td>
-        <td>${r.video_url ? `<a href="${r.video_url}" target="_blank" class="video-link">▶ 观看</a>` : "—"}</td>
-      </tr>`).join("") : `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-dim)">没有匹配的项目</td></tr>`;
+      tbody.innerHTML = filtered.length ? filtered.map(function(r) {
+        var sc = STATUS_CONFIG[r.status] || { cls: "tag-gray", color: "#8b949e" };
+        return '<tr>' +
+          '<td title="' + (r.title || "") + '">' + (r.title || "—") + '</td>' +
+          '<td><span class="tag tag-blue">' + (r.group || "—") + '</span></td>' +
+          '<td><span class="tag ' + sc.cls + '">' + (r.status || "—") + '</span></td>' +
+          '<td>' + (r.owner || "—") + '</td>' +
+          '<td>' + formatDeadline(r.deadline) + '</td>' +
+          '<td>' + (r.efficiency_hours ? r.efficiency_hours + " H" : "—") + '</td>' +
+          '<td>' + (r.has_blocker === "是" ? '<span style="color:var(--red)">有</span>' : '<span style="color:var(--text-dim)">无</span>') + '</td>' +
+          '<td>' + (r.has_skill === "是" ? '<span style="color:var(--green)">有</span>' : '<span style="color:var(--text-dim)">无</span>') + '</td>' +
+          '<td>' + (r.result_link ? '<a href="' + r.result_link + '" target="_blank" class="link">查看</a>' : "—") + '</td>' +
+        '</tr>';
+      }).join("") : '<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-dim)">没有匹配的项目</td></tr>';
+    }
+
+    function formatDeadline(v) {
+      if (!v) return "—";
+      // 飞书返回毫秒时间戳或 "2026-06-19 00:00:00" 格式
+      var n = Number(v);
+      if (!isNaN(n) && n > 100000000000) {
+        var d = new Date(n);
+        return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+      }
+      if (typeof v === "string" && v.includes(" ")) return v.split(" ")[0];
+      if (typeof v === "string" && v.length >= 10) return v.substring(0, 10);
+      return String(v);
     }
 
     function updateTimestamp(iso) {
-      const d = new Date(iso);
-      const pad = n => String(n).padStart(2, "0");
+      var d = new Date(iso);
+      var pad = function(n) { return String(n).padStart(2, "0"); };
       document.getElementById("updateTime").textContent =
-        `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+        d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate()) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
     }
 
     // ============================================================
-    // 事件绑定
+    // 动态生成小组筛选按钮
     // ============================================================
-    document.querySelectorAll(".filter-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        currentFilter = btn.dataset.filter;
-        renderTable(currentData.records);
+    function buildGroupFilters(records) {
+      var groups = {};
+      records.forEach(function(r) { if (r.group) groups[r.group] = true; });
+      var container = document.getElementById("groupFilters");
+      container.innerHTML = "";
+      Object.keys(groups).sort().forEach(function(g) {
+        var btn = document.createElement("button");
+        btn.className = "filter-btn";
+        btn.dataset.filter = g;
+        btn.textContent = g;
+        container.appendChild(btn);
       });
-    });
-    document.getElementById("searchInput").addEventListener("input", e => {
+      // 重新绑定事件
+      document.querySelectorAll(".filter-btn").forEach(function(btn) {
+        btn.addEventListener("click", function() {
+          document.querySelectorAll(".filter-btn").forEach(function(b) { b.classList.remove("active"); });
+          btn.classList.add("active");
+          currentFilter = btn.dataset.filter;
+          renderTable(currentData.records);
+        });
+      });
+    }
+
+    // ============================================================
+    // 搜索
+    // ============================================================
+    document.getElementById("searchInput").addEventListener("input", function(e) {
       searchQuery = e.target.value.trim();
       renderTable(currentData.records);
     });
 
     // ============================================================
-    // 刷新 — 从 Worker API 拉取最新数据
+    // 刷新
     // ============================================================
     function showToast(msg, type) {
       var t = document.createElement("div");
@@ -431,27 +534,61 @@
       var btn = document.getElementById("refreshBtn");
       var icon = document.getElementById("refreshIcon");
       if (!silent) { btn.classList.add("loading"); icon.textContent = "⏳"; }
+      var oldTs = currentData ? currentData.updated_at : "";
 
-      // 加时间戳参数避免浏览器缓存旧版 data.json
-      fetch(API_URL + "?t=" + Date.now())
-        .then(function(res) {
-          if (!res.ok) throw new Error("HTTP " + res.status);
-          return res.json();
-        })
-        .then(function(data) {
-          // data.json 格式: {total, updated_at, records}
-          if (!data || !data.records) throw new Error("数据格式异常");
-
+      fetch("https://api.github.com/repos/chengzai456-arch/gofo-data/actions/workflows/sync-dashboard.yml/dispatches", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + atob(TRIGGER_TOKEN),
+          "Accept": "application/vnd.github+json"
+        },
+        body: JSON.stringify({ref: "main"})
+      })
+      .then(function() {
+        return pollForUpdate(oldTs, 20);
+      })
+      .then(function(data) {
+        if (data) {
           currentData = data;
           renderAll();
-          if (!silent) showToast("✓ 数据已刷新（" + data.total + " 条记录）", "success");
-        })
-        .catch(function(err) {
-          if (!silent) showToast("✗ 刷新失败：" + err.message + "（数据保持为上次部署版本）", "error");
-        })
-        .finally(function() {
-          if (!silent) { btn.classList.remove("loading"); icon.textContent = "🔄"; }
-        });
+          if (!silent) showToast("数据已同步（" + data.total + " 条记录）", "success");
+          return;
+        }
+        return fetch(API_URL + "?t=" + Date.now())
+          .then(function(res) { return res.json(); })
+          .then(function(data) {
+            currentData = data;
+            renderAll();
+            if (!silent) showToast("同步中...若数据未更新请稍等再试", "success");
+          });
+      })
+      .catch(function(err) {
+        if (!silent) showToast("刷新失败：" + err.message, "error");
+      })
+      .finally(function() {
+        if (!silent) { btn.classList.remove("loading"); icon.textContent = "🔄"; }
+      });
+    }
+
+    function pollForUpdate(oldTs, maxAttempts) {
+      return new Promise(function(resolve) {
+        var attempts = 0;
+        function poll() {
+          attempts++;
+          fetch(API_URL + "?t=" + Date.now())
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+              if (data.updated_at !== oldTs) { resolve(data); }
+              else if (attempts >= maxAttempts) { resolve(null); }
+              else { setTimeout(poll, 3000); }
+            })
+            .catch(function() {
+              if (attempts >= maxAttempts) resolve(null);
+              else setTimeout(poll, 3000);
+            });
+        }
+        poll();
+      });
     }
 
     function renderAll() {
@@ -466,9 +603,9 @@
     // 启动
     // ============================================================
     (function init() {
+      buildGroupFilters(currentData.records);
       renderAll();
       document.getElementById("refreshBtn").addEventListener("click", function() { refreshData(false); });
-      // 每5分钟自动静默刷新（外网环境生效，内网静默失败）
       setInterval(function() { refreshData(true); }, 5 * 60 * 1000);
     })();
   </script>
