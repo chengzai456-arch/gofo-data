@@ -87,6 +87,18 @@ function extractMarkdownUrl(str) {
   return url ? url[0] : "";
 }
 
+/** 时间戳/字符串 -> YYYY-MM-DD（固定 GMT+8，与飞书显示一致） */
+function formatDate(v) {
+  if (!v) return "";
+  const n = Number(v);
+  if (!isNaN(n) && n > 100000000000) {
+    const d = new Date(n + 8 * 60 * 60 * 1000);
+    return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+  }
+  if (typeof v === "string" && v.includes(" ")) return v.split(" ")[0];
+  return String(v);
+}
+
 /** 从飞书多维表拉取全部记录 */
 async function fetchRecords(token) {
   const all = [];
@@ -110,7 +122,7 @@ async function fetchRecords(token) {
             group: getVal(fields, "所属小组") || "未分组",
             status: getVal(fields, "当前进度") || "待启动",
             owner: getVal(fields, "负责人") || "",
-            deadline: getVal(fields, "预计完成时间") || "",
+            deadline: formatDate(getVal(fields, "预计完成时间")),
             has_blocker: getVal(fields, "是否有卡点") || "否",
             efficiency_hours: parseFloat(getVal(fields, "提效时间H")) || 0,
             has_skill: getVal(fields, "已形成可复用SKILL") ? "是" : "否",
@@ -121,6 +133,10 @@ async function fetchRecords(token) {
             result_link: extractMarkdownUrl(getVal(fields, "成果晾晒（skill&链接）")),
             blocker_detail: getVal(fields, "卡点问题（详细描述）") || "",
             lessons: getVal(fields, "经验教训") || "",
+            results: getVal(fields, "成果展示") || "",
+            calibration: getVal(fields, "数据校准") || "",
+            style_tuning: getVal(fields, "样式调优") || "",
+            data_input: getVal(fields, "数据投喂") || "",
           });
         }
       });
