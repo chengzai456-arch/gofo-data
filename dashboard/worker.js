@@ -27,6 +27,8 @@ const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, X-Update-Key, X-Refresh-Key",
+  // 显式 Vary 防止 CDN 缓存跨 Origin 串响应
+  "Vary": "Origin",
 };
 
 // 内嵌 fallback 数据（KV 为空且 Feishu 不可用时使用）

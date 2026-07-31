@@ -608,7 +608,8 @@
       if (!silent) { btn.classList.add("loading"); icon.textContent = "⏳"; }
 
       // 直连 Cloudflare Worker → Worker 直连飞书 API，2-5 秒返回
-      fetch(WORKER_URL + "/api/refresh")
+      // cache: "no-store" 避免浏览器缓存跨域响应; mode: "cors" 显式声明跨域
+      fetch(WORKER_URL + "/api/refresh", { cache: "no-store", mode: "cors" })
         .then(function(res) {
           return res.json().then(function(j) { return { status: res.status, body: j }; });
         })
