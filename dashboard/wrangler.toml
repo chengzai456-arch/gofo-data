@@ -1,6 +1,7 @@
 name = "gofo-dashboard-api"
 main = "worker.js"
 compatibility_date = "2026-07-30"
+account_id = "747dda3e592c87bf5bd36523f99fb7f9"
 
 [[kv_namespaces]]
 binding = "BITABLE_DATA"

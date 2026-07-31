@@ -606,20 +606,22 @@
 
       // 直连 Cloudflare Worker → Worker 直连飞书 API，2-5 秒返回
       fetch(WORKER_URL + "/api/refresh")
-        .then(function(res) { return res.json(); })
-        .then(function(result) {
+        .then(function(res) {
+          return res.json().then(function(j) { return { status: res.status, body: j }; });
+        })
+        .then(function(r) {
           var elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-          if (result.ok && result.data) {
-            currentData = result.data;
+          if (r.body && r.body.ok && r.body.data) {
+            currentData = r.body.data;
             renderAll();
             if (!silent) {
               showToast(
-                "实时数据刷新完成：" + result.data.total + " 条记录（耗时 " + elapsed + "s）",
+                "实时数据刷新完成：" + r.body.data.total + " 条记录（耗时 " + elapsed + "s）",
                 "success"
               );
             }
           } else {
-            throw new Error(result.error || "未知错误");
+            throw new Error("HTTP " + r.status + ": " + ((r.body && r.body.error) || "未知错误"));
           }
         })
         .catch(function(err) {

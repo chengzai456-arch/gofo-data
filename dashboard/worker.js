@@ -21,7 +21,7 @@ const ALLOWED_ORIGINS = new Set([
 ]);
 
 // 同一 IP 两次 /api/refresh 的最小间隔（毫秒）
-const REFRESH_WINDOW_MS = 8000;
+const REFRESH_WINDOW_MS = 3000;
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -188,6 +188,7 @@ export default {
       // 鉴权 1: Origin 白名单
       const origin = request.headers.get("Origin");
       if (!origin || !ALLOWED_ORIGINS.has(origin)) {
+        console.log(`[/api/refresh] rejected origin="${origin}" allowed=${origin ? ALLOWED_ORIGINS.has(origin) : false}`);
         return new Response(
           JSON.stringify({ ok: false, error: "Forbidden origin" }),
           {
@@ -213,6 +214,7 @@ export default {
         console.error("[/api/refresh] Rate-limit KV error:", e.message);
       }
       if (limited) {
+        console.log(`[/api/refresh] rate limited ip=${ip}`);
         return new Response(
           JSON.stringify({ ok: false, error: "Rate limited, please retry later" }),
           {
