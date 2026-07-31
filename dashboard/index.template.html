@@ -594,6 +594,9 @@
       var t = document.createElement("div");
       t.className = "toast " + type;
       t.textContent = msg;
+      // 多 toast 错开垂直堆叠(每个约 56px 高, 避免相互遮挡)
+      var existing = document.querySelectorAll(".toast").length;
+      t.style.top = (20 + existing * 56) + "px";
       document.body.appendChild(t);
       setTimeout(function() { t.remove(); }, 3000);
     }
