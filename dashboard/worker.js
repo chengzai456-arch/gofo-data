@@ -163,33 +163,20 @@ export default {
     const path = url.pathname;
 
     // ============================================================
-    // POST /api/update — 外部写入 KV（GitHub Actions 同步脚本）
+    // POST /api/update — 已废弃（gofo 不用此端点；曾被外部项目污染 KV）
+    // 任何写入请求统一返回 410 Gone，引导调用方使用自己专属的 Worker
     // ============================================================
-    if (path === "/api/update" && request.method === "POST") {
-      const updateKey = request.headers.get("X-Update-Key");
-      if (updateKey !== env.UPDATE_KEY) {
-        return new Response(JSON.stringify({ ok: false, error: "Unauthorized" }), {
-          status: 401,
+    if (path === "/api/update") {
+      return new Response(
+        JSON.stringify({
+          ok: false,
+          error: "Deprecated. POST KV updates to your own Worker — this endpoint is reserved for gofo and rejects external writes.",
+        }),
+        {
+          status: 410,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      try {
-        const body = await request.json();
-        const data = {
-          total: body.records.length,
-          updated_at: new Date().toISOString(),
-          records: body.records,
-        };
-        await env.BITABLE_DATA.put(KV_KEY, JSON.stringify(data));
-        return new Response(JSON.stringify({ ok: true, updated: data.total }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      } catch (err) {
-        return new Response(JSON.stringify({ ok: false, error: err.message }), {
-          status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
+        }
+      );
     }
 
     // ============================================================
