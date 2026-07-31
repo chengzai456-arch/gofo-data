@@ -163,8 +163,8 @@
           <span class="live-dot"></span>
           <span id="updateTime">--:--:--</span>
         </div>
-        <button class="refresh-btn" id="refreshBtn" title="从飞书多维表拉取最新数据">
-          <span class="refresh-icon" id="refreshIcon">🔄</span> 刷新数据
+        <button class="refresh-btn" id="refreshBtn" title="重新加载页面，从 GitHub Pages 拉取最新构建产物（GitHub Actions 每5分钟自动构建）">
+          <span class="refresh-icon" id="refreshIcon">🔄</span> 刷新页面
         </button>
       </div>
     </div>
@@ -663,8 +663,9 @@
     (function init() {
       buildGroupFilters(currentData.records);
       renderAll();
-      document.getElementById("refreshBtn").addEventListener("click", function() { refreshData(false); });
-      setInterval(function() { refreshData(true); }, 5 * 60 * 1000);
+      document.getElementById("refreshBtn").addEventListener("click", function() { location.reload(); });
+      // 不再定时 fetch Worker(/api/refresh): 部分网络环境 CORS 拦截;
+      // 数据每 5 分钟通过 GitHub Actions 自动构建并部署, 用户主动点刷新按钮(重载页面)获取最新
     })();
   </script>
 </body>
