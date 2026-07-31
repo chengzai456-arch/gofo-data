@@ -15,7 +15,6 @@ const CONFIG = {
   BASE_TOKEN: "UpCxbXml4a6u9us4BwCcRdGDnPg",
   TABLE_ID: "tblSr9y6Wf811s7z",
   PASSWORD: process.env.DASHBOARD_PASSWORD || "gofo2025",
-  TRIGGER_TOKEN: process.env.TRIGGER_TOKEN || "",
 };
 
 const DASHBOARD_DIR = path.join(__dirname);
@@ -170,13 +169,6 @@ async function main() {
     html = html.replaceAll("__EMBEDDED_DATA_PLACEHOLDER__", dataJson);
     html = html.replaceAll("__BUILD_TIMESTAMP__", now);
     html = html.replaceAll("__LOGIN_HASH__", loginHash);
-    // 拆分成 4 段避免 GitHub Push Protection 检测到完整 base64 PAT
-    const tkB64 = btoa(CONFIG.TRIGGER_TOKEN);
-    const L = Math.ceil(tkB64.length / 4);
-    html = html.replaceAll("__TK0__", tkB64.substring(0, L));
-    html = html.replaceAll("__TK1__", tkB64.substring(L, 2*L));
-    html = html.replaceAll("__TK2__", tkB64.substring(2*L, 3*L));
-    html = html.replaceAll("__TK3__", tkB64.substring(3*L));
     fs.writeFileSync(path.join(DASHBOARD_DIR, "index.html"), html, "utf-8");
     fs.writeFileSync(path.join(DASHBOARD_DIR, "data.json"), JSON.stringify({ total: records.length, updated_at: now, records }), "utf-8");
     console.log("  OK");
