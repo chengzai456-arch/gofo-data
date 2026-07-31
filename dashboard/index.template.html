@@ -508,7 +508,7 @@
           '<td>' + (r.efficiency_hours ? r.efficiency_hours + " H" : "—") + '</td>' +
           '<td title="原工时 ' + (r.orig_hours || 0) + ' H → AI 工时 ' + (r.ai_hours || 0) + ' H">' + (savedHours !== null ? savedHours.toFixed(1) + " H" : "—") + '</td>' +
           '<td>' + (r.has_blocker === "是" ? '<span style="color:var(--red)">有</span>' : '<span style="color:var(--text-dim)">无</span>') + '</td>' +
-          '<td class="td-wrap" title="' + escapeHtml(r.blocker_detail) + '">' + (r.blocker_detail ? escapeHtml(r.blocker_detail) : "—") + '</td>' +
+          '<td><div class="td-wrap" title="' + escapeHtml(r.blocker_detail) + '">' + (r.blocker_detail ? escapeHtml(r.blocker_detail) : "—") + '</div></td>' +
           '<td>' + (r.has_skill === "是" ? '<span style="color:var(--green)">有</span>' : '<span style="color:var(--text-dim)">无</span>') + '</td>' +
           '<td>' + (r.result_link ? '<a href="' + escapeHtml(r.result_link) + '" target="_blank" class="link">查看</a>' : "—") + '</td>' +
         '</tr>';
