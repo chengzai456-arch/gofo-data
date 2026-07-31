@@ -52,6 +52,8 @@
     .filter-btn{background:var(--card-hover);border:1px solid var(--border);color:var(--text-dim);border-radius:6px;padding:6px 14px;font-size:13px;cursor:pointer;transition:all .15s}
     .filter-btn:hover{border-color:var(--accent);color:var(--text)}
     .filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+    .filter-select{background:var(--card-hover);border:1px solid var(--border);color:var(--text-dim);border-radius:6px;padding:6px 12px;font-size:13px;cursor:pointer;outline:none;transition:border-color .15s;appearance:none;padding-right:24px;background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%238b949e' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right 4px center;background-size:16px}
+    .filter-select:hover,.filter-select:focus{border-color:var(--accent);color:var(--text)}
     .search-input{background:var(--card-hover);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 14px;font-size:13px;width:200px;outline:none;transition:border-color .15s}
     .search-input:focus{border-color:var(--accent)}
     .table-scroll{overflow-x:auto;max-height:520px;overflow-y:auto}
@@ -208,6 +210,19 @@
       <div class="table-header">
         <h2>项目明细</h2>
         <div class="table-controls">
+          <select class="filter-select" id="blockerFilter">
+            <option value="all">卡点：全部</option>
+            <option value="是">有卡点</option>
+            <option value="否">无卡点</option>
+          </select>
+          <select class="filter-select" id="statusFilter">
+            <option value="all">进度：全部</option>
+            <option value="进行中">进行中</option>
+            <option value="待启动">待启动</option>
+            <option value="已完成">已完成</option>
+            <option value="暂停">暂停</option>
+            <option value="关闭">关闭</option>
+          </select>
           <button class="filter-btn active" data-filter="all">全部</button>
           <div id="groupFilters"></div>
           <input type="text" class="search-input" id="searchInput" placeholder="搜索项目名称/负责人...">
@@ -224,6 +239,7 @@
               <th>预计完成</th>
               <th>提效(H/月)</th>
               <th>卡点</th>
+              <th>卡点问题</th>
               <th>可复用SKILL</th>
               <th>成果</th>
             </tr>
@@ -304,6 +320,8 @@
     var charts = {};
     var currentFilter = "all";
     var searchQuery = "";
+    var blockerFilter = "all";
+    var statusFilter = "all";
     var currentData = EMBEDDED_DATA;
 
     // ============================================================
@@ -432,13 +450,16 @@
       var tbody = document.getElementById("tableBody");
       var filtered = records;
       if (currentFilter !== "all") filtered = filtered.filter(function(r) { return r.group === currentFilter; });
+      if (blockerFilter !== "all") filtered = filtered.filter(function(r) { return r.has_blocker === blockerFilter; });
+      if (statusFilter !== "all") filtered = filtered.filter(function(r) { return r.status === statusFilter; });
       if (searchQuery) {
         var q = searchQuery.toLowerCase();
         filtered = filtered.filter(function(r) {
           return r.title.toLowerCase().includes(q) ||
                  (r.owner || "").toLowerCase().includes(q) ||
                  (r.group || "").toLowerCase().includes(q) ||
-                 (r.status || "").toLowerCase().includes(q);
+                 (r.status || "").toLowerCase().includes(q) ||
+                 (r.blocker_detail || "").toLowerCase().includes(q);
         });
       }
       // 按状态优先级 + 预计完成时间排序
@@ -460,10 +481,11 @@
           '<td>' + formatDeadline(r.deadline) + '</td>' +
           '<td>' + (r.efficiency_hours ? r.efficiency_hours + " H" : "—") + '</td>' +
           '<td>' + (r.has_blocker === "是" ? '<span style="color:var(--red)">有</span>' : '<span style="color:var(--text-dim)">无</span>') + '</td>' +
+          '<td title="' + (r.blocker_detail || "").replace(/"/g,"&quot;") + '">' + formatBlockerDetail(r.blocker_detail) + '</td>' +
           '<td>' + (r.has_skill === "是" ? '<span style="color:var(--green)">有</span>' : '<span style="color:var(--text-dim)">无</span>') + '</td>' +
           '<td>' + (r.result_link ? '<a href="' + r.result_link + '" target="_blank" class="link">查看</a>' : "—") + '</td>' +
         '</tr>';
-      }).join("") : '<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-dim)">没有匹配的项目</td></tr>';
+      }).join("") : '<tr><td colspan="10" style="text-align:center;padding:40px;color:var(--text-dim)">没有匹配的项目</td></tr>';
     }
 
     function formatDeadline(v) {
@@ -477,6 +499,12 @@
       if (typeof v === "string" && v.includes(" ")) return v.split(" ")[0];
       if (typeof v === "string" && v.length >= 10) return v.substring(0, 10);
       return String(v);
+    }
+
+    function formatBlockerDetail(v) {
+      if (!v) return "—";
+      // 截断显示，完整内容在 title 悬浮提示
+      return v.length > 24 ? v.substring(0, 24) + "…" : v;
     }
 
     function updateTimestamp(iso) {
@@ -517,6 +545,18 @@
     // ============================================================
     document.getElementById("searchInput").addEventListener("input", function(e) {
       searchQuery = e.target.value.trim();
+      renderTable(currentData.records);
+    });
+
+    // 卡点筛选
+    document.getElementById("blockerFilter").addEventListener("change", function(e) {
+      blockerFilter = e.target.value;
+      renderTable(currentData.records);
+    });
+
+    // 进度筛选
+    document.getElementById("statusFilter").addEventListener("change", function(e) {
+      statusFilter = e.target.value;
       renderTable(currentData.records);
     });
 
