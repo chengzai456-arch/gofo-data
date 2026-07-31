@@ -248,10 +248,8 @@ export default {
           records,
         };
 
-        // 异步写入 KV（不阻塞响应）
-        env.BITABLE_DATA.put(KV_KEY, JSON.stringify(data)).catch((e) =>
-          console.error("KV write failed:", e.message)
-        );
+        // 写入 KV（确保 /api/data 与实时刷新结果一致）
+        await env.BITABLE_DATA.put(KV_KEY, JSON.stringify(data));
 
         return new Response(
           JSON.stringify({ ok: true, data, source: "feishu-live" }),
@@ -313,4 +311,28 @@ export default {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   },
+
+  // Cron 定时触发: 拉取飞书最新数据写入 KV
+  //（需 Cloudflare 配置 Cron Trigger，见 wrangler.toml [triggers]）
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(refreshAndCache(env));
+  },
 };
+
+// scheduled 与 fetch 共用的刷新缓存逻辑
+async function refreshAndCache(env) {
+  try {
+    console.log("[scheduled] Getting Feishu token...");
+    const token = await getFeishuToken(env);
+    const records = await fetchRecords(token);
+    const data = {
+      total: records.length,
+      updated_at: new Date().toISOString(),
+      records,
+    };
+    await env.BITABLE_DATA.put(KV_KEY, JSON.stringify(data));
+    console.log(`[scheduled] refreshed ${records.length} records -> KV`);
+  } catch (err) {
+    console.error("[scheduled] failed:", err.message);
+  }
+}

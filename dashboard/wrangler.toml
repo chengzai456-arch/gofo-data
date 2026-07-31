@@ -9,3 +9,7 @@ id = "abad6c3a83374187861cfc79b86572c1"
 [vars]
 BASE_TOKEN = "UpCxbXml4a6u9us4BwCcRdGDnPg"
 TABLE_ID = "tblSr9y6Wf811s7z"
+
+# 每 5 分钟自动拉取飞书数据刷新 KV（配合 worker.js 的 scheduled handler）
+[triggers]
+crons = ["*/5 * * * *"]
