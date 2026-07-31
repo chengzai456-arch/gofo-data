@@ -38,8 +38,18 @@ const FALLBACK_DATA = {
 
 // ---- 飞书 API 工具函数 ----
 
-/** 获取 tenant_access_token */
+// tenant_access_token 有效期 2 小时；缓存 1.5 小时，避免每次刷新都重新换取（省一次飞书往返）
+const TOKEN_KEY = "feishu_token";
+const TOKEN_TTL = 5400;
+
+/** 获取 tenant_access_token（优先用 KV 缓存，过期才重新换取） */
 async function getFeishuToken(env) {
+  try {
+    const cached = await env.BITABLE_DATA.get(TOKEN_KEY);
+    if (cached) return cached;
+  } catch (e) {
+    // KV 读取异常时走正常换取流程
+  }
   const res = await fetch(
     "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal",
     {
@@ -53,6 +63,9 @@ async function getFeishuToken(env) {
   );
   const json = await res.json();
   if (json.code !== 0) throw new Error(`Token API: ${json.msg} (code=${json.code})`);
+  env.BITABLE_DATA.put(TOKEN_KEY, json.tenant_access_token, { expirationTtl: TOKEN_TTL }).catch((e) =>
+    console.error("token cache write failed:", e.message)
+  );
   return json.tenant_access_token;
 }
 
