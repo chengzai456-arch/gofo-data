@@ -1,0 +1,11 @@
+name = "gofo-dashboard-api"
+main = "worker.js"
+compatibility_date = "2026-07-30"
+
+[[kv_namespaces]]
+binding = "BITABLE_DATA"
+id = "abad6c3a83374187861cfc79b86572c1"
+
+[vars]
+BASE_TOKEN = "UpCxbXml4a6u9us4BwCcRdGDnPg"
+TABLE_ID = "tblSr9y6Wf811s7z"

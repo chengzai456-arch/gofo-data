@@ -287,6 +287,7 @@
 
   <script>
     var API_URL = "./data.json";
+    var WORKER_URL = "https://gofo-dashboard-api.chengzai456.workers.dev";
 
     // ============================================================
     // 颜色 & 状态配置
@@ -533,62 +534,46 @@
     function refreshData(silent) {
       var btn = document.getElementById("refreshBtn");
       var icon = document.getElementById("refreshIcon");
+      var startTime = Date.now();
       if (!silent) { btn.classList.add("loading"); icon.textContent = "⏳"; }
-      var oldTs = currentData ? currentData.updated_at : "";
 
-      fetch("https://api.github.com/repos/chengzai456-arch/gofo-data/actions/workflows/sync-dashboard.yml/dispatches", {
-        method: "POST",
-        headers: {
-          "Authorization": "Bearer " + atob(TRIGGER_TOKEN),
-          "Accept": "application/vnd.github+json"
-        },
-        body: JSON.stringify({ref: "main"})
-      })
-      .then(function() {
-        return pollForUpdate(oldTs, 20);
-      })
-      .then(function(data) {
-        if (data) {
-          currentData = data;
-          renderAll();
-          if (!silent) showToast("数据已同步（" + data.total + " 条记录）", "success");
-          return;
-        }
-        return fetch(API_URL + "?t=" + Date.now())
-          .then(function(res) { return res.json(); })
-          .then(function(data) {
-            currentData = data;
+      // 直连 Cloudflare Worker → Worker 直连飞书 API，2-5 秒返回
+      fetch(WORKER_URL + "/api/refresh")
+        .then(function(res) { return res.json(); })
+        .then(function(result) {
+          var elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+          if (result.ok && result.data) {
+            currentData = result.data;
             renderAll();
-            if (!silent) showToast("同步中...若数据未更新请稍等再试", "success");
-          });
-      })
-      .catch(function(err) {
-        if (!silent) showToast("刷新失败：" + err.message, "error");
-      })
-      .finally(function() {
-        if (!silent) { btn.classList.remove("loading"); icon.textContent = "🔄"; }
-      });
-    }
-
-    function pollForUpdate(oldTs, maxAttempts) {
-      return new Promise(function(resolve) {
-        var attempts = 0;
-        function poll() {
-          attempts++;
-          fetch(API_URL + "?t=" + Date.now())
-            .then(function(res) { return res.json(); })
-            .then(function(data) {
-              if (data.updated_at !== oldTs) { resolve(data); }
-              else if (attempts >= maxAttempts) { resolve(null); }
-              else { setTimeout(poll, 3000); }
-            })
-            .catch(function() {
-              if (attempts >= maxAttempts) resolve(null);
-              else setTimeout(poll, 3000);
-            });
-        }
-        poll();
-      });
+            if (!silent) {
+              showToast(
+                "实时数据刷新完成：" + result.data.total + " 条记录（耗时 " + elapsed + "s）",
+                "success"
+              );
+            }
+          } else {
+            throw new Error(result.error || "未知错误");
+          }
+        })
+        .catch(function(err) {
+          if (!silent) {
+            // Worker 不可用时，降级到 data.json
+            showToast("实时刷新失败：" + err.message + "，尝试从静态文件加载...", "error");
+            fetch(API_URL + "?t=" + Date.now())
+              .then(function(res) { return res.json(); })
+              .then(function(data) {
+                currentData = data;
+                renderAll();
+                showToast("已从静态文件加载（" + data.total + " 条记录）", "success");
+              })
+              .catch(function() {
+                showToast("加载失败，请稍后重试", "error");
+              });
+          }
+        })
+        .finally(function() {
+          if (!silent) { btn.classList.remove("loading"); icon.textContent = "🔄"; }
+        });
     }
 
     function renderAll() {

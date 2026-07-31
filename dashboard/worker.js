@@ -1,0 +1,249 @@
+// ============================================================
+// Cloudflare Worker — GOFO AI 项目跟踪看板 API
+// 架构: Feishu API 直连(实时) + KV 缓存(兜底)
+// 端点:
+//   GET  /api/data    → 返回 KV 缓存数据（页面初始加载）
+//   GET  /api/refresh → 直连飞书 API 拉取最新数据，更新 KV，返回给前端
+//   POST /api/update  → 外部写入 KV（由 GitHub Actions 同步脚本调用）
+// ============================================================
+
+const KV_KEY = "bitable_data";
+const BASE_TOKEN = "UpCxbXml4a6u9us4BwCcRdGDnPg";
+const TABLE_ID = "tblSr9y6Wf811s7z";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, X-Update-Key, X-Refresh-Key",
+};
+
+// 内嵌 fallback 数据（KV 为空且 Feishu 不可用时使用）
+const FALLBACK_DATA = {
+  total: 0,
+  updated_at: "",
+  records: [],
+};
+
+// ---- 飞书 API 工具函数 ----
+
+/** 获取 tenant_access_token */
+async function getFeishuToken(env) {
+  const res = await fetch(
+    "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        app_id: env.FEISHU_APP_ID,
+        app_secret: env.FEISHU_APP_SECRET,
+      }),
+    }
+  );
+  const json = await res.json();
+  if (json.code !== 0) throw new Error(`Token API: ${json.msg} (code=${json.code})`);
+  return json.tenant_access_token;
+}
+
+/**
+ * 按字段名精确提取值，处理飞书多维表各种字段类型：
+ * - text / number / boolean: 直接返回字符串
+ * - select: ["选项名"] 或 [{name:"选项名"}]
+ * - user: [{name:"姓名", id:"ou_xxx"}]
+ * - url: {text:"...", link:"..."}
+ */
+function getVal(fields, fieldName) {
+  const v = fields[fieldName];
+  if (v === undefined || v === null) return "";
+  if (typeof v === "string" || typeof v === "number" || typeof v === "boolean") return String(v);
+  if (Array.isArray(v)) {
+    if (v.length === 0) return "";
+    const first = v[0];
+    if (typeof first === "string") return first;
+    if (first && typeof first === "object") return first.name || first.text || "";
+    return "";
+  }
+  if (typeof v === "object") return v.link || v.text || v.name || "";
+  return "";
+}
+
+/** 从 markdown 文本中提取第一个 URL */
+function extractMarkdownUrl(str) {
+  if (!str) return "";
+  const md = str.match(/\[([^\]]*)\]\(([^)]+)\)/);
+  if (md) return md[2];
+  const url = str.match(/https?:\/\/[^\s]+/);
+  return url ? url[0] : "";
+}
+
+/** 从飞书多维表拉取全部记录 */
+async function fetchRecords(token) {
+  const all = [];
+  let pt = "";
+  while (true) {
+    let url = `https://open.feishu.cn/open-apis/bitable/v1/apps/${BASE_TOKEN}/tables/${TABLE_ID}/records?page_size=100`;
+    if (pt) url += `&page_token=${pt}`;
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const r = await res.json();
+    if (r.code !== 0) throw new Error(`Records API: ${r.msg} (code=${r.code})`);
+    if (r.data && r.data.items) {
+      r.data.items.forEach((item) => {
+        if (item.fields) {
+          const fields = item.fields;
+          const title = getVal(fields, "AI项目名称");
+          if (!title) return;
+          all.push({
+            title: title.trim(),
+            group: getVal(fields, "所属小组") || "未分组",
+            status: getVal(fields, "当前进度") || "待启动",
+            owner: getVal(fields, "负责人") || "",
+            deadline: getVal(fields, "预计完成时间") || "",
+            has_blocker: getVal(fields, "是否有卡点") || "否",
+            efficiency_hours: parseFloat(getVal(fields, "提效时间H")) || 0,
+            has_skill: getVal(fields, "已形成可复用SKILL") ? "是" : "否",
+            online: getVal(fields, "已上线") || "",
+            ai_hours: parseFloat(getVal(fields, "AI处理后工时H/月")) || 0,
+            orig_hours: parseFloat(getVal(fields, "原工时H/月")) || 0,
+            progress: parseFloat(getVal(fields, "进度条")) || 0,
+            result_link: extractMarkdownUrl(getVal(fields, "成果晾晒（skill&链接）")),
+            blocker_detail: getVal(fields, "卡点问题（详细描述）") || "",
+            lessons: getVal(fields, "经验教训") || "",
+          });
+        }
+      });
+    }
+    if (r.data && r.data.has_more) {
+      pt = r.data.page_token;
+    } else {
+      break;
+    }
+  }
+  return all;
+}
+
+// ---- 主 handler ----
+
+export default {
+  async fetch(request, env) {
+    // CORS preflight
+    if (request.method === "OPTIONS") {
+      return new Response(null, { headers: corsHeaders });
+    }
+
+    const url = new URL(request.url);
+    const path = url.pathname;
+
+    // ============================================================
+    // POST /api/update — 外部写入 KV（GitHub Actions 同步脚本）
+    // ============================================================
+    if (path === "/api/update" && request.method === "POST") {
+      const updateKey = request.headers.get("X-Update-Key");
+      if (updateKey !== env.UPDATE_KEY) {
+        return new Response(JSON.stringify({ ok: false, error: "Unauthorized" }), {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      try {
+        const body = await request.json();
+        const data = {
+          total: body.records.length,
+          updated_at: new Date().toISOString(),
+          records: body.records,
+        };
+        await env.BITABLE_DATA.put(KV_KEY, JSON.stringify(data));
+        return new Response(JSON.stringify({ ok: true, updated: data.total }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ ok: false, error: err.message }), {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
+    // ============================================================
+    // GET /api/refresh — 直连飞书 API，实时拉取最新数据
+    // ============================================================
+    if (path === "/api/refresh" && request.method === "GET") {
+      try {
+        console.log("[/api/refresh] Getting Feishu token...");
+        const token = await getFeishuToken(env);
+        console.log("[/api/refresh] Fetching records...");
+        const records = await fetchRecords(token);
+        console.log(`[/api/refresh] Got ${records.length} records`);
+
+        const data = {
+          total: records.length,
+          updated_at: new Date().toISOString(),
+          records,
+        };
+
+        // 异步写入 KV（不阻塞响应）
+        env.BITABLE_DATA.put(KV_KEY, JSON.stringify(data)).catch((e) =>
+          console.error("KV write failed:", e.message)
+        );
+
+        return new Response(
+          JSON.stringify({ ok: true, data, source: "feishu-live" }),
+          {
+            headers: {
+              ...corsHeaders,
+              "Content-Type": "application/json",
+              "Cache-Control": "no-store, no-cache, must-revalidate",
+            },
+          }
+        );
+      } catch (err) {
+        console.error("[/api/refresh] Error:", err.message);
+        return new Response(
+          JSON.stringify({ ok: false, error: err.message, source: "error" }),
+          {
+            status: 502,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
+    }
+
+    // ============================================================
+    // GET /api/data — 返回 KV 缓存数据
+    // ============================================================
+    if (path === "/api/data" || path === "/" || path === "") {
+      try {
+        const cached = await env.BITABLE_DATA.get(KV_KEY);
+        if (cached) {
+          const data = JSON.parse(cached);
+          return new Response(JSON.stringify({ ok: true, data, source: "kv" }), {
+            headers: {
+              ...corsHeaders,
+              "Content-Type": "application/json",
+              "Cache-Control": "public, max-age=60",
+            },
+          });
+        }
+      } catch (e) {
+        // KV 读取失败，继续 fallback
+      }
+
+      return new Response(
+        JSON.stringify({ ok: true, data: FALLBACK_DATA, source: "fallback" }),
+        {
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache",
+          },
+        }
+      );
+    }
+
+    // 404
+    return new Response(JSON.stringify({ ok: false, error: "Not found" }), {
+      status: 404,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  },
+};
