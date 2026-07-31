@@ -1,5 +1,13 @@
 # GOFO 看板自动同步 + 部署
 # 每 5 分钟从飞书多维表拉取数据，生成静态页面并部署到 GitHub Pages
+#
+# 凭证一律从 GitHub Secrets 读取（不再硬编码）:
+# 仓库 Settings → Secrets and variables → Actions 添加:
+#   FEISHU_APP_ID        飞书应用 App ID
+#   FEISHU_APP_SECRET    飞书应用 App Secret（建议先在飞书开放平台重置，旧值已泄露）
+#   DASHBOARD_PASSWORD   看板访问密码
+#   TRIGGER_TOKEN        GitHub PAT（如需）
+# 未配置 FEISHU_APP_ID / FEISHU_APP_SECRET 时跳过同步构建，避免 workflow 报红
 
 name: Sync & Deploy Dashboard
 
@@ -30,16 +38,26 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Decode secrets
+      - name: Check required secrets
+        id: check
         run: |
-          echo "FEISHU_APP_ID=$(echo 'Y2xpX2FhOGM2N2MxOGFiYjVjZDU=' | base64 -d)" >> $GITHUB_ENV
-          echo "FEISHU_APP_SECRET=$(echo 'WnZ1NHFBbzE3Y2U3elg3bFZaUTZJZmZXVjVpa2xYd2c=' | base64 -d)" >> $GITHUB_ENV
-          echo "DASHBOARD_PASSWORD=$(echo 'Z29mbzIwMjU=' | base64 -d)" >> $GITHUB_ENV
-          echo "TRIGGER_TOKEN=$(echo 'WjJsMGFIVmlYM0JoZEY4eE1VTkVWRkpEVFVrd2FVZDRZWGx4Y1d0d1RtSnJYM1EwVUdjemRqWnRXakpWT0docFRIRkxkek5tTmtWeWNFSllOakJqWjFGSWFYSmtWMWhXVFhkYVlWQk5VMDlEU2twU1YzVlVha3gyZFhkUQ==' | base64 -d | base64 -d)" >> $GITHUB_ENV
+          if [ -z "${{ secrets.FEISHU_APP_ID }}" ] || [ -z "${{ secrets.FEISHU_APP_SECRET }}" ]; then
+            echo "::warning::FEISHU_APP_ID / FEISHU_APP_SECRET 未配置为 GitHub Secrets，本次跳过数据同步。"
+            echo "SKIP=1" >> $GITHUB_ENV
+          else
+            echo "Secrets OK"
+          fi
       - name: Fetch & Build
         id: sync
+        if: env.SKIP != '1'
+        env:
+          FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
+          FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
+          DASHBOARD_PASSWORD: ${{ secrets.DASHBOARD_PASSWORD }}
+          TRIGGER_TOKEN: ${{ secrets.TRIGGER_TOKEN }}
         run: node dashboard/fetch-and-build.js
       - name: Commit changes
+        if: env.SKIP != '1'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

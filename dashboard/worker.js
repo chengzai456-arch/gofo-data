@@ -4,12 +4,24 @@
 // 端点:
 //   GET  /api/data    → 返回 KV 缓存数据（页面初始加载）
 //   GET  /api/refresh → 直连飞书 API 拉取最新数据，更新 KV，返回给前端
+//                       鉴权: Origin 白名单 + 8s/IP 限流，防跨站/脚本滥用
 //   POST /api/update  → 外部写入 KV（由 GitHub Actions 同步脚本调用）
+//                       鉴权: X-Update-Key
 // ============================================================
 
 const KV_KEY = "bitable_data";
 const BASE_TOKEN = "UpCxbXml4a6u9us4BwCcRdGDnPg";
 const TABLE_ID = "tblSr9y6Wf811s7z";
+
+// /api/refresh 允许的来源（浏览器跨域请求会带 Origin header）。
+// 部署到新域名/新环境时把对应 origin 加入；"null" 兼容本地 file:// 打开页面。
+const ALLOWED_ORIGINS = new Set([
+  "https://chengzai456-arch.github.io",
+  "null",
+]);
+
+// 同一 IP 两次 /api/refresh 的最小间隔（毫秒）
+const REFRESH_WINDOW_MS = 8000;
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -166,8 +178,47 @@ export default {
 
     // ============================================================
     // GET /api/refresh — 直连飞书 API，实时拉取最新数据
+    // 鉴权1: Origin 白名单（拦截浏览器跨站调用）
+    // 鉴权2: 按 IP 限流（拦截 curl/脚本高频刷量）
     // ============================================================
     if (path === "/api/refresh" && request.method === "GET") {
+      // 鉴权 1: Origin 白名单
+      const origin = request.headers.get("Origin");
+      if (!origin || !ALLOWED_ORIGINS.has(origin)) {
+        return new Response(
+          JSON.stringify({ ok: false, error: "Forbidden origin" }),
+          {
+            status: 403,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
+
+      // 鉴权 2: 按 IP 限流（KV 异常时 fail-open，避免误伤正常用户）
+      const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+      const rlKey = "rl_refresh:" + ip;
+      const now = Date.now();
+      let limited = false;
+      try {
+        const lastTs = await env.BITABLE_DATA.get(rlKey);
+        if (lastTs && now - parseInt(lastTs) < REFRESH_WINDOW_MS) {
+          limited = true;
+        } else {
+          await env.BITABLE_DATA.put(rlKey, String(now), { expirationTtl: 60 });
+        }
+      } catch (e) {
+        console.error("[/api/refresh] Rate-limit KV error:", e.message);
+      }
+      if (limited) {
+        return new Response(
+          JSON.stringify({ ok: false, error: "Rate limited, please retry later" }),
+          {
+            status: 429,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
+
       try {
         console.log("[/api/refresh] Getting Feishu token...");
         const token = await getFeishuToken(env);
