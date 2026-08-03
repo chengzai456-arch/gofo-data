@@ -344,6 +344,14 @@ async function refreshAndCache(env) {
   }
 }
 
+// UTF-8 安全 base64（btoa 只支持 Latin-1，中文会抛错）
+function utf8ToBase64(str) {
+  const bytes = new TextEncoder().encode(str);
+  let bin = "";
+  bytes.forEach((b) => (bin += String.fromCharCode(b)));
+  return btoa(bin);
+}
+
 // 把最新数据写入 GitHub 仓库 dashboard/data.json（需要 GITHUB_PAT secret）
 const GH_OWNER = "chengzai456-arch";
 const GH_REPO = "gofo-data";
@@ -385,7 +393,7 @@ async function syncDataToGithub(env, data) {
       headers: { ...ghHeaders, "Content-Type": "application/json" },
       body: JSON.stringify({
         message: "sync: 实时数据更新 via Worker",
-        content: btoa(JSON.stringify(payload)),
+        content: utf8ToBase64(JSON.stringify(payload)),
         sha: sha || undefined,
       }),
     });
