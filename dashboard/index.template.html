@@ -163,8 +163,8 @@
           <span class="live-dot"></span>
           <span id="updateTime">--:--:--</span>
         </div>
-        <button class="refresh-btn" id="refreshBtn" title="重新加载页面，从 GitHub Pages 拉取最新构建产物（GitHub Actions 每5分钟自动构建）">
-          <span class="refresh-icon" id="refreshIcon">🔄</span> 刷新页面
+        <button class="refresh-btn" id="refreshBtn" title="从 GitHub Pages 拉取最新数据（Actions 每5分钟自动构建）">
+          <span class="refresh-icon" id="refreshIcon">🔄</span> 刷新数据
         </button>
       </div>
     </div>
@@ -607,41 +607,28 @@
       var startTime = Date.now();
       if (!silent) { btn.classList.add("loading"); icon.textContent = "⏳"; }
 
-      // 直连 Cloudflare Worker → Worker 直连飞书 API，2-5 秒返回
-      // cache: "no-store" 避免浏览器缓存跨域响应; mode: "cors" 显式声明跨域
-      fetch(WORKER_URL + "/api/refresh", { cache: "no-store", mode: "cors" })
-        .then(function(res) {
-          return res.json().then(function(j) { return { status: res.status, body: j }; });
-        })
-        .then(function(r) {
+      // data.json 与页面同源(github.io)，无 CORS/网络拦截问题；
+      // GitHub Actions 每 5 分钟自动拉取飞书并重建该文件，这里直接轮询它即可拿到最新数据
+      fetch(API_URL + "?t=" + Date.now())
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
           var elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-          if (r.body && r.body.ok && r.body.data) {
-            currentData = r.body.data;
+          if (data && data.records) {
+            currentData = data;
             renderAll();
             if (!silent) {
               showToast(
-                "实时数据刷新完成：" + r.body.data.total + " 条记录（耗时 " + elapsed + "s）",
+                "已更新到最新数据：" + data.total + " 条记录（耗时 " + elapsed + "s）",
                 "success"
               );
             }
           } else {
-            throw new Error("HTTP " + r.status + ": " + ((r.body && r.body.error) || "未知错误"));
+            throw new Error("数据格式异常");
           }
         })
         .catch(function(err) {
           if (!silent) {
-            // Worker 不可用时，降级到 data.json
-            showToast("实时刷新失败：" + err.message + "，尝试从静态文件加载...", "error");
-            fetch(API_URL + "?t=" + Date.now())
-              .then(function(res) { return res.json(); })
-              .then(function(data) {
-                currentData = data;
-                renderAll();
-                showToast("已从静态文件加载（" + data.total + " 条记录）", "success");
-              })
-              .catch(function() {
-                showToast("加载失败，请稍后重试", "error");
-              });
+            showToast("更新失败：" + err.message, "error");
           }
         })
         .finally(function() {
@@ -663,9 +650,10 @@
     (function init() {
       buildGroupFilters(currentData.records);
       renderAll();
-      document.getElementById("refreshBtn").addEventListener("click", function() { location.reload(); });
-      // 不再定时 fetch Worker(/api/refresh): 部分网络环境 CORS 拦截;
-      // 数据每 5 分钟通过 GitHub Actions 自动构建并部署, 用户主动点刷新按钮(重载页面)获取最新
+      // "刷新数据" = 轮询同源 data.json（Actions 每5分钟重建该文件），避开 Worker 跨域
+      document.getElementById("refreshBtn").addEventListener("click", function() { refreshData(false); });
+      // 每 60 秒静默轮询一次 data.json，页面数据自动保持最新
+      setInterval(function() { refreshData(true); }, 60 * 1000);
     })();
   </script>
 </body>
