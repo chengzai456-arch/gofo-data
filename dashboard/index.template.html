@@ -672,8 +672,8 @@
       renderAll();
       // "刷新数据" = 先试 Worker 实时(秒级)，失败自动降级同源 data.json
       document.getElementById("refreshBtn").addEventListener("click", function() { refreshData(false); });
-      // 每 15 秒静默轮询（Webhook 触发同步后 ~1-2 分钟部署完成，轮询及时发现新版本）
-      setInterval(function() { refreshData(true); }, 15 * 1000);
+      // 每 5 分钟静默轮询（与 Worker cron 每5分钟同步对齐，保持数据与飞书一致）
+      setInterval(function() { refreshData(true); }, 5 * 60 * 1000);
     })();
   </script>
 </body>
