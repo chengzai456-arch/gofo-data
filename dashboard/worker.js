@@ -336,7 +336,66 @@ async function refreshAndCache(env) {
     };
     await env.BITABLE_DATA.put(KV_KEY, JSON.stringify(data));
     console.log(`[scheduled] refreshed ${records.length} records -> KV`);
+    // 分钟级同步: 把最新数据写回 GitHub 仓库 dashboard/data.json，
+    // 触发 GitHub Pages 自动部署，前端(同源 github.io)轮询即见最新
+    await syncDataToGithub(env, data);
   } catch (err) {
     console.error("[scheduled] failed:", err.message);
+  }
+}
+
+// 把最新数据写入 GitHub 仓库 dashboard/data.json（需要 GITHUB_PAT secret）
+const GH_OWNER = "chengzai456-arch";
+const GH_REPO = "gofo-data";
+const GH_PATH = "dashboard/data.json";
+const GH_FILE_URL = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`;
+
+async function syncDataToGithub(env, data) {
+  const pat = env.GITHUB_PAT;
+  if (!pat) {
+    console.warn("[github] GITHUB_PAT 未配置，跳过 GitHub 同步");
+    return;
+  }
+  const ghHeaders = {
+    Authorization: `Bearer ${pat}`,
+    "User-Agent": "gofo-dashboard-worker",
+    Accept: "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28",
+  };
+  try {
+    // 1. 获取当前文件 sha（PUT 需要）
+    const getRes = await fetch(GH_FILE_URL, { headers: ghHeaders });
+    let sha = "";
+    if (getRes.ok) {
+      const meta = await getRes.json();
+      sha = meta.sha || "";
+    } else if (getRes.status !== 404) {
+      console.error("[github] get file failed:", getRes.status);
+      return;
+    }
+
+    // 2. 写入最新数据（时间戳用与 fetch-and-build.js 一致的 GMT 字符串格式）
+    const payload = {
+      total: data.total,
+      updated_at: new Date().toISOString().replace("T", " ").substring(0, 19),
+      records: data.records,
+    };
+    const putRes = await fetch(GH_FILE_URL, {
+      method: "PUT",
+      headers: { ...ghHeaders, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: "sync: 实时数据更新 via Worker",
+        content: btoa(JSON.stringify(payload)),
+        sha: sha || undefined,
+      }),
+    });
+    if (!putRes.ok) {
+      const err = await putRes.json().catch(() => ({}));
+      console.error("[github] update failed:", putRes.status, err.message || "");
+    } else {
+      console.log(`[github] data.json updated (${data.total} records)`);
+    }
+  } catch (e) {
+    console.error("[github] sync error:", e.message);
   }
 }
