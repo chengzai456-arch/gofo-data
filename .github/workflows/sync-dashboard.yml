@@ -76,7 +76,12 @@ jobs:
       url: ${{ steps.deploy.outputs.page_url }}
 
     steps:
+      # 关键: 重新拉取 main 最新代码(sync job 可能刚 commit+push 了新构建产物),
+      # 否则 deploy 会部署 run 触发时的旧 index.html
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
       - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3
         with:
