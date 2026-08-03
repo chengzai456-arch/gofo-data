@@ -99,6 +99,7 @@
       pointer-events:none;
     }
     .toast.success{background:#1a3a2a;color:var(--green);border:1px solid var(--green)}
+    .toast.info{background:#1a2a3a;color:var(--cyan);border:1px solid var(--cyan)}
     .toast.error{background:#3a1a1a;color:var(--red);border:1px solid var(--red)}
     @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
     @keyframes toastOut{from{opacity:1}to{opacity:0}}
@@ -607,6 +608,9 @@
       var startTime = Date.now();
       if (!silent) { btn.classList.add("loading"); icon.textContent = "⏳"; }
 
+      // 记录刷新前的数据签名，用于判断数据是否真的变了
+      var oldKey = currentData && currentData.records ? JSON.stringify(currentData.records) : "";
+
       // 路径1: Worker 实时接口(秒级; 网络能连 workers.dev 时生效)
       // 路径2: 降级到同源 data.json(GitHub Pages 已部署最新, 无 CORS 问题)
       fetch(WORKER_URL + "/api/refresh", { cache: "no-store", mode: "cors" })
@@ -615,13 +619,19 @@
         })
         .then(function(r) {
           if (r.body && r.body.ok && r.body.data) {
-            currentData = r.body.data;
+            var newData = r.body.data;
+            var changed = JSON.stringify(newData.records) !== oldKey;
+            currentData = newData;
             renderAll();
             if (!silent) {
-              showToast(
-                "已刷新（实时）：" + r.body.data.total + " 条记录（耗时 " + ((Date.now() - startTime) / 1000).toFixed(1) + "s）",
-                "success"
-              );
+              if (changed) {
+                showToast(
+                  "已刷新：" + newData.total + " 条记录（耗时 " + ((Date.now() - startTime) / 1000).toFixed(1) + "s）",
+                  "success"
+                );
+              } else {
+                showToast("数据已是最新：" + newData.total + " 条记录", "info");
+              }
             }
             return;
           }
@@ -633,13 +643,18 @@
             .then(function(res) { return res.json(); })
             .then(function(data) {
               if (data && data.records) {
+                var changed = JSON.stringify(data.records) !== oldKey;
                 currentData = data;
                 renderAll();
                 if (!silent) {
-                  showToast(
-                    "已刷新（静态）：" + data.total + " 条记录（耗时 " + ((Date.now() - startTime) / 1000).toFixed(1) + "s）",
-                    "success"
-                  );
+                  if (changed) {
+                    showToast(
+                      "已刷新：" + data.total + " 条记录（耗时 " + ((Date.now() - startTime) / 1000).toFixed(1) + "s）",
+                      "success"
+                    );
+                  } else {
+                    showToast("数据已是最新：" + data.total + " 条记录", "info");
+                  }
                 }
               } else {
                 throw new Error("数据格式异常");
