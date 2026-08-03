@@ -607,28 +607,48 @@
       var startTime = Date.now();
       if (!silent) { btn.classList.add("loading"); icon.textContent = "⏳"; }
 
-      // data.json 与页面同源(github.io)，无 CORS/网络拦截问题；
-      // GitHub Actions 每 5 分钟自动拉取飞书并重建该文件，这里直接轮询它即可拿到最新数据
-      fetch(API_URL + "?t=" + Date.now())
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-          var elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-          if (data && data.records) {
-            currentData = data;
+      // 路径1: Worker 实时接口(秒级; 网络能连 workers.dev 时生效)
+      // 路径2: 降级到同源 data.json(GitHub Pages 已部署最新, 无 CORS 问题)
+      fetch(WORKER_URL + "/api/refresh", { cache: "no-store", mode: "cors" })
+        .then(function(res) {
+          return res.json().then(function(j) { return { status: res.status, body: j }; });
+        })
+        .then(function(r) {
+          if (r.body && r.body.ok && r.body.data) {
+            currentData = r.body.data;
             renderAll();
             if (!silent) {
               showToast(
-                "已更新到最新数据：" + data.total + " 条记录（耗时 " + elapsed + "s）",
+                "已刷新（实时）：" + r.body.data.total + " 条记录（耗时 " + ((Date.now() - startTime) / 1000).toFixed(1) + "s）",
                 "success"
               );
             }
-          } else {
-            throw new Error("数据格式异常");
+            return;
           }
+          throw new Error("HTTP " + r.status);
+        })
+        .catch(function() {
+          // 路径2: 降级 data.json（同源，GitHub Pages 已部署的最新数据）
+          return fetch(API_URL + "?t=" + Date.now())
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+              if (data && data.records) {
+                currentData = data;
+                renderAll();
+                if (!silent) {
+                  showToast(
+                    "已刷新（静态）：" + data.total + " 条记录（耗时 " + ((Date.now() - startTime) / 1000).toFixed(1) + "s）",
+                    "success"
+                  );
+                }
+              } else {
+                throw new Error("数据格式异常");
+              }
+            });
         })
         .catch(function(err) {
           if (!silent) {
-            showToast("更新失败：" + err.message, "error");
+            showToast("刷新失败：" + err.message, "error");
           }
         })
         .finally(function() {
@@ -650,10 +670,10 @@
     (function init() {
       buildGroupFilters(currentData.records);
       renderAll();
-      // "刷新数据" = 轮询同源 data.json（Actions 每5分钟重建该文件），避开 Worker 跨域
+      // "刷新数据" = 先试 Worker 实时(秒级)，失败自动降级同源 data.json
       document.getElementById("refreshBtn").addEventListener("click", function() { refreshData(false); });
-      // 每 60 秒静默轮询一次 data.json，页面数据自动保持最新
-      setInterval(function() { refreshData(true); }, 60 * 1000);
+      // 每 15 秒静默轮询（Webhook 触发同步后 ~1-2 分钟部署完成，轮询及时发现新版本）
+      setInterval(function() { refreshData(true); }, 15 * 1000);
     })();
   </script>
 </body>

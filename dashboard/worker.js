@@ -168,7 +168,7 @@ async function fetchRecords(token) {
 // ---- 主 handler ----
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     // CORS preflight
     if (request.method === "OPTIONS") {
       return new Response(null, { headers: corsHeaders });
@@ -176,6 +176,27 @@ export default {
 
     const url = new URL(request.url);
     const path = url.pathname;
+
+    // ============================================================
+    // POST /webhook — 飞书多维表事件订阅（记录变更时飞书服务器推送）
+    // 1) url_verification: 返回 challenge 完成 URL 验证
+    // 2) 其他事件: 立即触发一次刷新（拉飞书 → KV → GitHub data.json）
+    // 由飞书服务器调用（服务器间），不经过浏览器，无 CORS/网络拦截问题
+    // ============================================================
+    if (path === "/webhook" && request.method === "POST") {
+      const body = await request.json().catch(() => null);
+      if (body && body.type === "url_verification") {
+        console.log("[/webhook] url_verification OK");
+        return new Response(JSON.stringify({ challenge: body.challenge }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      console.log("[/webhook] event received:", (body && body.header && body.header.event_type) || "unknown");
+      ctx.waitUntil(refreshAndCache(env));
+      return new Response(JSON.stringify({ ok: true, handled: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     // ============================================================
     // POST /api/update — 已废弃（gofo 不用此端点；曾被外部项目污染 KV）
