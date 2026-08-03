@@ -130,7 +130,12 @@ async function fetchRecords(token) {
       r.data.items.forEach((item) => {
         if (item.fields) {
           const fields = item.fields;
-          const title = getVal(fields, "AI项目名称");
+          let title = getVal(fields, "AI项目名称");
+          // 兜底: 字段名被意外修改/加了不可见字符(空格/零宽等)时, 模糊匹配字段 key
+          if (!title) {
+            const fbKey = Object.keys(fields).find((k) => k.replace(/\s|\u200B/g, "").startsWith("AI项目名称"));
+            if (fbKey) title = getVal(fields, fbKey);
+          }
           if (!title) return;
           all.push({
             title: title.trim(),
