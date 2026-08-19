@@ -337,6 +337,7 @@
       var onlineCount = 0;
       var totalOrigHours = 0;
       var totalAiHours = 0;
+      var totalEfficiencyHours = 0;
       var owners = {};
 
       records.forEach(function(r) {
@@ -347,6 +348,7 @@
         if (r.online === "true") onlineCount++;
         totalOrigHours += r.orig_hours || 0;
         totalAiHours += r.ai_hours || 0;
+        totalEfficiencyHours += r.efficiency_hours || 0;
         if (r.owner) {
           // 负责人可能是 @张三@李四 格式
           r.owner.replace(/@/g, " ").trim().split(/\s+/).forEach(function(n) {
@@ -361,8 +363,8 @@
         onlineCount: onlineCount,
         totalOrigHours: totalOrigHours,
         totalAiHours: totalAiHours,
-        aiSavedHours: totalOrigHours - totalAiHours,
-        aiRatio: totalOrigHours > 0 ? (totalOrigHours - totalAiHours) / totalOrigHours : 0,
+        aiSavedHours: totalEfficiencyHours,
+        aiRatio: totalOrigHours > 0 ? totalEfficiencyHours / totalOrigHours : 0,
         totalRecords: records.length,
         groupCount: Object.keys(groups).length,
         owners: owners
@@ -457,14 +459,14 @@
         var sc = STATUS_CONFIG[r.status] || { cls: "tag-gray", color: "#8b949e" };
         var pct = Math.max(0, Math.min(100, Math.round((r.progress || 0) * 100)));
         var progressBar = '<span class="progress-bar" title="进度 ' + pct + '%"><span class="progress-fill" style="width:' + pct + '%"></span></span><span class="progress-pct">' + pct + '%</span>';
-        var savedHours = r.orig_hours ? (r.orig_hours - r.ai_hours) : null;
+        var savedHours = r.efficiency_hours || null;
         return '<tr>' +
           '<td title="' + escapeHtml(r.title) + '">' + (r.title || "—") + '</td>' +
           '<td><span class="tag tag-blue">' + (r.group || "—") + '</span></td>' +
           '<td><span class="tag ' + sc.cls + '">' + (r.status || "—") + '</span> ' + progressBar + '</td>' +
           '<td>' + (r.owner || "—") + '</td>' +
           '<td>' + formatDeadline(r.deadline) + '</td>' +
-          '<td title="原工时 ' + (r.orig_hours || 0) + ' H → AI 工时 ' + (r.ai_hours || 0) + ' H">' + (savedHours !== null ? savedHours.toFixed(1) + " H" : "—") + '</td>' +
+          '<td title="提效时间 ' + (r.efficiency_hours || 0) + ' H">' + (savedHours !== null ? savedHours.toFixed(1) + " H" : "—") + '</td>' +
           '<td>' + (r.has_blocker === "是" ? '<span style="color:var(--red)">有</span>' : '<span style="color:var(--text-dim)">无</span>') + '</td>' +
           '<td><div class="td-wrap" title="' + escapeHtml(r.blocker_detail) + '">' + (r.blocker_detail ? escapeHtml(r.blocker_detail) : "—") + '</div></td>' +
           '<td>' + (r.has_skill === "是" ? '<span style="color:var(--green)">有</span>' : '<span style="color:var(--text-dim)">无</span>') + '</td>' +

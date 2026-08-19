@@ -133,6 +133,7 @@ async function getRecords(token) {
             online: getVal(fields, "已上线") || "",
             ai_hours: parseFloat(getVal(fields, "AI处理后工时H/月")) || 0,
             orig_hours: parseFloat(getVal(fields, "原工时H/月")) || 0,
+            efficiency_hours: parseFloat(getVal(fields, "提效时间H")) || 0,
             progress: parseFloat(getVal(fields, "进度条")) || 0,
             result_link: extractMarkdownUrl(getVal(fields, "成果晾晒（skill&链接）")),
             blocker_detail: getVal(fields, "卡点问题（详细描述）") || "",
