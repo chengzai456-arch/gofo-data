@@ -1,5 +1,7 @@
-# GOFO 看板自动同步 + 部署
-# 每 5 分钟从飞书多维表拉取数据，生成静态页面并部署到 GitHub Pages
+# GOFO 看板自动同步
+# 每 5 分钟从飞书多维表拉取数据，生成静态页面并提交到 main
+# 部署由 GitHub Pages 分支部署完成（Pages 配置: main 分支 / 仓库根目录）
+# 每次 push 到 main 都会自动触发 pages-build-deployment，无需 Actions 部署 job
 #
 # 凭证一律从 GitHub Secrets 读取（不再硬编码）:
 # 仓库 Settings → Secrets and variables → Actions 添加:
@@ -8,7 +10,7 @@
 #   DASHBOARD_PASSWORD   看板访问密码
 # 未配置 FEISHU_APP_ID / FEISHU_APP_SECRET 时跳过同步构建，避免 workflow 报红
 
-name: Sync & Deploy Dashboard
+name: Sync Dashboard
 
 on:
   schedule:
@@ -19,8 +21,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
   group: "dashboard"
@@ -53,38 +53,16 @@ jobs:
           FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
           FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
           DASHBOARD_PASSWORD: ${{ secrets.DASHBOARD_PASSWORD }}
-        run: node dashboard/fetch-and-build.js
+        run: node fetch-and-build.js
       - name: Commit changes
         if: env.SKIP != '1'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add dashboard/index.html dashboard/data.json
+          git add index.html data.json
           if git diff --staged --quiet; then
             echo "No changes"
           else
             git commit -m "sync: ${{ steps.sync.outputs.count }} 条记录"
             git push
           fi
-
-  deploy:
-    needs: sync
-    if: always()
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
-
-    steps:
-      # 关键: 重新拉取 main 最新代码(sync job 可能刚 commit+push 了新构建产物),
-      # 否则 deploy 会部署 run 触发时的旧 index.html
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 1
-      - uses: actions/configure-pages@v4
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dashboard/
-      - uses: actions/deploy-pages@v4
-        id: deploy

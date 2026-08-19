@@ -361,7 +361,7 @@ async function refreshAndCache(env) {
     };
     await env.BITABLE_DATA.put(KV_KEY, JSON.stringify(data));
     console.log(`[scheduled] refreshed ${records.length} records -> KV`);
-    // 分钟级同步: 把最新数据写回 GitHub 仓库 dashboard/data.json，
+    // 分钟级同步: 把最新数据写回 GitHub 仓库 data.json，
     // 触发 GitHub Pages 自动部署，前端(同源 github.io)轮询即见最新
     await syncDataToGithub(env, data);
   } catch (err) {
@@ -377,10 +377,10 @@ function utf8ToBase64(str) {
   return btoa(bin);
 }
 
-// 把最新数据写入 GitHub 仓库 dashboard/data.json（需要 GITHUB_PAT secret）
+// 把最新数据写入 GitHub 仓库 data.json（需要 GITHUB_PAT secret；站点已迁移至仓库根目录，分支部署直接生效）
 const GH_OWNER = "chengzai456-arch";
 const GH_REPO = "gofo-data";
-const GH_PATH = "dashboard/data.json";
+const GH_PATH = "data.json";
 const GH_FILE_URL = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`;
 
 async function syncDataToGithub(env, data) {
