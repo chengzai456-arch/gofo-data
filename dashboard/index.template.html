@@ -187,11 +187,6 @@
         <div class="metric-value" id="m-groups">--</div>
         <div class="metric-label">覆盖小组数</div>
       </div>
-      <div class="metric-card purple">
-        <span class="metric-icon">⚡</span>
-        <div class="metric-value" id="m-efficiency">--<span class="unit">H/月</span></div>
-        <div class="metric-label">累计提效时间</div>
-      </div>
       <div class="metric-card yellow">
         <span class="metric-icon">⏱️</span>
         <div class="metric-value" id="m-saved">--<span class="unit">H/月</span></div>
@@ -213,10 +208,6 @@
       <div class="chart-card">
         <div class="chart-title"><span class="dot" style="background:var(--orange)"></span>项目状态分布</div>
         <div class="chart-wrap"><canvas id="chartStatus"></canvas></div>
-      </div>
-      <div class="chart-card full">
-        <div class="chart-title"><span class="dot" style="background:var(--green)"></span>各小组提效时间对比（H/月）</div>
-        <div class="chart-wrap tall"><canvas id="chartEfficiency"></canvas></div>
       </div>
     </div>
 
@@ -252,7 +243,6 @@
               <th>当前进度</th>
               <th>负责人</th>
               <th>预计完成</th>
-              <th>提效(H/月)</th>
               <th>AI 节省(H/月)</th>
               <th>卡点</th>
               <th>卡点问题</th>
@@ -344,9 +334,7 @@
     function aggregate(records) {
       var groups = {};
       var statuses = {};
-      var groupEfficiency = {};
       var onlineCount = 0;
-      var totalEfficiency = 0;
       var totalOrigHours = 0;
       var totalAiHours = 0;
       var owners = {};
@@ -356,10 +344,7 @@
         groups[g] = (groups[g] || 0) + 1;
         var s = r.status || "待启动";
         statuses[s] = (statuses[s] || 0) + 1;
-        if (!groupEfficiency[g]) groupEfficiency[g] = 0;
-        groupEfficiency[g] += r.efficiency_hours || 0;
         if (r.online === "true") onlineCount++;
-        totalEfficiency += r.efficiency_hours || 0;
         totalOrigHours += r.orig_hours || 0;
         totalAiHours += r.ai_hours || 0;
         if (r.owner) {
@@ -373,9 +358,7 @@
       return {
         groups: groups,
         statuses: statuses,
-        groupEfficiency: groupEfficiency,
         onlineCount: onlineCount,
-        totalEfficiency: totalEfficiency,
         totalOrigHours: totalOrigHours,
         totalAiHours: totalAiHours,
         aiSavedHours: totalOrigHours - totalAiHours,
@@ -393,7 +376,6 @@
       document.getElementById("m-total").textContent = agg.totalRecords;
       document.getElementById("m-online").textContent = agg.onlineCount;
       document.getElementById("m-groups").textContent = agg.groupCount;
-      document.getElementById("m-efficiency").innerHTML = agg.totalEfficiency.toFixed(1) + '<span class="unit">H/月</span>';
       document.getElementById("m-saved").innerHTML = agg.aiSavedHours.toFixed(1) + '<span class="unit">H/月</span>';
       document.getElementById("m-ratio").textContent = Math.round(agg.aiRatio * 100) + "%";
     }
@@ -444,30 +426,6 @@
         },
         options: Object.assign({}, cd, { cutout: "60%" })
       });
-
-      // 各小组提效时间横向柱状图
-      var eKeys = Object.keys(agg.groupEfficiency).sort(function(a, b) { return agg.groupEfficiency[b] - agg.groupEfficiency[a]; });
-      if (charts.efficiency) charts.efficiency.destroy();
-      charts.efficiency = new Chart(document.getElementById("chartEfficiency"), {
-        type: "bar",
-        data: {
-          labels: eKeys,
-          datasets: [{
-            label: "提效时间 (H/月)",
-            data: eKeys.map(function(k) { return agg.groupEfficiency[k]; }),
-            backgroundColor: eKeys.map(function(_, i) { return GROUP_COLORS[i % GROUP_COLORS.length]; }),
-            borderRadius: 8, barThickness: 28
-          }]
-        },
-        options: Object.assign({}, cd, {
-          indexAxis: "y",
-          plugins: Object.assign({}, cd.plugins, { legend: { display: false } }),
-          scales: {
-            x: { beginAtZero: true, ticks: { color: "#8b949e", font: { size: 12 }, callback: function(v) { return v + " H"; } }, grid: { color: "#21262d" } },
-            y: { ticks: { color: "#8b949e", font: { size: 13 } }, grid: { display: false } }
-          }
-        })
-      });
     }
 
     function renderTable(records) {
@@ -506,14 +464,13 @@
           '<td><span class="tag ' + sc.cls + '">' + (r.status || "—") + '</span> ' + progressBar + '</td>' +
           '<td>' + (r.owner || "—") + '</td>' +
           '<td>' + formatDeadline(r.deadline) + '</td>' +
-          '<td>' + (r.efficiency_hours ? r.efficiency_hours + " H" : "—") + '</td>' +
           '<td title="原工时 ' + (r.orig_hours || 0) + ' H → AI 工时 ' + (r.ai_hours || 0) + ' H">' + (savedHours !== null ? savedHours.toFixed(1) + " H" : "—") + '</td>' +
           '<td>' + (r.has_blocker === "是" ? '<span style="color:var(--red)">有</span>' : '<span style="color:var(--text-dim)">无</span>') + '</td>' +
           '<td><div class="td-wrap" title="' + escapeHtml(r.blocker_detail) + '">' + (r.blocker_detail ? escapeHtml(r.blocker_detail) : "—") + '</div></td>' +
           '<td>' + (r.has_skill === "是" ? '<span style="color:var(--green)">有</span>' : '<span style="color:var(--text-dim)">无</span>') + '</td>' +
           '<td>' + (r.result_link ? '<a href="' + escapeHtml(r.result_link) + '" target="_blank" class="link">查看</a>' : "—") + '</td>' +
         '</tr>';
-      }).join("") : '<tr><td colspan="11" style="text-align:center;padding:40px;color:var(--text-dim)">没有匹配的项目</td></tr>';
+      }).join("") : '<tr><td colspan="10" style="text-align:center;padding:40px;color:var(--text-dim)">没有匹配的项目</td></tr>';
     }
 
     function formatDeadline(v) {

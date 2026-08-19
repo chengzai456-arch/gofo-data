@@ -144,7 +144,6 @@ async function fetchRecords(token) {
             owner: getVal(fields, "负责人") || "",
             deadline: formatDate(getVal(fields, "预计完成时间")),
             has_blocker: getVal(fields, "是否有卡点") || "否",
-            efficiency_hours: parseFloat(getVal(fields, "提效时间H")) || 0,
             has_skill: getVal(fields, "已形成可复用SKILL") ? "是" : "否",
             online: getVal(fields, "已上线") || "",
             ai_hours: parseFloat(getVal(fields, "AI处理后工时H/月")) || 0,
