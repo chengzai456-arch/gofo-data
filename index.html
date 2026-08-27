@@ -6,7 +6,7 @@
 <title>GOFO AI 提效看板</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Baloo+2:wght@500;600;700;800&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -284,136 +284,137 @@
     .table-header{padding:16px}
   }
 
-  /* ===== 三丽鸥马卡龙主题 ===== */
+  /* ===== 浅棕暖调主题 ===== */
   :root{
-    --bg:#fff6f9; --bg2:#ffeef4;
-    --card:rgba(255,255,255,.82); --card-hover:rgba(255,255,255,.96);
-    --border:rgba(255,133,172,.26); --border-strong:rgba(255,133,172,.55);
-    --text:#5d4157; --dim:#a5798f;
-    --indigo:#ff7eb0; --cyan:#5fd4c4; --green:#3fc9a4; --yellow:#ffc46b; --red:#ff8f8f;
-    --purple:#b28dd9; --orange:#ffab76; --pink:#ff7eb0;
-    --radius:20px;
-    --font-num:'Baloo 2','ZCOOL KuaiLe','Inter',-apple-system,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif;
+    --bg:#f7f2ec; --bg2:#efe7dd;
+    --card:rgba(255,255,255,.84); --card-hover:rgba(255,255,255,.96);
+    --border:rgba(176,137,104,.28); --border-strong:rgba(176,137,104,.55);
+    --text:#4a3f35; --dim:#9a8878;
+    --indigo:#b08968; --cyan:#6f9a94; --green:#7d9b76; --yellow:#d4a373; --red:#c4745e;
+    --purple:#8d8698; --orange:#c98d6b; --pink:#b08968;
+    --radius:18px;
+    --font-num:'Baloo 2','Inter',-apple-system,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif;
   }
   body{background:
-    radial-gradient(1100px 560px at 82% -10%, rgba(255,126,176,.22), transparent 62%),
-    radial-gradient(900px 500px at -12% 32%, rgba(178,141,217,.16), transparent 60%),
-    radial-gradient(860px 460px at 55% 112%, rgba(95,212,196,.14), transparent 60%),
-    #fff6f9;
+    radial-gradient(1100px 560px at 82% -10%, rgba(176,137,104,.18), transparent 62%),
+    radial-gradient(900px 500px at -12% 32%, rgba(141,134,152,.12), transparent 60%),
+    radial-gradient(860px 460px at 55% 112%, rgba(111,154,148,.12), transparent 60%),
+    #f7f2ec;
     color:var(--text)}
-  ::selection{background:rgba(255,126,176,.3)}
-  /* 波点（polka dots） */
+  ::selection{background:rgba(176,137,104,.3)}
+  /* 细波点（暖棕） */
   body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
     background-image:
-      radial-gradient(rgba(255,126,176,.10) 2.6px,transparent 2.6px),
-      radial-gradient(rgba(178,141,217,.08) 2.2px,transparent 2.2px);
+      radial-gradient(rgba(176,137,104,.10) 2.6px,transparent 2.6px),
+      radial-gradient(rgba(141,134,152,.08) 2.2px,transparent 2.2px);
     background-size:48px 48px,48px 48px;background-position:0 0,24px 24px}
-  .bg-grid{background-image:radial-gradient(rgba(255,133,172,.15) 1.6px,transparent 1.6px);background-size:34px 34px}
-  /* 糖果色星点 */
+  .bg-grid{background-image:radial-gradient(rgba(176,137,104,.14) 1.6px,transparent 1.6px);background-size:34px 34px}
+  /* 暖调星点 */
   .bg-stars{background-image:
-      radial-gradient(1.7px 1.7px at 8% 18%,rgba(255,126,176,.6),transparent 55%),
-      radial-gradient(1.3px 1.3px at 24% 62%,rgba(178,141,217,.55),transparent 55%),
-      radial-gradient(1.9px 1.9px at 38% 12%,rgba(255,171,118,.5),transparent 55%),
-      radial-gradient(1.3px 1.3px at 52% 44%,rgba(95,212,196,.5),transparent 55%),
-      radial-gradient(1.6px 1.6px at 64% 28%,rgba(255,126,176,.55),transparent 55%),
-      radial-gradient(1.3px 1.3px at 76% 70%,rgba(255,196,107,.5),transparent 55%),
-      radial-gradient(1.8px 1.8px at 88% 16%,rgba(178,141,217,.5),transparent 55%),
-      radial-gradient(1.3px 1.3px at 94% 58%,rgba(255,126,176,.45),transparent 55%),
-      radial-gradient(1.5px 1.5px at 16% 86%,rgba(255,171,118,.4),transparent 55%),
-      radial-gradient(1.4px 1.4px at 44% 92%,rgba(95,212,196,.4),transparent 55%),
-      radial-gradient(1.3px 1.3px at 70% 88%,rgba(255,126,176,.4),transparent 55%)}
+      radial-gradient(1.7px 1.7px at 8% 18%,rgba(176,137,104,.55),transparent 55%),
+      radial-gradient(1.3px 1.3px at 24% 62%,rgba(141,134,152,.5),transparent 55%),
+      radial-gradient(1.9px 1.9px at 38% 12%,rgba(201,141,107,.45),transparent 55%),
+      radial-gradient(1.3px 1.3px at 52% 44%,rgba(111,154,148,.45),transparent 55%),
+      radial-gradient(1.6px 1.6px at 64% 28%,rgba(176,137,104,.5),transparent 55%),
+      radial-gradient(1.3px 1.3px at 76% 70%,rgba(212,163,115,.45),transparent 55%),
+      radial-gradient(1.8px 1.8px at 88% 16%,rgba(141,134,152,.45),transparent 55%),
+      radial-gradient(1.3px 1.3px at 94% 58%,rgba(176,137,104,.4),transparent 55%),
+      radial-gradient(1.5px 1.5px at 16% 86%,rgba(201,141,107,.35),transparent 55%),
+      radial-gradient(1.4px 1.4px at 44% 92%,rgba(111,154,148,.35),transparent 55%),
+      radial-gradient(1.3px 1.3px at 70% 88%,rgba(176,137,104,.35),transparent 55%)}
   .bg-aurora{background:
-      radial-gradient(60% 38% at 50% 108%,rgba(178,141,217,.14),transparent 70%),
-      radial-gradient(46% 30% at 18% -6%,rgba(95,212,196,.12),transparent 70%),
-      radial-gradient(44% 30% at 88% 26%,rgba(255,126,176,.12),transparent 70%)}
-  .orb{opacity:.55}
-  .orb.o1{background:rgba(255,126,176,.4)}
-  .orb.o2{background:rgba(95,212,196,.3)}
-  .orb.o3{background:rgba(178,141,217,.34)}
-  #progressBar{background:linear-gradient(90deg,#ff7eb0,#b28dd9,#5fd4c4);box-shadow:0 0 12px rgba(255,126,176,.6);height:4px}
+      radial-gradient(60% 38% at 50% 108%,rgba(141,134,152,.12),transparent 70%),
+      radial-gradient(46% 30% at 18% -6%,rgba(111,154,148,.10),transparent 70%),
+      radial-gradient(44% 30% at 88% 26%,rgba(176,137,104,.12),transparent 70%)}
+  .orb{opacity:.5}
+  .orb.o1{background:rgba(176,137,104,.35)}
+  .orb.o2{background:rgba(111,154,148,.28)}
+  .orb.o3{background:rgba(141,134,152,.3)}
+  #progressBar{background:linear-gradient(90deg,#b08968,#8d8698,#6f9a94);box-shadow:0 0 12px rgba(176,137,104,.5);height:4px}
   .container{max-width:1400px;padding:28px 24px 44px}
-  .header-left h1,.login-box h2,.table-header h2,.chart-title{font-family:'ZCOOL KuaiLe','Baloo 2','Inter','PingFang SC','Microsoft YaHei',sans-serif;font-weight:400}
+  .header-left h1,.login-box h2,.table-header h2,.chart-title{font-family:'Inter','Baloo 2',-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;font-weight:700;letter-spacing:-.2px}
 
-  .login-overlay{background:radial-gradient(900px 520px at 50% -10%,rgba(255,126,176,.28),transparent 62%),radial-gradient(700px 420px at 85% 115%,rgba(178,141,217,.16),transparent 60%),#fff6f9}
-  .login-box{background:rgba(255,255,255,.9);border:1px solid rgba(255,133,172,.4);border-radius:28px;
-    box-shadow:0 20px 60px rgba(255,126,176,.22),0 8px 24px rgba(178,141,217,.14)}
-  .login-box:hover{border-color:rgba(255,133,172,.7);box-shadow:0 24px 72px rgba(255,126,176,.3),0 10px 28px rgba(178,141,217,.18)}
-  .login-box::before{background:linear-gradient(135deg,rgba(255,126,176,.75),transparent 40%,transparent 60%,rgba(95,212,196,.6))}
-  .login-logo{background:linear-gradient(135deg,#ffb3cd,#ff7eb0);box-shadow:0 10px 30px rgba(255,126,176,.45);border-radius:22px;font-size:34px}
-  @keyframes logoBreathe{0%,100%{transform:scale(1);box-shadow:0 10px 30px rgba(255,126,176,.45)}50%{transform:scale(1.06);box-shadow:0 10px 42px rgba(178,141,217,.5)}}
-  .login-input{background:rgba(255,246,249,.9);border-color:rgba(255,133,172,.35);color:var(--text)}
-  .login-input::placeholder{color:#c9a1b3}
-  .login-input:focus{border-color:#ff7eb0;box-shadow:0 0 0 3px rgba(255,126,176,.18)}
-  .login-input.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(255,143,143,.25)}
-  .login-eye{color:#c9a1b3}
-  .login-eye:hover{color:#ff7eb0;background:rgba(255,126,176,.12)}
-  .login-btn{background:linear-gradient(92deg,#ff7eb0,#ffb3cd 45%,#b28dd9);box-shadow:0 10px 28px rgba(255,126,176,.5);border-radius:14px}
-  .login-btn:hover{background-position:100% 0;box-shadow:0 14px 38px rgba(255,126,176,.68)}
+  .login-overlay{background:radial-gradient(900px 520px at 50% -10%,rgba(176,137,104,.2),transparent 62%),radial-gradient(700px 420px at 85% 115%,rgba(141,134,152,.14),transparent 60%),#f7f2ec}
+  .login-box{background:rgba(255,255,255,.92);border:1px solid rgba(176,137,104,.35);border-radius:24px;
+    box-shadow:0 20px 60px rgba(176,137,104,.2),0 8px 24px rgba(141,134,152,.12)}
+  .login-box:hover{border-color:rgba(176,137,104,.6);box-shadow:0 24px 72px rgba(176,137,104,.26),0 10px 28px rgba(141,134,152,.16)}
+  .login-box::before{background:linear-gradient(135deg,rgba(176,137,104,.7),transparent 40%,transparent 60%,rgba(111,154,148,.55))}
+  .login-logo{background:linear-gradient(135deg,#c9a88c,#a4785a);box-shadow:0 10px 30px rgba(164,120,90,.4);border-radius:20px;color:#fff}
+  .login-logo svg,.logo-badge svg{display:block}
+  @keyframes logoBreathe{0%,100%{transform:scale(1);box-shadow:0 10px 30px rgba(164,120,90,.4)}50%{transform:scale(1.06);box-shadow:0 10px 42px rgba(141,134,152,.45)}}
+  .login-input{background:rgba(247,242,236,.9);border-color:rgba(176,137,104,.35);color:var(--text)}
+  .login-input::placeholder{color:#bda893}
+  .login-input:focus{border-color:#b08968;box-shadow:0 0 0 3px rgba(176,137,104,.18)}
+  .login-input.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(196,116,94,.25)}
+  .login-eye{color:#bda893}
+  .login-eye:hover{color:#b08968;background:rgba(176,137,104,.12)}
+  .login-btn{background:linear-gradient(92deg,#a4785a,#c9a88c 45%,#8d8698);box-shadow:0 10px 28px rgba(164,120,90,.4);border-radius:14px}
+  .login-btn:hover{background-position:100% 0;box-shadow:0 14px 38px rgba(164,120,90,.55)}
 
-  .logo-badge{background:linear-gradient(135deg,#ffb3cd,#ff7eb0);box-shadow:0 10px 32px rgba(255,126,176,.45);border-radius:18px;font-size:26px}
-  .gradient-text{background:linear-gradient(92deg,#ff5f9e,#b28dd9 45%,#3fc9a4 80%);background-size:220% 100%;
+  .logo-badge{background:linear-gradient(135deg,#c9a88c,#a4785a);box-shadow:0 10px 32px rgba(164,120,90,.4);border-radius:16px;color:#fff}
+  .gradient-text{background:linear-gradient(92deg,#8a6248,#8d8698 45%,#6f8a84 80%);background-size:220% 100%;
     -webkit-background-clip:text;background-clip:text;color:transparent}
-  .pill{background:rgba(255,255,255,.85);border-color:rgba(255,133,172,.3)}
-  .refresh-btn{background:rgba(255,255,255,.85);border-color:rgba(255,133,172,.32);color:#8a5f74}
-  .refresh-btn:hover{border-color:#ff7eb0;box-shadow:0 0 0 3px rgba(255,126,176,.15),0 6px 18px rgba(255,126,176,.2)}
-  .link-btn{background:linear-gradient(92deg,#ff7eb0,#e98bc7 45%,#b28dd9);background-size:180% 100%;
-    box-shadow:0 8px 24px rgba(255,126,176,.4)}
-  .link-btn:hover{box-shadow:0 10px 30px rgba(255,126,176,.5)}
+  .pill{background:rgba(255,255,255,.85);border-color:rgba(176,137,104,.3)}
+  .refresh-btn{background:rgba(255,255,255,.85);border-color:rgba(176,137,104,.32);color:#7a6a5b}
+  .refresh-btn:hover{border-color:#b08968;box-shadow:0 0 0 3px rgba(176,137,104,.15),0 6px 18px rgba(176,137,104,.2)}
+  .link-btn{background:linear-gradient(92deg,#a4785a,#c9a88c 45%,#8d8698);background-size:180% 100%;
+    box-shadow:0 8px 24px rgba(164,120,90,.35)}
+  .link-btn:hover{box-shadow:0 10px 30px rgba(164,120,90,.45)}
 
   .metric-card{background:var(--card);border:1px solid var(--border);
-    box-shadow:0 12px 32px rgba(255,126,176,.1),0 4px 14px rgba(178,141,217,.08)}
-  .metric-card:hover{transform:translateY(-4px) rotate(-.4deg);border-color:var(--border-strong);
-    box-shadow:0 18px 44px rgba(255,126,176,.2),0 6px 18px rgba(178,141,217,.12)}
-  .metric-card::after{background:radial-gradient(320px 120px at 80% -20%,rgba(255,196,107,.18),transparent 70%)}
+    box-shadow:0 12px 32px rgba(176,137,104,.1),0 4px 14px rgba(141,134,152,.08)}
+  .metric-card:hover{transform:translateY(-4px);border-color:var(--border-strong);
+    box-shadow:0 18px 44px rgba(176,137,104,.18),0 6px 18px rgba(141,134,152,.12)}
+  .metric-card::after{background:radial-gradient(320px 120px at 80% -20%,rgba(212,163,115,.16),transparent 70%)}
   .metric-value{text-shadow:none}
-  .m-indigo .metric-ico{background:rgba(255,126,176,.16);color:#ff5f9e}
-  .m-indigo .metric-value{color:#ff5f9e}
-  .m-green .metric-ico{background:rgba(63,201,164,.15);color:#1e9e77}
-  .m-green .metric-value{color:#1e9e77}
-  .m-cyan .metric-ico{background:rgba(95,212,196,.16);color:#2aa392}
-  .m-cyan .metric-value{color:#2aa392}
-  .m-yellow .metric-ico{background:rgba(255,196,107,.18);color:#e0902a}
-  .m-yellow .metric-value{color:#e0902a}
-  .m-purple .metric-ico{background:rgba(178,141,217,.16);color:#8a5fc4}
-  .m-purple .metric-value{color:#8a5fc4}
-  .m-red .metric-ico{background:rgba(255,143,143,.16);color:#e05a5a}
-  .m-red .metric-value{color:#e05a5a}
-  .m-indigo{box-shadow:inset 0 3px 0 rgba(255,126,176,.75),0 12px 32px rgba(255,126,176,.1)}
-  .m-green{box-shadow:inset 0 3px 0 rgba(63,201,164,.7),0 12px 32px rgba(255,126,176,.1)}
-  .m-cyan{box-shadow:inset 0 3px 0 rgba(95,212,196,.7),0 12px 32px rgba(255,126,176,.1)}
-  .m-yellow{box-shadow:inset 0 3px 0 rgba(255,196,107,.75),0 12px 32px rgba(255,126,176,.1)}
-  .m-purple{box-shadow:inset 0 3px 0 rgba(178,141,217,.7),0 12px 32px rgba(255,126,176,.1)}
-  .m-red{box-shadow:inset 0 3px 0 rgba(255,143,143,.7),0 12px 32px rgba(255,126,176,.1)}
+  .m-indigo .metric-ico{background:rgba(176,137,104,.16);color:#8a6248}
+  .m-indigo .metric-value{color:#8a6248}
+  .m-green .metric-ico{background:rgba(125,155,118,.15);color:#5c7a55}
+  .m-green .metric-value{color:#5c7a55}
+  .m-cyan .metric-ico{background:rgba(111,154,148,.16);color:#4d7a74}
+  .m-cyan .metric-value{color:#4d7a74}
+  .m-yellow .metric-ico{background:rgba(212,163,115,.18);color:#b07d3e}
+  .m-yellow .metric-value{color:#b07d3e}
+  .m-purple .metric-ico{background:rgba(141,134,152,.16);color:#6b6478}
+  .m-purple .metric-value{color:#6b6478}
+  .m-red .metric-ico{background:rgba(196,116,94,.16);color:#a5573f}
+  .m-red .metric-value{color:#a5573f}
+  .m-indigo{box-shadow:inset 0 3px 0 rgba(176,137,104,.7),0 12px 32px rgba(176,137,104,.1)}
+  .m-green{box-shadow:inset 0 3px 0 rgba(125,155,118,.65),0 12px 32px rgba(176,137,104,.1)}
+  .m-cyan{box-shadow:inset 0 3px 0 rgba(111,154,148,.65),0 12px 32px rgba(176,137,104,.1)}
+  .m-yellow{box-shadow:inset 0 3px 0 rgba(212,163,115,.7),0 12px 32px rgba(176,137,104,.1)}
+  .m-purple{box-shadow:inset 0 3px 0 rgba(141,134,152,.65),0 12px 32px rgba(176,137,104,.1)}
+  .m-red{box-shadow:inset 0 3px 0 rgba(196,116,94,.65),0 12px 32px rgba(176,137,104,.1)}
 
-  .chart-card,.table-section{background:var(--card);border:1px solid var(--border);box-shadow:0 12px 32px rgba(255,126,176,.08),0 4px 14px rgba(178,141,217,.06)}
-  .chart-card:hover{border-color:rgba(255,133,172,.5)}
-  .chart-center .cc-val{color:#1e9e77;text-shadow:none}
-  thead th{background:rgba(255,240,245,.97);color:#a5798f;border-bottom:1px solid rgba(255,133,172,.2)}
-  tbody tr{border-bottom:1px solid rgba(255,133,172,.1)}
-  tbody tr:hover{background:rgba(255,126,176,.07)}
-  .progress-fill{background:linear-gradient(90deg,#ff7eb0,#b28dd9)}
-  .filter-btn{background:rgba(255,255,255,.85);border-color:rgba(255,133,172,.3);color:#a5798f}
-  .filter-btn:hover{border-color:#ff7eb0;color:#8a5f74}
-  .filter-btn.active{background:linear-gradient(92deg,#ff7eb0,#e98bc7);color:#fff;font-weight:700;box-shadow:0 6px 18px rgba(255,126,176,.35)}
-  .search-input{background:rgba(255,255,255,.85);border-color:rgba(255,133,172,.3);color:var(--text)}
-  .search-input::placeholder{color:#c9a1b3}
-  .search-input:focus{border-color:#ff7eb0;box-shadow:0 0 0 3px rgba(255,126,176,.15)}
-  .count-badge{color:#ff5f9e;background:rgba(255,126,176,.14)}
-  .tag-blue{background:rgba(124,197,255,.2);color:#3d8fd1}
-  .tag-green{background:rgba(63,201,164,.16);color:#1e9e77}
-  .tag-yellow{background:rgba(255,196,107,.2);color:#d18a1f}
-  .tag-orange{background:rgba(255,171,118,.2);color:#d9713d}
-  .tag-gray{background:rgba(181,161,175,.2);color:#8d7a86}
-  .tag-red{background:rgba(255,143,143,.18);color:#e05a5a}
-  .tag-purple{background:rgba(178,141,217,.18);color:#8a5fc4}
-  .tag-cyan{background:rgba(95,212,196,.18);color:#2aa392}
-  .link{color:#ff5f9e;border-bottom-color:rgba(255,126,176,.4)}
-  .link:hover{color:#ff5f9e;border-bottom-color:#ff5f9e}
-  .save-high{color:#1e9e77}
-  .save-mid{color:#d18a1f}
-  footer{border-top-color:rgba(255,133,172,.2)}
-  footer a{border-bottom-color:rgba(165,121,143,.4)}
-  .toast{background:rgba(255,255,255,.97);border-color:rgba(255,133,172,.4);box-shadow:0 16px 44px rgba(255,126,176,.25),0 8px 20px rgba(178,141,217,.12);color:#5d4157}
+  .chart-card,.table-section{background:var(--card);border:1px solid var(--border);box-shadow:0 12px 32px rgba(176,137,104,.08),0 4px 14px rgba(141,134,152,.06)}
+  .chart-card:hover{border-color:rgba(176,137,104,.5)}
+  .chart-center .cc-val{color:#5c7a55;text-shadow:none}
+  thead th{background:rgba(247,242,236,.97);color:#9a8878;border-bottom:1px solid rgba(176,137,104,.2)}
+  tbody tr{border-bottom:1px solid rgba(176,137,104,.12)}
+  tbody tr:hover{background:rgba(176,137,104,.07)}
+  .progress-fill{background:linear-gradient(90deg,#a4785a,#8d8698)}
+  .filter-btn{background:rgba(255,255,255,.85);border-color:rgba(176,137,104,.3);color:#9a8878}
+  .filter-btn:hover{border-color:#b08968;color:#7a6a5b}
+  .filter-btn.active{background:linear-gradient(92deg,#a4785a,#b08968);color:#fff;font-weight:700;box-shadow:0 6px 18px rgba(164,120,90,.35)}
+  .search-input{background:rgba(255,255,255,.85);border-color:rgba(176,137,104,.3);color:var(--text)}
+  .search-input::placeholder{color:#bda893}
+  .search-input:focus{border-color:#b08968;box-shadow:0 0 0 3px rgba(176,137,104,.15)}
+  .count-badge{color:#8a6248;background:rgba(176,137,104,.14)}
+  .tag-blue{background:rgba(127,159,185,.18);color:#4a7391}
+  .tag-green{background:rgba(125,155,118,.16);color:#5c7a55}
+  .tag-yellow{background:rgba(212,163,115,.2);color:#a06d2c}
+  .tag-orange{background:rgba(201,141,107,.18);color:#b0603a}
+  .tag-gray{background:rgba(181,169,159,.22);color:#8d7d70}
+  .tag-red{background:rgba(196,116,94,.16);color:#a5573f}
+  .tag-purple{background:rgba(141,134,152,.16);color:#6b6478}
+  .tag-cyan{background:rgba(111,154,148,.16);color:#4d7a74}
+  .link{color:#8a6248;border-bottom-color:rgba(176,137,104,.4)}
+  .link:hover{color:#6d4c37;border-bottom-color:#8a6248}
+  .save-high{color:#5c7a55}
+  .save-mid{color:#a06d2c}
+  footer{border-top-color:rgba(176,137,104,.2)}
+  footer a{border-bottom-color:rgba(154,136,120,.4)}
+  .toast{background:rgba(255,255,255,.97);border-color:rgba(176,137,104,.4);box-shadow:0 16px 44px rgba(176,137,104,.22),0 8px 20px rgba(141,134,152,.12);color:#4a3f35}
 </style>
 </head>
 <body>
@@ -434,7 +435,7 @@
 <div class="login-overlay" id="loginOverlay">
   <canvas class="login-canvas" id="loginCanvas"></canvas>
   <div class="login-box">
-    <div class="login-logo" id="loginLogo">🎀</div>
+    <div class="login-logo" id="loginLogo"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="16"/><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/></svg></div>
     <h2>GOFO AI 提效看板</h2>
     <div class="login-sub">数据来自飞书多维表 · 请输入访问密码</div>
     <div class="login-field">
@@ -453,7 +454,7 @@
   <!-- 顶栏 -->
   <header class="header">
     <div class="header-left">
-      <div class="logo-badge">🎀</div>
+      <div class="logo-badge"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="16"/><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/></svg></div>
       <div>
         <h1>GOFO <span class="gradient-text">AI 提效看板</span></h1>
         <div class="subtitle">飞书多维表数据驱动 · 自动实时同步</div>
@@ -462,8 +463,8 @@
     <div class="header-right">
       <div class="pill"><span class="live-dot"></span>数据已更新 <strong id="updateTime">--</strong></div>
       <div class="pill">自动刷新 <strong id="countdown">05:00</strong></div>
-      <a class="link-btn" id="feishuLink" href="https://acnjh1thgeif.larkenterprise.com/base/UpCxbXml4a6u9us4BwCcRdGDnPg?table=tblSr9y6Wf811s7z&view=vewROr9AXR" target="_blank" rel="noopener"><span class="shine"></span><span class="ico">🔗</span>飞书数据源</a>
-      <button class="refresh-btn" id="refreshBtn"><span class="ico">⟳</span>刷新数据</button>
+      <a class="link-btn" id="feishuLink" href="https://acnjh1thgeif.larkenterprise.com/base/UpCxbXml4a6u9us4BwCcRdGDnPg?table=tblSr9y6Wf811s7z&view=vewROr9AXR" target="_blank" rel="noopener"><span class="shine"></span><span class="ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>飞书数据源</a>
+      <button class="refresh-btn" id="refreshBtn"><span class="ico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></span>刷新数据</button>
     </div>
   </header>
 
@@ -473,22 +474,22 @@
   <!-- 图表 -->
   <section class="charts">
     <div class="chart-card" data-scroll>
-      <div class="chart-title"><span class="dot" style="color:#818cf8;background:#818cf8"></span>各小组项目分布</div>
+      <div class="chart-title"><span class="dot" style="color:#b08968;background:#b08968"></span>各小组项目分布</div>
       <div class="chart-wrap"><canvas id="chartGroup"></canvas></div>
     </div>
     <div class="chart-card" data-scroll>
-      <div class="chart-title"><span class="dot" style="color:#34d399;background:#34d399"></span>项目状态分布</div>
+      <div class="chart-title"><span class="dot" style="color:#7d9b76;background:#7d9b76"></span>项目状态分布</div>
       <div class="chart-wrap">
         <canvas id="chartStatus"></canvas>
         <div class="chart-center" id="statusCenter"><div class="cc-val">--</div><div class="cc-label">完成率</div></div>
       </div>
     </div>
     <div class="chart-card full" data-scroll>
-      <div class="chart-title"><span class="dot" style="color:#22d3ee;background:#22d3ee"></span>分组提效对比 <span style="font-weight:500;color:var(--dim);font-size:12.5px">(H/月)</span></div>
+      <div class="chart-title"><span class="dot" style="color:#6f9a94;background:#6f9a94"></span>分组提效对比 <span style="font-weight:500;color:var(--dim);font-size:12.5px">(H/月)</span></div>
       <div class="chart-wrap"><canvas id="chartEfficiency"></canvas></div>
     </div>
     <div class="chart-card full" data-scroll>
-      <div class="chart-title"><span class="dot" style="color:#c084fc;background:#c084fc"></span>Top 提效项目</div>
+      <div class="chart-title"><span class="dot" style="color:#8d8698;background:#8d8698"></span>Top 提效项目</div>
       <div class="chart-wrap"><canvas id="chartTop"></canvas></div>
     </div>
   </section>
@@ -533,7 +534,7 @@
 // 构建时注入占位符 (fetch-and-build.js 替换)
 // ============================================================
 var LOGIN_HASH = "6ce20308599f0bbb871c115b0243197ea6177d56b9913ed2da6fa8e1c8dfe04e";
-var BUILD_TIMESTAMP = "2026-08-27 10:16:48";
+var BUILD_TIMESTAMP = "2026-08-27 10:53:42";
 var EMBEDDED_DATA = {"total":42,"updated_at":"2026-08-27 06:20:24","records":[{"title":"AIGUS正式工考勤数据晾晒","group":"系统组","status":"已完成","owner":"@Mchester Zhang","deadline":"2026-06-19","has_blocker":"否","has_skill":"是","online":"","ai_hours":3.8,"orig_hours":80.5,"efficiency_hours":76.7,"progress":1,"result_link":"https://personnel-platform-orpin.vercel.app","blocker_detail":"","lessons":"1、vecel部署在海外，GF需要更改DNS才能访问；2、github代码托管规范，减少仓库建设减轻服务对接难度","results":"正职工考勤日晾晒 SOP链接","calibration":"排班率数据准确度100%，排班正确率、打卡率、缺卡数误差控制在0-2%","style_tuning":"调整前端界面和功能优化，1、功能优化，固定文件上传样式，优化权限授权方式；2样式优化：增加GSAP样式组件，提高界面交互感","data_input":"投5.30-6.10de 考勤数据，让AI处理数据生成html表，与人工处理数据进行对比"},{"title":"AI核算补贴类","group":"薪酬组","status":"已完成","owner":"@Liping Xu","deadline":"2026-05-22","has_blocker":"否","has_skill":"是","online":"true","ai_hours":0.2,"orig_hours":6,"efficiency_hours":5.8,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按补贴类计算规则","calibration":"准确率100%","style_tuning":"明细和汇总表","data_input":"目前四个补贴均投喂完成数据生成，新增一个补贴待投喂验证"},{"title":"AI进行系统视频培训","group":"系统组","status":"已完成","owner":"@Ilyth An@Ann Ma","deadline":"2026-06-30","has_blocker":"否","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"参照集团敏捷培训视频skill生产视频","calibration":"","style_tuning":"","data_input":""},{"title":"AI核算1099司机工时","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-05-15","has_blocker":"否","has_skill":"是","online":"true","ai_hours":56,"orig_hours":60,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按1099司机工时核算规则","calibration":"偶有四舍五入0.01的工时差异，不影响整体","style_tuning":"样式和工资表一致","data_input":"先投喂两个区试算，然后再全部区域投喂试算一期"},{"title":"AI提取意大利PDF工资单为EXCEL表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-05-15","has_blocker":"否","has_skill":"是","online":"true","ai_hours":18.5,"orig_hours":22.5,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按数据需求提取","calibration":"多次调整数据位置的准确度，以及漏人的情况，现基本能全部提取","style_tuning":"样式无要求，能区分数据即可","data_input":"先投喂两份数据调试"},{"title":"AI进行GUS劳务工考勤数据晾晒","group":"报账组","status":"已完成","owner":"@Mchester Zhang","deadline":"2026-08-05","has_blocker":"否","has_skill":"否","online":"","ai_hours":1.9,"orig_hours":18,"efficiency_hours":17.1,"progress":1,"result_link":"https://a4073c6d60bf4842b324f7adbdbe7b7b.app.codebuddy.work","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI 提升人事服务台机器人拦截情况","group":"支持组","status":"已完成","owner":"@Owen Yuan@Zoe Tian","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"true","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"1.服务台链接ai，通过直连服务台无法直接输出图片回复。需要单独加云文档才可以实现图片回复","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行OA系统组织架构表匹配ehr系统表单，导入提效","group":"支持组","status":"关闭","owner":"@Owen Yuan@Zhiqing Guo","deadline":"2026-06-30","has_blocker":"是","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"OA流程提交的表单每人填写情况不一致（名字可能是重名、没提供工号），暂时无法高正确率输出对应数据","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行人力成本打标提效","group":"支持组","status":"已完成","owner":"@Owen Yuan@Ziwei Wang","deadline":"2026-07-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":8,"orig_hours":24,"efficiency_hours":16,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行月度绩效晾晒展现效果优化","group":"支持组","status":"已完成","owner":"@Owen Yuan@Zoe Tian","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"true","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"http://【WorkBuddy】performance_report.html","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行招聘达成率数据统计提效","group":"支持组","status":"关闭","owner":"@Owen Yuan@Clara Li","deadline":"2026-06-30","has_blocker":"是","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行薪资流水数据提取、信息核对","group":"支持组","status":"暂停","owner":"@Owen Yuan@Ziwei Wang","deadline":"2026-07-31","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"薪资流水改革为 5年社保+1年流水，暂时无需ai识别1年流水","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行美区各大区劳务报账晾晒","group":"支持组","status":"已完成","owner":"@Ziwei Wang","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"http://美区劳务付款看板技能-安装包.zip","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行招聘积分晾晒","group":"支持组","status":"已完成","owner":"@Ziwei Wang@Clara Li","deadline":"2026-07-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":2,"orig_hours":4,"efficiency_hours":2,"progress":1,"result_link":"https://workbuddy.link/p/JccGLnooiO1WBx5SgvIKIh?ext2=copy_link","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行供应商门户区域月度供应商派遣达标率汇总报告","group":"系统组","status":"已完成","owner":"@Ann Ma","deadline":"2026-07-31","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"OTWS无法直接导出数据报表分析，需要AI从网页直接获取数据生成报表","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行自动更新考勤机状态","group":"系统组","status":"待启动","owner":"@Ann Ma","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"研究aily自动回复群任务","group":"系统组","status":"待启动","owner":"@Ann Ma","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行自动生成培训ppt","group":"系统组","status":"已完成","owner":"@Ilyth An","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0.5,"orig_hours":1,"efficiency_hours":0.5,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI根据投喂SOP、问题自动生成对应FAQ","group":"系统组","status":"已完成","owner":"@Beverly Lin","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"搜索不够智能；图片与问题和答案对不上；交互有些卡顿","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GUS新班次使用情况季度晾晒","group":"系统组","status":"已完成","owner":"@Ilyth An@Mchester Zhang","deadline":"2026-07-15","has_blocker":"否","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"1.首先剔除工号为GL0开头的国内员工\n2.对班次数据进行清理，改成需要展示的56班次名称\n3.按照区域进行拆分，分别进行数据展示和图标展示\n4.将大区数据进行整理","calibration":"基本准确","style_tuning":"正在优化前端UI展示","data_input":"已投喂5月班次数据"},{"title":"AI进行需求仪表盘展示","group":"系统组","status":"待启动","owner":"@Beverly Lin@Mchester Zhang@Ilyth An","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行需求状态、内容机器人推送","group":"系统组","status":"待启动","owner":"@Beverly Lin@Mchester Zhang@Ilyth An@Ann Ma","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI提取荷兰PDF账单养老金数据","group":"薪酬组","status":"已完成","owner":"@Yuxia Lai","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":1,"orig_hours":2,"efficiency_hours":1,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI生成1099司机月度薪酬看板","group":"薪酬组","status":"已完成","owner":"@Anni Liu","deadline":"2026-06-10","has_blocker":"否","has_skill":"是","online":"true","ai_hours":0.5,"orig_hours":1,"efficiency_hours":0.5,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按看报要求提取数据","calibration":"多次调整看板图表的准确度，现数据基本准确","style_tuning":"固定看板模板","data_input":"投喂2026年1-4月数据"},{"title":"AI实现机器人每日自动推送数据卡片","group":"系统组","status":"已完成","owner":"@Mchester Zhang","deadline":"2026-08-01","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI校准GEU考勤签到表和AI识别小程序工时","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-17","has_blocker":"是","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"CodeBuddy没有OCR引擎，它只能逐条读取并理解，数据量大时非常耗时且耗积分","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI提取法国PDF劳务费发票为excel表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-14","has_blocker":"否","has_skill":"是","online":"false","ai_hours":6,"orig_hours":12,"efficiency_hours":6,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按数据需求提取","calibration":"多次调整数据位置的准确度，以及漏人的情况，现基本能全部提取","style_tuning":"","data_input":"先投喂两份数据调试"},{"title":"AI提取意大利PDF劳务费发票为excel表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-14","has_blocker":"否","has_skill":"是","online":"false","ai_hours":16,"orig_hours":20,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按数据需求提取","calibration":"多次调整数据位置的准确度，以及漏人的情况，现基本能全部提取","style_tuning":"","data_input":"先投喂两份数据调试"},{"title":"AI进行GUS考勤确认&补签数据日晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GUS报账节点数据晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GUS劳务工签署率数据晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AIGEU四个国家正式工考勤数据晾晒","group":"系统组","status":"已完成","owner":"@Mchester Zhang","deadline":"2026-08-14","has_blocker":"否","has_skill":"否","online":"","ai_hours":2,"orig_hours":32,"efficiency_hours":30,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GUS考勤确认&补签数据周晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行海外劳务报账运营质量报告月晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行半年度绩效晾晒","group":"支持组","status":"已完成","owner":"@Zoe Tian@Owen Yuan","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"true","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行上半年等级分布晾晒","group":"支持组","status":"已完成","owner":"@Zoe Tian@Owen Yuan","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI合并花名册、入职/待入职/取消入职名单、调动报告","group":"支持组","status":"已完成","owner":"@Ziwei Wang","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":20,"orig_hours":40,"efficiency_hours":20,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GEU各大区劳务费用实发晾晒","group":"支持组","status":"已完成","owner":"@Ziwei Wang","deadline":"2026-08-31","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI提取法国PDF工资单数据为excel表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-15","has_blocker":"否","has_skill":"否","online":"","ai_hours":8,"orig_hours":12,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI提取荷兰PDF工资单数据为excel表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-17","has_blocker":"否","has_skill":"否","online":"","ai_hours":16,"orig_hours":20,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI生成1099司机周薪酬勘误看板","group":"薪酬组","status":"已完成","owner":"@Anni Liu","deadline":"2026-07-31","has_blocker":"否","has_skill":"否","online":"","ai_hours":0.5,"orig_hours":1,"efficiency_hours":0.5,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI生成法国劳务工时汇总表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-08-11","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""}]};
 
 // ============================================================
@@ -546,16 +547,16 @@ var WORKER_URL = "https://gofo-dashboard-api.chengzai456.workers.dev";
 
 var REFRESH_INTERVAL = 5 * 60 * 1000;   // 自动刷新间隔 5 分钟
 
-// 小组配色
-var GROUP_COLORS = ["#ff7eb0", "#5fd4c4", "#ffc46b", "#b28dd9", "#7cc5ff", "#ffab76", "#f6a5c0", "#8ee6a8"];
+// 小组配色 (浅棕暖调中性系)
+var GROUP_COLORS = ["#b08968", "#7d9b76", "#d4a373", "#8d8698", "#6f9a94", "#c4745e", "#9c8b7a", "#a3b18a"];
 
 // 状态配置: 颜色 + 标签样式
 var STATUS_CONFIG = {
-  "进行中": { color: "#7cc5ff", cls: "tag-blue" },
-  "待启动": { color: "#ffc46b", cls: "tag-yellow" },
-  "已完成": { color: "#5fd4c4", cls: "tag-green" },
-  "暂停":   { color: "#ffab76", cls: "tag-orange" },
-  "关闭":   { color: "#c9b3c0", cls: "tag-gray" }
+  "进行中": { color: "#7f9fb9", cls: "tag-blue" },
+  "待启动": { color: "#d4a373", cls: "tag-yellow" },
+  "已完成": { color: "#7d9b76", cls: "tag-green" },
+  "暂停":   { color: "#c98d6b", cls: "tag-orange" },
+  "关闭":   { color: "#b5a99f", cls: "tag-gray" }
 };
 var statusOrder = { "进行中": 0, "待启动": 1, "已完成": 2, "暂停": 3, "关闭": 4 };
 
@@ -759,7 +760,7 @@ function createParticleField(canvas, opts) {
         parts.push({
           x: w / 2 + (Math.random() - .5) * 160, y: h / 2 + (Math.random() - .5) * 120,
           vx: (Math.random() - .5) * 2.2, vy: (Math.random() - .5) * 2.2,
-          r: Math.random() * 2 + 1, c: Math.random() < .5 ? o.color2 : "255,171,118"
+          r: Math.random() * 2 + 1, c: Math.random() < .5 ? o.color2 : "212,163,115"
         });
       }
       if (parts.length > o.count + 60) parts.splice(0, parts.length - o.count - 30);
@@ -780,7 +781,7 @@ function initLoginParticles() {
   var cv = document.getElementById("loginCanvas");
   cv._fx = createParticleField(cv, {
     count: 80, linkDist: 140, speed: .45,
-    color: "255,126,176", color2: "95,212,196", interactive: true, lineOpacity: .4
+    color: "176,137,104", color2: "125,155,118", interactive: true, lineOpacity: .4
   });
 }
 
@@ -820,13 +821,22 @@ function computeKPIs(records) {
 // ============================================================
 function renderMetrics() {
   var k = computeKPIs(currentData.records);
+  // 中性线性图标 (feather 风格 SVG)
+  var ICO = {
+    list: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>',
+    check: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+    zap: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+    trend: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
+    grid: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+    alert: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+  };
   var cards = [
-    { icon: "📋", label: "项目总数", value: k.total, dec: 0, cls: "m-indigo" },
-    { icon: "🚀", label: "已上线项目", value: k.online, dec: 0, cls: "m-green" },
-    { icon: "⚡", label: "累计提效", value: k.effTotal, dec: 1, unit: "H/月", cls: "m-cyan" },
-    { icon: "📈", label: "平均提效率", value: k.saveRate, dec: 1, unit: "%", cls: "m-yellow" },
-    { icon: "🧩", label: "可复用 SKILL", value: k.skillCount, dec: 0, cls: "m-purple" },
-    { icon: "⚠️", label: "卡点项目", value: k.blockerCount, dec: 0, cls: "m-red" }
+    { icon: ICO.list, label: "项目总数", value: k.total, dec: 0, cls: "m-indigo" },
+    { icon: ICO.check, label: "已上线项目", value: k.online, dec: 0, cls: "m-green" },
+    { icon: ICO.zap, label: "累计提效", value: k.effTotal, dec: 1, unit: "H/月", cls: "m-cyan" },
+    { icon: ICO.trend, label: "平均提效率", value: k.saveRate, dec: 1, unit: "%", cls: "m-yellow" },
+    { icon: ICO.grid, label: "可复用 SKILL", value: k.skillCount, dec: 0, cls: "m-purple" },
+    { icon: ICO.alert, label: "卡点项目", value: k.blockerCount, dec: 0, cls: "m-red" }
   ];
   document.getElementById("metrics").innerHTML = cards.map(function(c) {
     return '<div class="metric-card ' + c.cls + '">' +
@@ -862,8 +872,8 @@ function chartOpts() {
     animation: { duration: 900, easing: "easeOutQuart" },
     plugins: { legend: { display: false } },
     scales: {
-      x: { ticks: { color: "#a5798f", font: { size: 11 } }, grid: { color: "rgba(255,126,176,.14)" } },
-      y: { ticks: { color: "#a5798f", font: { size: 11 } }, grid: { color: "rgba(255,126,176,.14)" } }
+      x: { ticks: { color: "#9a8878", font: { size: 11 } }, grid: { color: "rgba(176,137,104,.14)" } },
+      y: { ticks: { color: "#9a8878", font: { size: 11 } }, grid: { color: "rgba(176,137,104,.14)" } }
     }
   };
 }
@@ -915,14 +925,14 @@ function renderCharts() {
       datasets: [{
         data: sKeys.map(function(k) { return agg.statuses[k]; }),
         backgroundColor: sKeys.map(function(k) { return (STATUS_CONFIG[k] || { color: "#9ca3af" }).color; }),
-        borderColor: "#0a0d1a", borderWidth: 3, hoverOffset: 8
+        borderColor: "#f7f2ec", borderWidth: 3, hoverOffset: 8
       }]
     },
     options: Object.assign({}, o, {
       cutout: "64%",
       scales: {},
       plugins: {
-        legend: { display: true, position: "bottom", labels: { color: "#a5798f", padding: 14, usePointStyle: true, pointStyle: "circle", font: { size: 12 } } }
+        legend: { display: true, position: "bottom", labels: { color: "#9a8878", padding: 14, usePointStyle: true, pointStyle: "circle", font: { size: 12 } } }
       }
     })
   });
@@ -949,8 +959,8 @@ function renderCharts() {
     options: Object.assign({}, o, {
       indexAxis: "y",
       scales: {
-        x: { ticks: { color: "#a5798f", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(255,126,176,.14)" } },
-        y: { ticks: { color: "#a5798f", font: { size: 12 } }, grid: { display: false } }
+        x: { ticks: { color: "#9a8878", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(176,137,104,.14)" } },
+        y: { ticks: { color: "#9a8878", font: { size: 12 } }, grid: { display: false } }
       }
     })
   });
@@ -968,16 +978,16 @@ function renderCharts() {
       datasets: [{
         label: "提效 (H/月)",
         data: top.map(function(r) { return parseFloat(r.efficiency_hours) || 0; }),
-        backgroundColor: function(c) { return barGradH(c.chart.ctx, "#ff7eb0"); },
-        hoverBackgroundColor: "#ffc9dd",
+        backgroundColor: function(c) { return barGradH(c.chart.ctx, "#b08968"); },
+        hoverBackgroundColor: "#d8bd9f",
         borderRadius: 9, barThickness: 22, maxBarThickness: 28
       }]
     },
     options: Object.assign({}, o, {
       indexAxis: "y",
       scales: {
-        x: { ticks: { color: "#a5798f", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(255,126,176,.14)" } },
-        y: { ticks: { color: "#8a5f74", font: { size: 11.5 } }, grid: { display: false } }
+        x: { ticks: { color: "#9a8878", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(176,137,104,.14)" } },
+        y: { ticks: { color: "#7a6a5b", font: { size: 11.5 } }, grid: { display: false } }
       }
     })
   });
@@ -1044,7 +1054,7 @@ function renderTable() {
     var pct = Math.max(0, Math.min(100, Math.round((parseFloat(r.progress) || 0) * 100)));
     var bar = '<span class="progress-bar"><span class="progress-fill" style="width:' + pct + '%"></span></span>' +
       '<span style="font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums">' + pct + '%</span>';
-    var onlineBadge = normYes(r.online) ? '<span title="已上线" style="margin-left:7px;font-size:12px">🚀</span>' : "";
+    var onlineBadge = normYes(r.online) ? '<span title="已上线" style="margin-left:7px;font-size:12px;color:#7d9b76;vertical-align:middle">●</span>' : "";
     var save = 0;
     if (parseFloat(r.orig_hours) > 0) {
       save = Math.round((parseFloat(r.orig_hours) - (parseFloat(r.ai_hours) || 0)) / parseFloat(r.orig_hours) * 100);
@@ -1214,7 +1224,7 @@ function initDashboard() {
   var bg = document.getElementById("bgCanvas");
   if (bg) bg._fx = createParticleField(bg, {
     count: 55, linkDist: 120, speed: .3,
-    color: "255,126,176", color2: "178,141,217", interactive: false, lineOpacity: .2
+    color: "176,137,104", color2: "141,134,152", interactive: false, lineOpacity: .2
   });
   bindEffects();
   renderAll();
