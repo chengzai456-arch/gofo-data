@@ -791,15 +791,17 @@ function initLoginParticles() {
 // 数据聚合
 // ============================================================
 function aggregate(records) {
-  var groups = {}, statuses = {}, groupEff = {};
+  var groups = {}, statuses = {}, groupEff = {}, groupStatus = {};
   records.forEach(function(r) {
     var g = r.group || "未分组";
     groups[g] = (groups[g] || 0) + 1;
     var s = r.status || "未知";
     statuses[s] = (statuses[s] || 0) + 1;
     groupEff[g] = (groupEff[g] || 0) + (parseFloat(r.efficiency_hours) || 0);
+    if (!groupStatus[g]) groupStatus[g] = {};
+    groupStatus[g][s] = (groupStatus[g][s] || 0) + 1;
   });
-  return { groups: groups, statuses: statuses, groupEff: groupEff };
+  return { groups: groups, statuses: statuses, groupEff: groupEff, groupStatus: groupStatus };
 }
 
 function computeKPIs(records) {
@@ -900,21 +902,41 @@ function renderCharts() {
   var agg = aggregate(records);
   var o = chartOpts();
 
-  // 1. 各小组项目分布 (柱状图)
+  // 1. 各小组项目分布 (按状态堆叠柱状图)
   var gKeys = Object.keys(agg.groups);
+  var stackStatuses = ["已完成", "进行中", "待启动", "暂停", "关闭"];
   if (charts.group) charts.group.destroy();
   charts.group = new Chart(document.getElementById("chartGroup"), {
     type: "bar",
     data: {
       labels: gKeys,
-      datasets: [{
-        data: gKeys.map(function(k) { return agg.groups[k]; }),
-        backgroundColor: function(c) { return barGrad(c.chart.ctx, groupColor(gKeys[c.dataIndex])); },
-        hoverBackgroundColor: function(c) { return groupColor(gKeys[c.dataIndex]); },
-        borderRadius: 10, barThickness: 42, maxBarThickness: 54
-      }]
+      datasets: stackStatuses.map(function(s) {
+        var color = (STATUS_CONFIG[s] || { color: "#9a8878" }).color;
+        return {
+          label: s,
+          data: gKeys.map(function(g) { return (agg.groupStatus[g] && agg.groupStatus[g][s]) || 0; }),
+          backgroundColor: color + "d9",
+          hoverBackgroundColor: color,
+          borderRadius: 6, barThickness: 42, maxBarThickness: 54
+        };
+      })
     },
-    options: Object.assign({}, o, { plugins: { legend: { display: false } } })
+    options: Object.assign({}, o, {
+      scales: {
+        x: { stacked: true, ticks: { color: "#9a8878", font: { size: 11 } }, grid: { display: false } },
+        y: { stacked: true, beginAtZero: true, ticks: { color: "#9a8878", precision: 0, font: { size: 11 } }, grid: { color: "rgba(176,137,104,.14)" } }
+      },
+      plugins: {
+        legend: { display: true, position: "bottom", labels: { color: "#9a8878", padding: 12, usePointStyle: true, pointStyle: "circle", font: { size: 12 } } },
+        tooltip: {
+          callbacks: {
+            footer: function(items) {
+              return "合计: " + items.reduce(function(s, it) { return s + it.parsed.y; }, 0);
+            }
+          }
+        }
+      }
+    })
   });
 
   // 2. 项目状态分布 (环形图) + 中心完成率
