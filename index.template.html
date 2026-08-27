@@ -348,18 +348,19 @@
   .login-input.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(196,116,94,.25)}
   .login-eye{color:#bda893}
   .login-eye:hover{color:#b08968;background:rgba(176,137,104,.12)}
-  .login-btn{background:linear-gradient(92deg,#a4785a,#c9a88c 45%,#8d8698);box-shadow:0 10px 28px rgba(164,120,90,.4);border-radius:14px}
-  .login-btn:hover{background-position:100% 0;box-shadow:0 14px 38px rgba(164,120,90,.55)}
+  .login-btn{background:linear-gradient(180deg,#2b2b2b,#111 60%,#000);box-shadow:0 10px 28px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.12);border-radius:14px;border:1px solid #000}
+  .login-btn:hover{background-position:100% 0;box-shadow:0 14px 38px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.18)}
 
   .logo-badge{background:linear-gradient(135deg,#c9a88c,#a4785a);box-shadow:0 10px 32px rgba(164,120,90,.4);border-radius:16px;color:#fff}
   .gradient-text{background:linear-gradient(92deg,#8a6248,#8d8698 45%,#6f8a84 80%);background-size:220% 100%;
     -webkit-background-clip:text;background-clip:text;color:transparent}
   .pill{background:rgba(255,255,255,.85);border-color:rgba(176,137,104,.3)}
-  .refresh-btn{background:rgba(255,255,255,.85);border-color:rgba(176,137,104,.32);color:#7a6a5b}
-  .refresh-btn:hover{border-color:#b08968;box-shadow:0 0 0 3px rgba(176,137,104,.15),0 6px 18px rgba(176,137,104,.2)}
-  .link-btn{background:linear-gradient(92deg,#a4785a,#c9a88c 45%,#8d8698);background-size:180% 100%;
-    box-shadow:0 8px 24px rgba(164,120,90,.35)}
-  .link-btn:hover{box-shadow:0 10px 30px rgba(164,120,90,.45)}
+  .refresh-btn{background:linear-gradient(180deg,#2b2b2b,#111 60%,#000);border:1px solid #000;color:#fff}
+  .refresh-btn:hover{border-color:#000;box-shadow:0 6px 20px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.14);background:linear-gradient(180deg,#3a3a3a,#1c1c1c 60%,#0a0a0a)}
+  .refresh-btn:active{transform:scale(.97)}
+  .link-btn{background:linear-gradient(180deg,#2b2b2b,#111 60%,#000);background-size:100% 100%;
+    box-shadow:0 8px 24px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.12);border:1px solid #000}
+  .link-btn:hover{box-shadow:0 10px 30px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.18);background:linear-gradient(180deg,#3a3a3a,#1c1c1c 60%,#0a0a0a)}
 
   .metric-card{background:var(--card);border:1px solid var(--border);
     box-shadow:0 12px 32px rgba(176,137,104,.1),0 4px 14px rgba(141,134,152,.08)}
@@ -393,9 +394,10 @@
   tbody tr{border-bottom:1px solid rgba(176,137,104,.12)}
   tbody tr:hover{background:rgba(176,137,104,.07)}
   .progress-fill{background:linear-gradient(90deg,#a4785a,#8d8698)}
-  .filter-btn{background:rgba(255,255,255,.85);border-color:rgba(176,137,104,.3);color:#9a8878}
-  .filter-btn:hover{border-color:#b08968;color:#7a6a5b}
-  .filter-btn.active{background:linear-gradient(92deg,#a4785a,#b08968);color:#fff;font-weight:700;box-shadow:0 6px 18px rgba(164,120,90,.35)}
+  .filter-btn{background:rgba(255,255,255,.85);border-color:rgba(176,137,104,.3);color:#5f5347}
+  .filter-btn:hover{border-color:#1a1a1a;color:#1a1a1a}
+  .filter-btn.active{background:#111;color:#fff;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,.4);border-color:#000}
+  select.filter-btn{color:#5f5347}
   .search-input{background:rgba(255,255,255,.85);border-color:rgba(176,137,104,.3);color:var(--text)}
   .search-input::placeholder{color:#bda893}
   .search-input:focus{border-color:#b08968;box-shadow:0 0 0 3px rgba(176,137,104,.15)}
