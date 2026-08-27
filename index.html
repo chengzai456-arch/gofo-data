@@ -13,13 +13,13 @@
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   :root{
-    --bg:#070b14; --bg2:#0b1120;
-    --card:rgba(17,24,39,.72); --card-hover:rgba(30,41,59,.85);
-    --border:rgba(148,163,184,.14); --border-strong:rgba(148,163,184,.28);
-    --text:#e5e9f0; --dim:#8b96a8;
-    --indigo:#6366f1; --cyan:#22d3ee; --green:#34d399; --yellow:#fbbf24; --red:#f87171;
-    --purple:#a78bfa; --orange:#fb923c; --pink:#ec4899;
-    --radius:16px;
+    --bg:#05060c; --bg2:#090b18;
+    --card:rgba(10,13,26,.78); --card-hover:rgba(18,22,44,.9);
+    --border:rgba(168,85,247,.20); --border-strong:rgba(34,211,238,.45);
+    --text:#eef0ff; --dim:#8f93b8;
+    --indigo:#a855f7; --cyan:#22d3ee; --green:#34d399; --yellow:#fbbf24; --red:#fb7185;
+    --purple:#c084fc; --orange:#fb923c; --pink:#f472b6;
+    --radius:14px;
     --font-num:'Space Grotesk','Inter',-apple-system,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif;
   }
   html{scroll-behavior:smooth}
@@ -50,7 +50,7 @@
 
   /* ===== 滚动进度条 ===== */
   #progressBar{position:fixed;top:0;left:0;right:0;height:3px;z-index:1000;
-    background:linear-gradient(90deg,#6366f1,#22d3ee,#a78bfa);
+    background:linear-gradient(90deg,#6366f1,#22d3ee,#c084fc);
     transform:scaleX(0);transform-origin:left;box-shadow:0 0 12px rgba(99,102,241,.8)}
 
   .container{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:28px 24px 40px}
@@ -86,7 +86,7 @@
     font-family:var(--font-num);font-size:25px;font-weight:700;color:#fff;flex-shrink:0;
     background:linear-gradient(135deg,#6366f1,#22d3ee);box-shadow:0 10px 30px rgba(99,102,241,.4)}
   .header-left h1{font-size:26px;font-weight:800;letter-spacing:-.5px;line-height:1.25}
-  .gradient-text{background:linear-gradient(92deg,#818cf8,#22d3ee 45%,#a78bfa 80%);background-size:220% 100%;
+  .gradient-text{background:linear-gradient(92deg,#818cf8,#22d3ee 45%,#c084fc 80%);background-size:220% 100%;
     -webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 7s linear infinite}
   @keyframes shimmer{to{background-position:-220% 0}}
   .subtitle{color:var(--dim);font-size:13px;margin-top:3px}
@@ -130,8 +130,8 @@
   .m-cyan .metric-value{color:#67e8f9}
   .m-yellow .metric-ico{background:rgba(251,191,36,.15);color:#fbbf24}
   .m-yellow .metric-value{color:#fcd34d}
-  .m-purple .metric-ico{background:rgba(167,139,250,.16);color:#a78bfa}
-  .m-purple .metric-value{color:#c4b5fd}
+  .m-purple .metric-ico{background:rgba(167,139,250,.16);color:#c084fc}
+  .m-purple .metric-value{color:#e9d5ff}
   .m-red .metric-ico{background:rgba(248,113,113,.15);color:#f87171}
   .m-red .metric-value{color:#fca5a5}
   .m-indigo{box-shadow:inset 0 2px 0 rgba(99,102,241,.55),0 10px 30px rgba(0,0,0,.28)}
@@ -184,9 +184,9 @@
   .tag-green{background:rgba(52,211,153,.14);color:#6ee7b7}
   .tag-yellow{background:rgba(251,191,36,.13);color:#fcd34d}
   .tag-orange{background:rgba(251,146,60,.13);color:#fdba74}
-  .tag-gray{background:rgba(148,163,184,.13);color:#cbd5e1}
+  .tag-gray{background:rgba(148,163,184,.13);color:#c4b5fd}
   .tag-red{background:rgba(248,113,113,.14);color:#fca5a5}
-  .tag-purple{background:rgba(167,139,250,.14);color:#c4b5fd}
+  .tag-purple{background:rgba(167,139,250,.14);color:#e9d5ff}
   .tag-cyan{background:rgba(34,211,238,.13);color:#67e8f9}
   .progress-bar{display:inline-block;width:64px;height:6px;background:rgba(148,163,184,.18);border-radius:4px;
     vertical-align:middle;margin:0 8px 0 4px;overflow:hidden}
@@ -222,6 +222,88 @@
     .metric-value{font-size:32px}
     .table-header{padding:16px}
   }
+
+  /* ===== 霓虹主题覆盖 ===== */
+  body{background:
+    radial-gradient(1000px 540px at 80% -10%, rgba(168,85,247,.22), transparent 60%),
+    radial-gradient(900px 520px at -10% 30%, rgba(34,211,238,.14), transparent 58%),
+    radial-gradient(800px 500px at 50% 115%, rgba(236,72,153,.13), transparent 62%),
+    #05060c}
+  ::selection{background:rgba(168,85,247,.45)}
+  /* 扫描线 + 星点 */
+  body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(1.5px 1.5px at 12% 22%, rgba(255,255,255,.5), transparent 55%),
+      radial-gradient(1.2px 1.2px at 68% 14%, rgba(255,255,255,.4), transparent 55%),
+      radial-gradient(1.6px 1.6px at 35% 68%, rgba(255,255,255,.35), transparent 55%),
+      radial-gradient(1.2px 1.2px at 82% 55%, rgba(255,255,255,.4), transparent 55%),
+      radial-gradient(1.4px 1.4px at 22% 88%, rgba(255,255,255,.3), transparent 55%),
+      radial-gradient(1.3px 1.3px at 55% 38%, rgba(255,255,255,.35), transparent 55%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 1px, transparent 1px 4px)}
+  .bg-grid{background-image:linear-gradient(rgba(168,85,247,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,.08) 1px,transparent 1px);background-size:44px 44px}
+  .orb{opacity:.5}
+  .orb.o1{background:rgba(168,85,247,.5)}
+  .orb.o2{background:rgba(34,211,238,.32)}
+  .orb.o3{background:rgba(236,72,153,.4)}
+  #progressBar{background:linear-gradient(90deg,#a855f7,#22d3ee,#f472b6);box-shadow:0 0 14px rgba(168,85,247,.9);height:3px}
+  .container{max-width:1400px;padding:28px 24px 44px}
+
+  .login-overlay{background:radial-gradient(800px 460px at 50% -10%,rgba(168,85,247,.3),transparent 60%),#05060c}
+  .login-box{background:rgba(10,13,26,.9);border:1px solid rgba(168,85,247,.35);border-radius:20px;
+    box-shadow:0 0 44px rgba(168,85,247,.18),0 24px 70px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06)}
+  .login-box::before{background:linear-gradient(135deg,rgba(168,85,247,.8),transparent 40%,transparent 60%,rgba(34,211,238,.75))}
+  .login-logo{background:linear-gradient(135deg,#a855f7,#22d3ee);box-shadow:0 10px 32px rgba(168,85,247,.55)}
+  .login-input{background:rgba(8,10,22,.8);border-color:rgba(168,85,247,.25);color:var(--text)}
+  .login-input:focus{border-color:#22d3ee;box-shadow:0 0 0 3px rgba(34,211,238,.18)}
+  .login-btn{background:linear-gradient(92deg,#a855f7,#d946ef 45%,#22d3ee);box-shadow:0 10px 28px rgba(168,85,247,.5)}
+  .login-btn:hover{background-position:100% 0}
+
+  .logo-badge{background:linear-gradient(135deg,#a855f7,#22d3ee);box-shadow:0 10px 32px rgba(168,85,247,.5)}
+  .gradient-text{background:linear-gradient(92deg,#c084fc,#22d3ee 45%,#f472b6 80%)}
+  .header-left h1{text-shadow:0 0 24px rgba(168,85,247,.35)}
+  .pill{background:rgba(10,13,26,.8);border-color:rgba(168,85,247,.22)}
+  .refresh-btn{background:rgba(10,13,26,.8);border-color:rgba(168,85,247,.28);color:#e0e7ff}
+  .refresh-btn:hover{border-color:#22d3ee;box-shadow:0 0 0 3px rgba(34,211,238,.16),0 0 20px rgba(34,211,238,.2)}
+
+  .metric-card{background:var(--card);border:1px solid var(--border);
+    box-shadow:0 0 26px rgba(168,85,247,.07),0 10px 30px rgba(0,0,0,.4)}
+  .metric-card:hover{transform:translateY(-4px);border-color:var(--border-strong);
+    box-shadow:0 0 34px rgba(34,211,238,.18),0 18px 44px rgba(0,0,0,.5)}
+  .metric-card::after{background:radial-gradient(320px 120px at 80% -20%,rgba(192,132,252,.12),transparent 70%)}
+  .metric-value{text-shadow:0 0 18px rgba(168,85,247,.4)}
+  .m-indigo .metric-ico{background:rgba(168,85,247,.16);color:#c084fc}
+  .m-indigo .metric-value{color:#d8b4fe;text-shadow:0 0 18px rgba(168,85,247,.5)}
+  .m-green .metric-ico{background:rgba(52,211,153,.14);color:#34d399}
+  .m-green .metric-value{color:#6ee7b7}
+  .m-cyan .metric-ico{background:rgba(34,211,238,.14);color:#22d3ee}
+  .m-cyan .metric-value{color:#67e8f9}
+  .m-yellow .metric-ico{background:rgba(251,191,36,.13);color:#fbbf24}
+  .m-yellow .metric-value{color:#fcd34d}
+  .m-purple .metric-ico{background:rgba(192,132,252,.16);color:#c084fc}
+  .m-purple .metric-value{color:#d8b4fe}
+  .m-red .metric-ico{background:rgba(251,113,133,.14);color:#fb7185}
+  .m-red .metric-value{color:#fda4af}
+  .m-indigo{box-shadow:inset 0 2px 0 rgba(168,85,247,.6),0 0 26px rgba(168,85,247,.07)}
+  .m-green{box-shadow:inset 0 2px 0 rgba(52,211,153,.6),0 0 26px rgba(168,85,247,.07)}
+  .m-cyan{box-shadow:inset 0 2px 0 rgba(34,211,238,.6),0 0 26px rgba(168,85,247,.07)}
+  .m-yellow{box-shadow:inset 0 2px 0 rgba(251,191,36,.6),0 0 26px rgba(168,85,247,.07)}
+  .m-purple{box-shadow:inset 0 2px 0 rgba(192,132,252,.6),0 0 26px rgba(168,85,247,.07)}
+  .m-red{box-shadow:inset 0 2px 0 rgba(251,113,133,.6),0 0 26px rgba(168,85,247,.07)}
+
+  .chart-card,.table-section{background:var(--card);border:1px solid var(--border);box-shadow:0 0 26px rgba(168,85,247,.07),0 10px 30px rgba(0,0,0,.4)}
+  .chart-card:hover{border-color:rgba(168,85,247,.4)}
+  .chart-center .cc-val{color:#34d399;text-shadow:0 0 18px rgba(52,211,153,.6)}
+  thead th{background:rgba(8,10,22,.97);color:#8f93b8;border-bottom:1px solid rgba(168,85,247,.16)}
+  tbody tr{border-bottom:1px solid rgba(168,85,247,.07)}
+  tbody tr:hover{background:rgba(168,85,247,.10)}
+  .progress-fill{background:linear-gradient(90deg,#a855f7,#22d3ee)}
+  .filter-btn{background:rgba(8,10,22,.75);border-color:rgba(168,85,247,.22);color:#8f93b8}
+  .filter-btn:hover{border-color:#22d3ee;color:#e0e7ff}
+  .filter-btn.active{background:linear-gradient(92deg,rgba(168,85,247,.9),rgba(34,211,238,.85));color:#05060c;font-weight:700;box-shadow:0 0 20px rgba(168,85,247,.45)}
+  .search-input{background:rgba(8,10,22,.75);border-color:rgba(168,85,247,.22);color:var(--text)}
+  .search-input:focus{border-color:#22d3ee;box-shadow:0 0 0 3px rgba(34,211,238,.16)}
+  footer{border-top-color:rgba(168,85,247,.14)}
+  .toast{background:rgba(10,13,26,.96);border-color:rgba(168,85,247,.3);box-shadow:0 0 30px rgba(168,85,247,.15),0 16px 44px rgba(0,0,0,.5)}
 </style>
 </head>
 <body>
@@ -254,7 +336,7 @@
       <div class="logo-badge">G</div>
       <div>
         <h1>GOFO <span class="gradient-text">AI 提效看板</span></h1>
-        <div class="subtitle">飞书多维表数据驱动 · GSAP 动效 · 自动实时同步</div>
+        <div class="subtitle">飞书多维表数据驱动 · 霓虹赛博主题</div>
       </div>
     </div>
     <div class="header-right">
@@ -285,7 +367,7 @@
       <div class="chart-wrap"><canvas id="chartEfficiency"></canvas></div>
     </div>
     <div class="chart-card full" data-scroll>
-      <div class="chart-title"><span class="dot" style="color:#a78bfa;background:#a78bfa"></span>Top 提效项目</div>
+      <div class="chart-title"><span class="dot" style="color:#c084fc;background:#c084fc"></span>Top 提效项目</div>
       <div class="chart-wrap"><canvas id="chartTop"></canvas></div>
     </div>
   </section>
@@ -330,8 +412,8 @@
 // 构建时注入占位符 (fetch-and-build.js 替换)
 // ============================================================
 var LOGIN_HASH = "6ce20308599f0bbb871c115b0243197ea6177d56b9913ed2da6fa8e1c8dfe04e";
-var BUILD_TIMESTAMP = "2026-08-27 08:37:25";
-var EMBEDDED_DATA = {"total":42,"updated_at":"2026-08-27 08:35:23","records":[{"title":"AIGUS正式工考勤数据晾晒","group":"系统组","status":"已完成","owner":"@Mchester Zhang","deadline":"2026-06-19","has_blocker":"否","has_skill":"是","online":"","ai_hours":3.8,"orig_hours":80.5,"efficiency_hours":76.7,"progress":1,"result_link":"https://personnel-platform-orpin.vercel.app","blocker_detail":"","lessons":"1、vecel部署在海外，GF需要更改DNS才能访问；2、github代码托管规范，减少仓库建设减轻服务对接难度","results":"正职工考勤日晾晒 SOP链接","calibration":"排班率数据准确度100%，排班正确率、打卡率、缺卡数误差控制在0-2%","style_tuning":"调整前端界面和功能优化，1、功能优化，固定文件上传样式，优化权限授权方式；2样式优化：增加GSAP样式组件，提高界面交互感","data_input":"投5.30-6.10de 考勤数据，让AI处理数据生成html表，与人工处理数据进行对比"},{"title":"AI核算补贴类","group":"薪酬组","status":"已完成","owner":"@Liping Xu","deadline":"2026-05-22","has_blocker":"否","has_skill":"是","online":"true","ai_hours":0.2,"orig_hours":6,"efficiency_hours":5.8,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按补贴类计算规则","calibration":"准确率100%","style_tuning":"明细和汇总表","data_input":"目前四个补贴均投喂完成数据生成，新增一个补贴待投喂验证"},{"title":"AI进行系统视频培训","group":"系统组","status":"已完成","owner":"@Ilyth An@Ann Ma","deadline":"2026-06-30","has_blocker":"否","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"参照集团敏捷培训视频skill生产视频","calibration":"","style_tuning":"","data_input":""},{"title":"AI核算1099司机工时","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-05-15","has_blocker":"否","has_skill":"是","online":"true","ai_hours":56,"orig_hours":60,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按1099司机工时核算规则","calibration":"偶有四舍五入0.01的工时差异，不影响整体","style_tuning":"样式和工资表一致","data_input":"先投喂两个区试算，然后再全部区域投喂试算一期"},{"title":"AI提取意大利PDF工资单为EXCEL表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-05-15","has_blocker":"否","has_skill":"是","online":"true","ai_hours":18.5,"orig_hours":22.5,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按数据需求提取","calibration":"多次调整数据位置的准确度，以及漏人的情况，现基本能全部提取","style_tuning":"样式无要求，能区分数据即可","data_input":"先投喂两份数据调试"},{"title":"AI进行GUS劳务工考勤数据晾晒","group":"报账组","status":"已完成","owner":"@Mchester Zhang","deadline":"2026-08-05","has_blocker":"否","has_skill":"否","online":"","ai_hours":1.9,"orig_hours":18,"efficiency_hours":17.1,"progress":1,"result_link":"https://a4073c6d60bf4842b324f7adbdbe7b7b.app.codebuddy.work","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI 提升人事服务台机器人拦截情况","group":"支持组","status":"已完成","owner":"@Owen Yuan@Zoe Tian","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"true","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"1.服务台链接ai，通过直连服务台无法直接输出图片回复。需要单独加云文档才可以实现图片回复","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行OA系统组织架构表匹配ehr系统表单，导入提效","group":"支持组","status":"关闭","owner":"@Owen Yuan@Zhiqing Guo","deadline":"2026-06-30","has_blocker":"是","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"OA流程提交的表单每人填写情况不一致（名字可能是重名、没提供工号），暂时无法高正确率输出对应数据","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行人力成本打标提效","group":"支持组","status":"已完成","owner":"@Owen Yuan@Ziwei Wang","deadline":"2026-07-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":8,"orig_hours":24,"efficiency_hours":16,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行月度绩效晾晒展现效果优化","group":"支持组","status":"已完成","owner":"@Owen Yuan@Zoe Tian","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"true","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"http://【WorkBuddy】performance_report.html","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行招聘达成率数据统计提效","group":"支持组","status":"关闭","owner":"@Owen Yuan@Clara Li","deadline":"2026-06-30","has_blocker":"是","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行薪资流水数据提取、信息核对","group":"支持组","status":"暂停","owner":"@Owen Yuan@Ziwei Wang","deadline":"2026-07-31","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"薪资流水改革为 5年社保+1年流水，暂时无需ai识别1年流水","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行美区各大区劳务报账晾晒","group":"支持组","status":"已完成","owner":"@Ziwei Wang","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"http://美区劳务付款看板技能-安装包.zip","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行招聘积分晾晒","group":"支持组","status":"已完成","owner":"@Ziwei Wang@Clara Li","deadline":"2026-07-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":2,"orig_hours":4,"efficiency_hours":2,"progress":1,"result_link":"https://workbuddy.link/p/JccGLnooiO1WBx5SgvIKIh?ext2=copy_link","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行供应商门户区域月度供应商派遣达标率汇总报告","group":"系统组","status":"已完成","owner":"@Ann Ma","deadline":"2026-07-31","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"OTWS无法直接导出数据报表分析，需要AI从网页直接获取数据生成报表","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行自动更新考勤机状态","group":"系统组","status":"待启动","owner":"@Ann Ma","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"研究aily自动回复群任务","group":"系统组","status":"待启动","owner":"@Ann Ma","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行自动生成培训ppt","group":"系统组","status":"已完成","owner":"@Ilyth An","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0.5,"orig_hours":1,"efficiency_hours":0.5,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI根据投喂SOP、问题自动生成对应FAQ","group":"系统组","status":"已完成","owner":"@Beverly Lin","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"搜索不够智能；图片与问题和答案对不上；交互有些卡顿","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GUS新班次使用情况季度晾晒","group":"系统组","status":"已完成","owner":"@Ilyth An@Mchester Zhang","deadline":"2026-07-15","has_blocker":"否","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"1.首先剔除工号为GL0开头的国内员工\n2.对班次数据进行清理，改成需要展示的56班次名称\n3.按照区域进行拆分，分别进行数据展示和图标展示\n4.将大区数据进行整理","calibration":"基本准确","style_tuning":"正在优化前端UI展示","data_input":"已投喂5月班次数据"},{"title":"AI进行需求仪表盘展示","group":"系统组","status":"待启动","owner":"@Beverly Lin@Mchester Zhang@Ilyth An","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行需求状态、内容机器人推送","group":"系统组","status":"待启动","owner":"@Beverly Lin@Mchester Zhang@Ilyth An@Ann Ma","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI提取荷兰PDF账单养老金数据","group":"薪酬组","status":"已完成","owner":"@Yuxia Lai","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":1,"orig_hours":2,"efficiency_hours":1,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI生成1099司机月度薪酬看板","group":"薪酬组","status":"已完成","owner":"@Anni Liu","deadline":"2026-06-10","has_blocker":"否","has_skill":"是","online":"true","ai_hours":0.5,"orig_hours":1,"efficiency_hours":0.5,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按看报要求提取数据","calibration":"多次调整看板图表的准确度，现数据基本准确","style_tuning":"固定看板模板","data_input":"投喂2026年1-4月数据"},{"title":"AI实现机器人每日自动推送数据卡片","group":"系统组","status":"已完成","owner":"@Mchester Zhang","deadline":"2026-08-01","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI校准GEU考勤签到表和AI识别小程序工时","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-17","has_blocker":"是","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"CodeBuddy没有OCR引擎，它只能逐条读取并理解，数据量大时非常耗时且耗积分","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI提取法国PDF劳务费发票为excel表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-14","has_blocker":"否","has_skill":"是","online":"false","ai_hours":6,"orig_hours":12,"efficiency_hours":6,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按数据需求提取","calibration":"多次调整数据位置的准确度，以及漏人的情况，现基本能全部提取","style_tuning":"","data_input":"先投喂两份数据调试"},{"title":"AI提取意大利PDF劳务费发票为excel表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-14","has_blocker":"否","has_skill":"是","online":"false","ai_hours":16,"orig_hours":20,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按数据需求提取","calibration":"多次调整数据位置的准确度，以及漏人的情况，现基本能全部提取","style_tuning":"","data_input":"先投喂两份数据调试"},{"title":"AI进行GUS考勤确认&补签数据日晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GUS报账节点数据月晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GUS劳务工签署率数据周晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AIGEU四个国家正式工考勤数据晾晒","group":"系统组","status":"已完成","owner":"@Mchester Zhang","deadline":"2026-08-14","has_blocker":"否","has_skill":"否","online":"","ai_hours":2,"orig_hours":32,"efficiency_hours":30,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GUS考勤确认&补签数据周晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行海外劳务报账运营质量报告月晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行半年度绩效晾晒","group":"支持组","status":"已完成","owner":"@Zoe Tian@Owen Yuan","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"true","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行上半年等级分布晾晒","group":"支持组","status":"已完成","owner":"@Zoe Tian@Owen Yuan","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI合并花名册、入职/待入职/取消入职名单、调动报告","group":"支持组","status":"已完成","owner":"@Ziwei Wang","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":20,"orig_hours":40,"efficiency_hours":20,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GEU各大区劳务费用实发晾晒","group":"支持组","status":"已完成","owner":"@Ziwei Wang","deadline":"2026-08-31","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI提取法国PDF工资单数据为excel表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-15","has_blocker":"否","has_skill":"否","online":"","ai_hours":8,"orig_hours":12,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI提取荷兰PDF工资单数据为excel表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-17","has_blocker":"否","has_skill":"否","online":"","ai_hours":16,"orig_hours":20,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI生成1099司机周薪酬勘误看板","group":"薪酬组","status":"已完成","owner":"@Anni Liu","deadline":"2026-07-31","has_blocker":"否","has_skill":"否","online":"","ai_hours":0.5,"orig_hours":1,"efficiency_hours":0.5,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI生成法国劳务工时汇总表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-08-11","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""}]};
+var BUILD_TIMESTAMP = "2026-08-27 09:07:25";
+var EMBEDDED_DATA = {"total":42,"updated_at":"2026-08-27 09:05:23","records":[{"title":"AIGUS正式工考勤数据晾晒","group":"系统组","status":"已完成","owner":"@Mchester Zhang","deadline":"2026-06-19","has_blocker":"否","has_skill":"是","online":"","ai_hours":3.8,"orig_hours":80.5,"efficiency_hours":76.7,"progress":1,"result_link":"https://personnel-platform-orpin.vercel.app","blocker_detail":"","lessons":"1、vecel部署在海外，GF需要更改DNS才能访问；2、github代码托管规范，减少仓库建设减轻服务对接难度","results":"正职工考勤日晾晒 SOP链接","calibration":"排班率数据准确度100%，排班正确率、打卡率、缺卡数误差控制在0-2%","style_tuning":"调整前端界面和功能优化，1、功能优化，固定文件上传样式，优化权限授权方式；2样式优化：增加GSAP样式组件，提高界面交互感","data_input":"投5.30-6.10de 考勤数据，让AI处理数据生成html表，与人工处理数据进行对比"},{"title":"AI核算补贴类","group":"薪酬组","status":"已完成","owner":"@Liping Xu","deadline":"2026-05-22","has_blocker":"否","has_skill":"是","online":"true","ai_hours":0.2,"orig_hours":6,"efficiency_hours":5.8,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按补贴类计算规则","calibration":"准确率100%","style_tuning":"明细和汇总表","data_input":"目前四个补贴均投喂完成数据生成，新增一个补贴待投喂验证"},{"title":"AI进行系统视频培训","group":"系统组","status":"已完成","owner":"@Ilyth An@Ann Ma","deadline":"2026-06-30","has_blocker":"否","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"参照集团敏捷培训视频skill生产视频","calibration":"","style_tuning":"","data_input":""},{"title":"AI核算1099司机工时","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-05-15","has_blocker":"否","has_skill":"是","online":"true","ai_hours":56,"orig_hours":60,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按1099司机工时核算规则","calibration":"偶有四舍五入0.01的工时差异，不影响整体","style_tuning":"样式和工资表一致","data_input":"先投喂两个区试算，然后再全部区域投喂试算一期"},{"title":"AI提取意大利PDF工资单为EXCEL表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-05-15","has_blocker":"否","has_skill":"是","online":"true","ai_hours":18.5,"orig_hours":22.5,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按数据需求提取","calibration":"多次调整数据位置的准确度，以及漏人的情况，现基本能全部提取","style_tuning":"样式无要求，能区分数据即可","data_input":"先投喂两份数据调试"},{"title":"AI进行GUS劳务工考勤数据晾晒","group":"报账组","status":"已完成","owner":"@Mchester Zhang","deadline":"2026-08-05","has_blocker":"否","has_skill":"否","online":"","ai_hours":1.9,"orig_hours":18,"efficiency_hours":17.1,"progress":1,"result_link":"https://a4073c6d60bf4842b324f7adbdbe7b7b.app.codebuddy.work","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI 提升人事服务台机器人拦截情况","group":"支持组","status":"已完成","owner":"@Owen Yuan@Zoe Tian","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"true","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"1.服务台链接ai，通过直连服务台无法直接输出图片回复。需要单独加云文档才可以实现图片回复","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行OA系统组织架构表匹配ehr系统表单，导入提效","group":"支持组","status":"关闭","owner":"@Owen Yuan@Zhiqing Guo","deadline":"2026-06-30","has_blocker":"是","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"OA流程提交的表单每人填写情况不一致（名字可能是重名、没提供工号），暂时无法高正确率输出对应数据","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行人力成本打标提效","group":"支持组","status":"已完成","owner":"@Owen Yuan@Ziwei Wang","deadline":"2026-07-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":8,"orig_hours":24,"efficiency_hours":16,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行月度绩效晾晒展现效果优化","group":"支持组","status":"已完成","owner":"@Owen Yuan@Zoe Tian","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"true","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"http://【WorkBuddy】performance_report.html","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行招聘达成率数据统计提效","group":"支持组","status":"关闭","owner":"@Owen Yuan@Clara Li","deadline":"2026-06-30","has_blocker":"是","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行薪资流水数据提取、信息核对","group":"支持组","status":"暂停","owner":"@Owen Yuan@Ziwei Wang","deadline":"2026-07-31","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"薪资流水改革为 5年社保+1年流水，暂时无需ai识别1年流水","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行美区各大区劳务报账晾晒","group":"支持组","status":"已完成","owner":"@Ziwei Wang","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"http://美区劳务付款看板技能-安装包.zip","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行招聘积分晾晒","group":"支持组","status":"已完成","owner":"@Ziwei Wang@Clara Li","deadline":"2026-07-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":2,"orig_hours":4,"efficiency_hours":2,"progress":1,"result_link":"https://workbuddy.link/p/JccGLnooiO1WBx5SgvIKIh?ext2=copy_link","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行供应商门户区域月度供应商派遣达标率汇总报告","group":"系统组","status":"已完成","owner":"@Ann Ma","deadline":"2026-07-31","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"OTWS无法直接导出数据报表分析，需要AI从网页直接获取数据生成报表","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行自动更新考勤机状态","group":"系统组","status":"待启动","owner":"@Ann Ma","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"研究aily自动回复群任务","group":"系统组","status":"待启动","owner":"@Ann Ma","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行自动生成培训ppt","group":"系统组","status":"已完成","owner":"@Ilyth An","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0.5,"orig_hours":1,"efficiency_hours":0.5,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI根据投喂SOP、问题自动生成对应FAQ","group":"系统组","status":"已完成","owner":"@Beverly Lin","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"搜索不够智能；图片与问题和答案对不上；交互有些卡顿","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GUS新班次使用情况季度晾晒","group":"系统组","status":"已完成","owner":"@Ilyth An@Mchester Zhang","deadline":"2026-07-15","has_blocker":"否","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"1.首先剔除工号为GL0开头的国内员工\n2.对班次数据进行清理，改成需要展示的56班次名称\n3.按照区域进行拆分，分别进行数据展示和图标展示\n4.将大区数据进行整理","calibration":"基本准确","style_tuning":"正在优化前端UI展示","data_input":"已投喂5月班次数据"},{"title":"AI进行需求仪表盘展示","group":"系统组","status":"待启动","owner":"@Beverly Lin@Mchester Zhang@Ilyth An","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行需求状态、内容机器人推送","group":"系统组","status":"待启动","owner":"@Beverly Lin@Mchester Zhang@Ilyth An@Ann Ma","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI提取荷兰PDF账单养老金数据","group":"薪酬组","status":"已完成","owner":"@Yuxia Lai","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":1,"orig_hours":2,"efficiency_hours":1,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI生成1099司机月度薪酬看板","group":"薪酬组","status":"已完成","owner":"@Anni Liu","deadline":"2026-06-10","has_blocker":"否","has_skill":"是","online":"true","ai_hours":0.5,"orig_hours":1,"efficiency_hours":0.5,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按看报要求提取数据","calibration":"多次调整看板图表的准确度，现数据基本准确","style_tuning":"固定看板模板","data_input":"投喂2026年1-4月数据"},{"title":"AI实现机器人每日自动推送数据卡片","group":"系统组","status":"已完成","owner":"@Mchester Zhang","deadline":"2026-08-01","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI校准GEU考勤签到表和AI识别小程序工时","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-17","has_blocker":"是","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"CodeBuddy没有OCR引擎，它只能逐条读取并理解，数据量大时非常耗时且耗积分","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI提取法国PDF劳务费发票为excel表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-14","has_blocker":"否","has_skill":"是","online":"false","ai_hours":6,"orig_hours":12,"efficiency_hours":6,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按数据需求提取","calibration":"多次调整数据位置的准确度，以及漏人的情况，现基本能全部提取","style_tuning":"","data_input":"先投喂两份数据调试"},{"title":"AI提取意大利PDF劳务费发票为excel表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-14","has_blocker":"否","has_skill":"是","online":"false","ai_hours":16,"orig_hours":20,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按数据需求提取","calibration":"多次调整数据位置的准确度，以及漏人的情况，现基本能全部提取","style_tuning":"","data_input":"先投喂两份数据调试"},{"title":"AI进行GUS考勤确认&补签数据日晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GUS报账节点数据月晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GUS劳务工签署率数据周晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AIGEU四个国家正式工考勤数据晾晒","group":"系统组","status":"已完成","owner":"@Mchester Zhang","deadline":"2026-08-14","has_blocker":"否","has_skill":"否","online":"","ai_hours":2,"orig_hours":32,"efficiency_hours":30,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GUS考勤确认&补签数据周晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行海外劳务报账运营质量报告月晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行半年度绩效晾晒","group":"支持组","status":"已完成","owner":"@Zoe Tian@Owen Yuan","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"true","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行上半年等级分布晾晒","group":"支持组","status":"已完成","owner":"@Zoe Tian@Owen Yuan","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI合并花名册、入职/待入职/取消入职名单、调动报告","group":"支持组","status":"已完成","owner":"@Ziwei Wang","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":20,"orig_hours":40,"efficiency_hours":20,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GEU各大区劳务费用实发晾晒","group":"支持组","status":"已完成","owner":"@Ziwei Wang","deadline":"2026-08-31","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI提取法国PDF工资单数据为excel表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-15","has_blocker":"否","has_skill":"否","online":"","ai_hours":8,"orig_hours":12,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI提取荷兰PDF工资单数据为excel表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-17","has_blocker":"否","has_skill":"否","online":"","ai_hours":16,"orig_hours":20,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI生成1099司机周薪酬勘误看板","group":"薪酬组","status":"已完成","owner":"@Anni Liu","deadline":"2026-07-31","has_blocker":"否","has_skill":"否","online":"","ai_hours":0.5,"orig_hours":1,"efficiency_hours":0.5,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI生成法国劳务工时汇总表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-08-11","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""}]};
 
 // ============================================================
 // 配置区
@@ -344,7 +426,7 @@ var WORKER_URL = "https://gofo-dashboard-api.chengzai456.workers.dev";
 var REFRESH_INTERVAL = 5 * 60 * 1000;   // 自动刷新间隔 5 分钟
 
 // 小组配色
-var GROUP_COLORS = ["#6366f1", "#22d3ee", "#f59e0b", "#ec4899", "#34d399", "#a78bfa", "#f87171", "#fb923c"];
+var GROUP_COLORS = ["#6366f1", "#22d3ee", "#f59e0b", "#ec4899", "#34d399", "#c084fc", "#f87171", "#fb923c"];
 
 // 状态配置: 颜色 + 标签样式
 var STATUS_CONFIG = {
@@ -515,8 +597,8 @@ function chartOpts() {
     animation: { duration: 900, easing: "easeOutQuart" },
     plugins: { legend: { display: false } },
     scales: {
-      x: { ticks: { color: "#8b96a8", font: { size: 11 } }, grid: { color: "rgba(148,163,184,.10)" } },
-      y: { ticks: { color: "#8b96a8", font: { size: 11 } }, grid: { color: "rgba(148,163,184,.10)" } }
+      x: { ticks: { color: "#8f93b8", font: { size: 11 } }, grid: { color: "rgba(168,85,247,.13)" } },
+      y: { ticks: { color: "#8f93b8", font: { size: 11 } }, grid: { color: "rgba(168,85,247,.13)" } }
     }
   };
 }
@@ -568,14 +650,14 @@ function renderCharts() {
       datasets: [{
         data: sKeys.map(function(k) { return agg.statuses[k]; }),
         backgroundColor: sKeys.map(function(k) { return (STATUS_CONFIG[k] || { color: "#9ca3af" }).color; }),
-        borderColor: "#0d1424", borderWidth: 3, hoverOffset: 8
+        borderColor: "#0a0d1a", borderWidth: 3, hoverOffset: 8
       }]
     },
     options: Object.assign({}, o, {
       cutout: "64%",
       scales: {},
       plugins: {
-        legend: { display: true, position: "bottom", labels: { color: "#8b96a8", padding: 14, usePointStyle: true, pointStyle: "circle", font: { size: 12 } } }
+        legend: { display: true, position: "bottom", labels: { color: "#8f93b8", padding: 14, usePointStyle: true, pointStyle: "circle", font: { size: 12 } } }
       }
     })
   });
@@ -602,8 +684,8 @@ function renderCharts() {
     options: Object.assign({}, o, {
       indexAxis: "y",
       scales: {
-        x: { ticks: { color: "#8b96a8", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(148,163,184,.10)" } },
-        y: { ticks: { color: "#8b96a8", font: { size: 12 } }, grid: { display: false } }
+        x: { ticks: { color: "#8f93b8", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(168,85,247,.13)" } },
+        y: { ticks: { color: "#8f93b8", font: { size: 12 } }, grid: { display: false } }
       }
     })
   });
@@ -621,16 +703,16 @@ function renderCharts() {
       datasets: [{
         label: "提效 (H/月)",
         data: top.map(function(r) { return parseFloat(r.efficiency_hours) || 0; }),
-        backgroundColor: function(c) { return barGradH(c.chart.ctx, "#a78bfa"); },
-        hoverBackgroundColor: "#c4b5fd",
+        backgroundColor: function(c) { return barGradH(c.chart.ctx, "#c084fc"); },
+        hoverBackgroundColor: "#e9d5ff",
         borderRadius: 9, barThickness: 22, maxBarThickness: 28
       }]
     },
     options: Object.assign({}, o, {
       indexAxis: "y",
       scales: {
-        x: { ticks: { color: "#8b96a8", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(148,163,184,.10)" } },
-        y: { ticks: { color: "#cbd5e1", font: { size: 11.5 } }, grid: { display: false } }
+        x: { ticks: { color: "#8f93b8", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(168,85,247,.13)" } },
+        y: { ticks: { color: "#c4b5fd", font: { size: 11.5 } }, grid: { display: false } }
       }
     })
   });

@@ -13,13 +13,13 @@
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   :root{
-    --bg:#070b14; --bg2:#0b1120;
-    --card:rgba(17,24,39,.72); --card-hover:rgba(30,41,59,.85);
-    --border:rgba(148,163,184,.14); --border-strong:rgba(148,163,184,.28);
-    --text:#e5e9f0; --dim:#8b96a8;
-    --indigo:#6366f1; --cyan:#22d3ee; --green:#34d399; --yellow:#fbbf24; --red:#f87171;
-    --purple:#a78bfa; --orange:#fb923c; --pink:#ec4899;
-    --radius:16px;
+    --bg:#05060c; --bg2:#090b18;
+    --card:rgba(10,13,26,.78); --card-hover:rgba(18,22,44,.9);
+    --border:rgba(168,85,247,.20); --border-strong:rgba(34,211,238,.45);
+    --text:#eef0ff; --dim:#8f93b8;
+    --indigo:#a855f7; --cyan:#22d3ee; --green:#34d399; --yellow:#fbbf24; --red:#fb7185;
+    --purple:#c084fc; --orange:#fb923c; --pink:#f472b6;
+    --radius:14px;
     --font-num:'Space Grotesk','Inter',-apple-system,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif;
   }
   html{scroll-behavior:smooth}
@@ -50,7 +50,7 @@
 
   /* ===== 滚动进度条 ===== */
   #progressBar{position:fixed;top:0;left:0;right:0;height:3px;z-index:1000;
-    background:linear-gradient(90deg,#6366f1,#22d3ee,#a78bfa);
+    background:linear-gradient(90deg,#6366f1,#22d3ee,#c084fc);
     transform:scaleX(0);transform-origin:left;box-shadow:0 0 12px rgba(99,102,241,.8)}
 
   .container{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:28px 24px 40px}
@@ -86,7 +86,7 @@
     font-family:var(--font-num);font-size:25px;font-weight:700;color:#fff;flex-shrink:0;
     background:linear-gradient(135deg,#6366f1,#22d3ee);box-shadow:0 10px 30px rgba(99,102,241,.4)}
   .header-left h1{font-size:26px;font-weight:800;letter-spacing:-.5px;line-height:1.25}
-  .gradient-text{background:linear-gradient(92deg,#818cf8,#22d3ee 45%,#a78bfa 80%);background-size:220% 100%;
+  .gradient-text{background:linear-gradient(92deg,#818cf8,#22d3ee 45%,#c084fc 80%);background-size:220% 100%;
     -webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 7s linear infinite}
   @keyframes shimmer{to{background-position:-220% 0}}
   .subtitle{color:var(--dim);font-size:13px;margin-top:3px}
@@ -130,8 +130,8 @@
   .m-cyan .metric-value{color:#67e8f9}
   .m-yellow .metric-ico{background:rgba(251,191,36,.15);color:#fbbf24}
   .m-yellow .metric-value{color:#fcd34d}
-  .m-purple .metric-ico{background:rgba(167,139,250,.16);color:#a78bfa}
-  .m-purple .metric-value{color:#c4b5fd}
+  .m-purple .metric-ico{background:rgba(167,139,250,.16);color:#c084fc}
+  .m-purple .metric-value{color:#e9d5ff}
   .m-red .metric-ico{background:rgba(248,113,113,.15);color:#f87171}
   .m-red .metric-value{color:#fca5a5}
   .m-indigo{box-shadow:inset 0 2px 0 rgba(99,102,241,.55),0 10px 30px rgba(0,0,0,.28)}
@@ -184,9 +184,9 @@
   .tag-green{background:rgba(52,211,153,.14);color:#6ee7b7}
   .tag-yellow{background:rgba(251,191,36,.13);color:#fcd34d}
   .tag-orange{background:rgba(251,146,60,.13);color:#fdba74}
-  .tag-gray{background:rgba(148,163,184,.13);color:#cbd5e1}
+  .tag-gray{background:rgba(148,163,184,.13);color:#c4b5fd}
   .tag-red{background:rgba(248,113,113,.14);color:#fca5a5}
-  .tag-purple{background:rgba(167,139,250,.14);color:#c4b5fd}
+  .tag-purple{background:rgba(167,139,250,.14);color:#e9d5ff}
   .tag-cyan{background:rgba(34,211,238,.13);color:#67e8f9}
   .progress-bar{display:inline-block;width:64px;height:6px;background:rgba(148,163,184,.18);border-radius:4px;
     vertical-align:middle;margin:0 8px 0 4px;overflow:hidden}
@@ -222,6 +222,88 @@
     .metric-value{font-size:32px}
     .table-header{padding:16px}
   }
+
+  /* ===== 霓虹主题覆盖 ===== */
+  body{background:
+    radial-gradient(1000px 540px at 80% -10%, rgba(168,85,247,.22), transparent 60%),
+    radial-gradient(900px 520px at -10% 30%, rgba(34,211,238,.14), transparent 58%),
+    radial-gradient(800px 500px at 50% 115%, rgba(236,72,153,.13), transparent 62%),
+    #05060c}
+  ::selection{background:rgba(168,85,247,.45)}
+  /* 扫描线 + 星点 */
+  body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(1.5px 1.5px at 12% 22%, rgba(255,255,255,.5), transparent 55%),
+      radial-gradient(1.2px 1.2px at 68% 14%, rgba(255,255,255,.4), transparent 55%),
+      radial-gradient(1.6px 1.6px at 35% 68%, rgba(255,255,255,.35), transparent 55%),
+      radial-gradient(1.2px 1.2px at 82% 55%, rgba(255,255,255,.4), transparent 55%),
+      radial-gradient(1.4px 1.4px at 22% 88%, rgba(255,255,255,.3), transparent 55%),
+      radial-gradient(1.3px 1.3px at 55% 38%, rgba(255,255,255,.35), transparent 55%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 1px, transparent 1px 4px)}
+  .bg-grid{background-image:linear-gradient(rgba(168,85,247,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,.08) 1px,transparent 1px);background-size:44px 44px}
+  .orb{opacity:.5}
+  .orb.o1{background:rgba(168,85,247,.5)}
+  .orb.o2{background:rgba(34,211,238,.32)}
+  .orb.o3{background:rgba(236,72,153,.4)}
+  #progressBar{background:linear-gradient(90deg,#a855f7,#22d3ee,#f472b6);box-shadow:0 0 14px rgba(168,85,247,.9);height:3px}
+  .container{max-width:1400px;padding:28px 24px 44px}
+
+  .login-overlay{background:radial-gradient(800px 460px at 50% -10%,rgba(168,85,247,.3),transparent 60%),#05060c}
+  .login-box{background:rgba(10,13,26,.9);border:1px solid rgba(168,85,247,.35);border-radius:20px;
+    box-shadow:0 0 44px rgba(168,85,247,.18),0 24px 70px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06)}
+  .login-box::before{background:linear-gradient(135deg,rgba(168,85,247,.8),transparent 40%,transparent 60%,rgba(34,211,238,.75))}
+  .login-logo{background:linear-gradient(135deg,#a855f7,#22d3ee);box-shadow:0 10px 32px rgba(168,85,247,.55)}
+  .login-input{background:rgba(8,10,22,.8);border-color:rgba(168,85,247,.25);color:var(--text)}
+  .login-input:focus{border-color:#22d3ee;box-shadow:0 0 0 3px rgba(34,211,238,.18)}
+  .login-btn{background:linear-gradient(92deg,#a855f7,#d946ef 45%,#22d3ee);box-shadow:0 10px 28px rgba(168,85,247,.5)}
+  .login-btn:hover{background-position:100% 0}
+
+  .logo-badge{background:linear-gradient(135deg,#a855f7,#22d3ee);box-shadow:0 10px 32px rgba(168,85,247,.5)}
+  .gradient-text{background:linear-gradient(92deg,#c084fc,#22d3ee 45%,#f472b6 80%)}
+  .header-left h1{text-shadow:0 0 24px rgba(168,85,247,.35)}
+  .pill{background:rgba(10,13,26,.8);border-color:rgba(168,85,247,.22)}
+  .refresh-btn{background:rgba(10,13,26,.8);border-color:rgba(168,85,247,.28);color:#e0e7ff}
+  .refresh-btn:hover{border-color:#22d3ee;box-shadow:0 0 0 3px rgba(34,211,238,.16),0 0 20px rgba(34,211,238,.2)}
+
+  .metric-card{background:var(--card);border:1px solid var(--border);
+    box-shadow:0 0 26px rgba(168,85,247,.07),0 10px 30px rgba(0,0,0,.4)}
+  .metric-card:hover{transform:translateY(-4px);border-color:var(--border-strong);
+    box-shadow:0 0 34px rgba(34,211,238,.18),0 18px 44px rgba(0,0,0,.5)}
+  .metric-card::after{background:radial-gradient(320px 120px at 80% -20%,rgba(192,132,252,.12),transparent 70%)}
+  .metric-value{text-shadow:0 0 18px rgba(168,85,247,.4)}
+  .m-indigo .metric-ico{background:rgba(168,85,247,.16);color:#c084fc}
+  .m-indigo .metric-value{color:#d8b4fe;text-shadow:0 0 18px rgba(168,85,247,.5)}
+  .m-green .metric-ico{background:rgba(52,211,153,.14);color:#34d399}
+  .m-green .metric-value{color:#6ee7b7}
+  .m-cyan .metric-ico{background:rgba(34,211,238,.14);color:#22d3ee}
+  .m-cyan .metric-value{color:#67e8f9}
+  .m-yellow .metric-ico{background:rgba(251,191,36,.13);color:#fbbf24}
+  .m-yellow .metric-value{color:#fcd34d}
+  .m-purple .metric-ico{background:rgba(192,132,252,.16);color:#c084fc}
+  .m-purple .metric-value{color:#d8b4fe}
+  .m-red .metric-ico{background:rgba(251,113,133,.14);color:#fb7185}
+  .m-red .metric-value{color:#fda4af}
+  .m-indigo{box-shadow:inset 0 2px 0 rgba(168,85,247,.6),0 0 26px rgba(168,85,247,.07)}
+  .m-green{box-shadow:inset 0 2px 0 rgba(52,211,153,.6),0 0 26px rgba(168,85,247,.07)}
+  .m-cyan{box-shadow:inset 0 2px 0 rgba(34,211,238,.6),0 0 26px rgba(168,85,247,.07)}
+  .m-yellow{box-shadow:inset 0 2px 0 rgba(251,191,36,.6),0 0 26px rgba(168,85,247,.07)}
+  .m-purple{box-shadow:inset 0 2px 0 rgba(192,132,252,.6),0 0 26px rgba(168,85,247,.07)}
+  .m-red{box-shadow:inset 0 2px 0 rgba(251,113,133,.6),0 0 26px rgba(168,85,247,.07)}
+
+  .chart-card,.table-section{background:var(--card);border:1px solid var(--border);box-shadow:0 0 26px rgba(168,85,247,.07),0 10px 30px rgba(0,0,0,.4)}
+  .chart-card:hover{border-color:rgba(168,85,247,.4)}
+  .chart-center .cc-val{color:#34d399;text-shadow:0 0 18px rgba(52,211,153,.6)}
+  thead th{background:rgba(8,10,22,.97);color:#8f93b8;border-bottom:1px solid rgba(168,85,247,.16)}
+  tbody tr{border-bottom:1px solid rgba(168,85,247,.07)}
+  tbody tr:hover{background:rgba(168,85,247,.10)}
+  .progress-fill{background:linear-gradient(90deg,#a855f7,#22d3ee)}
+  .filter-btn{background:rgba(8,10,22,.75);border-color:rgba(168,85,247,.22);color:#8f93b8}
+  .filter-btn:hover{border-color:#22d3ee;color:#e0e7ff}
+  .filter-btn.active{background:linear-gradient(92deg,rgba(168,85,247,.9),rgba(34,211,238,.85));color:#05060c;font-weight:700;box-shadow:0 0 20px rgba(168,85,247,.45)}
+  .search-input{background:rgba(8,10,22,.75);border-color:rgba(168,85,247,.22);color:var(--text)}
+  .search-input:focus{border-color:#22d3ee;box-shadow:0 0 0 3px rgba(34,211,238,.16)}
+  footer{border-top-color:rgba(168,85,247,.14)}
+  .toast{background:rgba(10,13,26,.96);border-color:rgba(168,85,247,.3);box-shadow:0 0 30px rgba(168,85,247,.15),0 16px 44px rgba(0,0,0,.5)}
 </style>
 </head>
 <body>
@@ -254,7 +336,7 @@
       <div class="logo-badge">G</div>
       <div>
         <h1>GOFO <span class="gradient-text">AI 提效看板</span></h1>
-        <div class="subtitle">飞书多维表数据驱动 · GSAP 动效 · 自动实时同步</div>
+        <div class="subtitle">飞书多维表数据驱动 · 霓虹赛博主题</div>
       </div>
     </div>
     <div class="header-right">
@@ -285,7 +367,7 @@
       <div class="chart-wrap"><canvas id="chartEfficiency"></canvas></div>
     </div>
     <div class="chart-card full" data-scroll>
-      <div class="chart-title"><span class="dot" style="color:#a78bfa;background:#a78bfa"></span>Top 提效项目</div>
+      <div class="chart-title"><span class="dot" style="color:#c084fc;background:#c084fc"></span>Top 提效项目</div>
       <div class="chart-wrap"><canvas id="chartTop"></canvas></div>
     </div>
   </section>
@@ -344,7 +426,7 @@ var WORKER_URL = "https://gofo-dashboard-api.chengzai456.workers.dev";
 var REFRESH_INTERVAL = 5 * 60 * 1000;   // 自动刷新间隔 5 分钟
 
 // 小组配色
-var GROUP_COLORS = ["#6366f1", "#22d3ee", "#f59e0b", "#ec4899", "#34d399", "#a78bfa", "#f87171", "#fb923c"];
+var GROUP_COLORS = ["#6366f1", "#22d3ee", "#f59e0b", "#ec4899", "#34d399", "#c084fc", "#f87171", "#fb923c"];
 
 // 状态配置: 颜色 + 标签样式
 var STATUS_CONFIG = {
@@ -515,8 +597,8 @@ function chartOpts() {
     animation: { duration: 900, easing: "easeOutQuart" },
     plugins: { legend: { display: false } },
     scales: {
-      x: { ticks: { color: "#8b96a8", font: { size: 11 } }, grid: { color: "rgba(148,163,184,.10)" } },
-      y: { ticks: { color: "#8b96a8", font: { size: 11 } }, grid: { color: "rgba(148,163,184,.10)" } }
+      x: { ticks: { color: "#8f93b8", font: { size: 11 } }, grid: { color: "rgba(168,85,247,.13)" } },
+      y: { ticks: { color: "#8f93b8", font: { size: 11 } }, grid: { color: "rgba(168,85,247,.13)" } }
     }
   };
 }
@@ -568,14 +650,14 @@ function renderCharts() {
       datasets: [{
         data: sKeys.map(function(k) { return agg.statuses[k]; }),
         backgroundColor: sKeys.map(function(k) { return (STATUS_CONFIG[k] || { color: "#9ca3af" }).color; }),
-        borderColor: "#0d1424", borderWidth: 3, hoverOffset: 8
+        borderColor: "#0a0d1a", borderWidth: 3, hoverOffset: 8
       }]
     },
     options: Object.assign({}, o, {
       cutout: "64%",
       scales: {},
       plugins: {
-        legend: { display: true, position: "bottom", labels: { color: "#8b96a8", padding: 14, usePointStyle: true, pointStyle: "circle", font: { size: 12 } } }
+        legend: { display: true, position: "bottom", labels: { color: "#8f93b8", padding: 14, usePointStyle: true, pointStyle: "circle", font: { size: 12 } } }
       }
     })
   });
@@ -602,8 +684,8 @@ function renderCharts() {
     options: Object.assign({}, o, {
       indexAxis: "y",
       scales: {
-        x: { ticks: { color: "#8b96a8", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(148,163,184,.10)" } },
-        y: { ticks: { color: "#8b96a8", font: { size: 12 } }, grid: { display: false } }
+        x: { ticks: { color: "#8f93b8", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(168,85,247,.13)" } },
+        y: { ticks: { color: "#8f93b8", font: { size: 12 } }, grid: { display: false } }
       }
     })
   });
@@ -621,16 +703,16 @@ function renderCharts() {
       datasets: [{
         label: "提效 (H/月)",
         data: top.map(function(r) { return parseFloat(r.efficiency_hours) || 0; }),
-        backgroundColor: function(c) { return barGradH(c.chart.ctx, "#a78bfa"); },
-        hoverBackgroundColor: "#c4b5fd",
+        backgroundColor: function(c) { return barGradH(c.chart.ctx, "#c084fc"); },
+        hoverBackgroundColor: "#e9d5ff",
         borderRadius: 9, barThickness: 22, maxBarThickness: 28
       }]
     },
     options: Object.assign({}, o, {
       indexAxis: "y",
       scales: {
-        x: { ticks: { color: "#8b96a8", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(148,163,184,.10)" } },
-        y: { ticks: { color: "#cbd5e1", font: { size: 11.5 } }, grid: { display: false } }
+        x: { ticks: { color: "#8f93b8", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(168,85,247,.13)" } },
+        y: { ticks: { color: "#c4b5fd", font: { size: 11.5 } }, grid: { display: false } }
       }
     })
   });
