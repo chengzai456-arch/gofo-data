@@ -508,17 +508,26 @@ var GROUP_COLORS = ["#6366f1", "#22d3ee", "#f59e0b", "#ec4899", "#34d399", "#c08
 // 状态配置: 颜色 + 标签样式
 var STATUS_CONFIG = {
   "进行中": { color: "#60a5fa", cls: "tag-blue" },
-  "待启动": { color: "#fbbf24", cls: "tag-yellow" },
   "已完成": { color: "#34d399", cls: "tag-green" },
-  "暂停":   { color: "#fb923c", cls: "tag-orange" },
-  "关闭":   { color: "#9ca3af", cls: "tag-gray" }
+  "暂停":   { color: "#fb923c", cls: "tag-orange" }
 };
-var statusOrder = { "进行中": 0, "待启动": 1, "已完成": 2, "暂停": 3, "关闭": 4 };
+var statusOrder = { "进行中": 0, "已完成": 1, "暂停": 2 };
+
+// 不参与统计与展示的项目状态（已关闭 / 待启动）
+var EXCLUDED_STATUSES = ["关闭", "待启动"];
+function applyExclude(data) {
+  if (!data || !data.records) return data;
+  data.records = data.records.filter(function(r) {
+    return EXCLUDED_STATUSES.indexOf(r.status) === -1;
+  });
+  if (typeof data.total === "number") data.total = data.records.length;
+  return data;
+}
 
 // ============================================================
 // 状态
 // ============================================================
-var currentData = (EMBEDDED_DATA && EMBEDDED_DATA.records) ? EMBEDDED_DATA : { total: 0, updated_at: "", records: [] };
+var currentData = applyExclude((EMBEDDED_DATA && EMBEDDED_DATA.records) ? EMBEDDED_DATA : { total: 0, updated_at: "", records: [] });
 var charts = {};
 var filters = { group: "all", status: "all", blocker: "all", search: "" };
 var nextRefreshAt = Date.now() + REFRESH_INTERVAL;
@@ -1059,8 +1068,8 @@ function refreshData(silent) {
   function done() { btn.classList.remove("spinning"); }
 
   function apply(data, source) {
-    var changed = JSON.stringify(data.records) !== oldKey;
-    currentData = data;
+    currentData = applyExclude(data);
+    var changed = JSON.stringify(currentData.records) !== oldKey;
     renderAll();
     done();
     if (!silent) showToast(changed ? "数据已刷新 · " + source : "数据已是最新", changed ? "" : "error");
@@ -1087,7 +1096,7 @@ function fetchFromJson(silent, done) {
     .then(function(res) { return res.json(); })
     .then(function(data) {
       if (data && data.records) {
-        currentData = data;
+        currentData = applyExclude(data);
         renderAll();
         done();
         if (!silent) showToast("数据已刷新 · 定时同步源");
