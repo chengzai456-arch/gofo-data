@@ -1,654 +1,872 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GOFO AI 项目跟踪看板</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    :root{
-      --bg:#0d1117;--card:#161b22;--card-hover:#1c2330;--border:#30363d;
-      --text:#e6edf3;--text-dim:#8b949e;--accent:#4f8cff;
-      --blue:#4f8cff;--orange:#ff8c42;--green:#42d39b;--yellow:#ffd642;--purple:#c44fff;--red:#ff6b6b;--cyan:#00d4ff;
-      --radius:12px;
-    }
-    body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'PingFang SC','Microsoft YaHei',sans-serif;line-height:1.6;min-height:100vh}
-    .container{max-width:1400px;margin:0 auto;padding:24px}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GOFO AI 提效看板</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#070b14; --bg2:#0b1120;
+    --card:rgba(17,24,39,.72); --card-hover:rgba(30,41,59,.85);
+    --border:rgba(148,163,184,.14); --border-strong:rgba(148,163,184,.28);
+    --text:#e5e9f0; --dim:#8b96a8;
+    --indigo:#6366f1; --cyan:#22d3ee; --green:#34d399; --yellow:#fbbf24; --red:#f87171;
+    --purple:#a78bfa; --orange:#fb923c; --pink:#ec4899;
+    --radius:16px;
+    --font-num:'Space Grotesk','Inter',-apple-system,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif;
+  }
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(1200px 620px at 82% -10%, rgba(99,102,241,.20), transparent 62%),
+      radial-gradient(1000px 520px at -12% 32%, rgba(34,211,238,.13), transparent 60%),
+      radial-gradient(900px 480px at 55% 110%, rgba(168,85,247,.12), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'PingFang SC','Microsoft YaHei',sans-serif;
+    line-height:1.6;min-height:100vh;overflow-x:hidden;
+  }
+  ::selection{background:rgba(99,102,241,.4)}
 
-    .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:12px}
-    .header-left h1{font-size:26px;font-weight:700;letter-spacing:-0.5px}
-    .header-left .subtitle{color:var(--text-dim);font-size:13px;margin-top:4px}
-    .header-right{display:flex;align-items:center;gap:16px}
-    .update-badge{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--text-dim)}
-    .update-badge .live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:6px;animation:pulse 2s infinite}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+  /* ===== 背景装饰 ===== */
+  .bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:linear-gradient(rgba(148,163,184,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.05) 1px,transparent 1px);
+    background-size:46px 46px;
+    -webkit-mask-image:radial-gradient(ellipse 90% 65% at 50% 0%,#000 25%,transparent 78%);
+    mask-image:radial-gradient(ellipse 90% 65% at 50% 0%,#000 25%,transparent 78%);
+  }
+  .orb{position:fixed;border-radius:50%;filter:blur(90px);opacity:.45;pointer-events:none;z-index:0;animation:float 18s ease-in-out infinite}
+  .orb.o1{width:430px;height:430px;background:rgba(99,102,241,.38);top:-140px;right:-90px}
+  .orb.o2{width:360px;height:360px;background:rgba(34,211,238,.22);bottom:-120px;left:-110px;animation-delay:-6s}
+  .orb.o3{width:280px;height:280px;background:rgba(168,85,247,.26);top:42%;left:58%;animation-delay:-11s}
+  @keyframes float{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(42px,-32px) scale(1.07)}66%{transform:translate(-32px,26px) scale(.95)}}
 
-    .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
-    .metric-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;position:relative;overflow:hidden;transition:border-color .2s,transform .15s}
-    .metric-card:hover{border-color:var(--accent);transform:translateY(-2px)}
-    .metric-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent)}
-    .metric-card.blue::before{background:var(--blue)}
-    .metric-card.green::before{background:var(--green)}
-    .metric-card.orange::before{background:var(--orange)}
-    .metric-card.purple::before{background:var(--purple)}
-    .metric-card.yellow::before{background:var(--yellow)}
-    .metric-card.cyan::before{background:var(--cyan)}
-    .metric-icon{font-size:28px;margin-bottom:12px;display:block}
-    .metric-value{font-size:36px;font-weight:800;letter-spacing:-1px;font-variant-numeric:tabular-nums}
-    .metric-value .unit{font-size:16px;font-weight:400;color:var(--text-dim);margin-left:4px}
-    .metric-label{color:var(--text-dim);font-size:14px;margin-top:4px}
+  /* ===== 滚动进度条 ===== */
+  #progressBar{position:fixed;top:0;left:0;right:0;height:3px;z-index:1000;
+    background:linear-gradient(90deg,#6366f1,#22d3ee,#a78bfa);
+    transform:scaleX(0);transform-origin:left;box-shadow:0 0 12px rgba(99,102,241,.8)}
 
-    .charts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
-    .chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
-    .chart-card.full{grid-column:1/-1}
-    .chart-title{font-size:15px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-    .chart-title .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-    .chart-wrap{position:relative;height:260px}
-    .chart-wrap.tall{height:320px}
+  .container{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:28px 24px 40px}
 
-    .table-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-    .table-header{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:12px}
-    .table-header h2{font-size:15px;font-weight:600}
-    .table-controls{display:flex;gap:10px;flex-wrap:wrap}
-    .filter-btn{background:var(--card-hover);border:1px solid var(--border);color:var(--text-dim);border-radius:6px;padding:6px 14px;font-size:13px;cursor:pointer;transition:all .15s}
-    .filter-btn:hover{border-color:var(--accent);color:var(--text)}
-    .filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
-    .filter-select{background:var(--card-hover);border:1px solid var(--border);color:var(--text-dim);border-radius:6px;padding:6px 12px;font-size:13px;cursor:pointer;outline:none;transition:border-color .15s;appearance:none;padding-right:24px;background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%238b949e' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right 4px center;background-size:16px}
-    .filter-select:hover,.filter-select:focus{border-color:var(--accent);color:var(--text)}
-    .search-input{background:var(--card-hover);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 14px;font-size:13px;width:200px;outline:none;transition:border-color .15s}
-    .search-input:focus{border-color:var(--accent)}
-    .table-scroll{overflow-x:auto;max-height:520px;overflow-y:auto}
-    table{width:100%;border-collapse:collapse;font-size:13px}
-    thead th{position:sticky;top:0;background:var(--card-hover);text-align:left;padding:12px 16px;font-weight:600;color:var(--text-dim);white-space:nowrap;z-index:1}
-    tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
-    tbody tr:hover{background:var(--card-hover)}
-    tbody td{padding:10px 16px;white-space:nowrap}
-    .tag{display:inline-block;padding:2px 10px;border-radius:4px;font-size:12px;font-weight:500}
-    .tag-blue{background:rgba(79,140,255,.15);color:var(--blue)}
-    .tag-orange{background:rgba(255,140,66,.15);color:var(--orange)}
-    .tag-green{background:rgba(66,211,155,.15);color:var(--green)}
-    .tag-yellow{background:rgba(255,214,66,.15);color:var(--yellow)}
-    .tag-purple{background:rgba(196,79,255,.15);color:var(--purple)}
-    .tag-red{background:rgba(255,107,107,.15);color:var(--red)}
-    .tag-gray{background:rgba(139,148,158,.15);color:var(--text-dim)}
-    .link{color:var(--accent);text-decoration:none;font-size:12px}
-    .link:hover{text-decoration:underline}
-    .progress-bar{display:inline-block;width:60px;height:6px;background:var(--border);border-radius:3px;vertical-align:middle;margin-right:6px;overflow:hidden}
-    .progress-fill{display:block;height:100%;border-radius:3px;background:var(--accent);transition:width .3s}
-    .progress-pct{font-size:11px;color:var(--text-dim);font-variant-numeric:tabular-nums;vertical-align:middle}
-    .td-wrap{white-space:normal;word-break:break-word;min-width:160px;max-width:320px;line-height:1.5}
+  /* ===== 登录 ===== */
+  .login-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(900px 500px at 50% -10%,rgba(99,102,241,.22),transparent 60%),var(--bg)}
+  .login-box{position:relative;width:380px;max-width:92vw;padding:44px 40px;text-align:center;
+    background:var(--card);border:1px solid var(--border);border-radius:22px;backdrop-filter:blur(18px);
+    box-shadow:0 24px 70px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06)}
+  .login-box::before{content:'';position:absolute;inset:-1px;border-radius:22px;padding:1px;
+    background:linear-gradient(135deg,rgba(99,102,241,.65),transparent 40%,transparent 60%,rgba(34,211,238,.6));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+  .login-logo{width:64px;height:64px;margin:0 auto 18px;border-radius:18px;display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-num);font-size:30px;font-weight:700;color:#fff;
+    background:linear-gradient(135deg,#6366f1,#22d3ee);box-shadow:0 10px 30px rgba(99,102,241,.45)}
+  .login-box h2{font-size:21px;font-weight:700;margin-bottom:6px}
+  .login-box .login-sub{color:var(--dim);font-size:13px;margin-bottom:26px}
+  .login-input{width:100%;padding:13px 16px;background:rgba(10,15,28,.7);border:1px solid var(--border);border-radius:12px;
+    color:var(--text);font-size:14px;outline:none;margin-bottom:14px;transition:border-color .2s,box-shadow .2s}
+  .login-input:focus{border-color:var(--indigo);box-shadow:0 0 0 3px rgba(99,102,241,.22)}
+  .login-btn{position:relative;width:100%;padding:13px;border:none;border-radius:12px;color:#fff;font-size:14px;font-weight:600;
+    cursor:pointer;background:linear-gradient(92deg,#6366f1,#7c5cf0 55%,#22d3ee);background-size:180% 100%;
+    box-shadow:0 10px 26px rgba(99,102,241,.4);transition:background-position .4s}
+  .login-btn:hover{background-position:100% 0}
+  .login-error{color:var(--red);font-size:13px;margin-top:12px;min-height:20px}
 
-    .refresh-btn{
-      display:inline-flex;align-items:center;gap:6px;
-      background:var(--accent);color:#fff;border:none;border-radius:8px;
-      padding:8px 16px;font-size:13px;font-weight:500;cursor:pointer;
-      transition:background .2s, transform .1s;
-    }
-    .refresh-btn:hover{background:#3d7aff;transform:translateY(-1px)}
-    .refresh-btn:active{transform:translateY(0)}
-    .refresh-btn.loading{opacity:.7;pointer-events:none}
-    .refresh-icon{display:inline-block;font-size:16px;transition:transform .6s}
-    .refresh-btn.loading .refresh-icon{animation:spin .8s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
+  /* ===== 顶栏 ===== */
+  .header{display:flex;justify-content:space-between;align-items:flex-start;margin:8px 0 30px;flex-wrap:wrap;gap:16px}
+  .header-left{display:flex;align-items:center;gap:16px}
+  .logo-badge{width:52px;height:52px;border-radius:15px;display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-num);font-size:25px;font-weight:700;color:#fff;flex-shrink:0;
+    background:linear-gradient(135deg,#6366f1,#22d3ee);box-shadow:0 10px 30px rgba(99,102,241,.4)}
+  .header-left h1{font-size:26px;font-weight:800;letter-spacing:-.5px;line-height:1.25}
+  .gradient-text{background:linear-gradient(92deg,#818cf8,#22d3ee 45%,#a78bfa 80%);background-size:220% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 7s linear infinite}
+  @keyframes shimmer{to{background-position:-220% 0}}
+  .subtitle{color:var(--dim);font-size:13px;margin-top:3px}
+  .header-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .pill{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);
+    border-radius:999px;padding:8px 16px;font-size:13px;color:var(--dim);backdrop-filter:blur(10px)}
+  .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
+  .pill strong{color:var(--text);font-variant-numeric:tabular-nums}
+  #countdown{min-width:56px;text-align:center;font-family:var(--font-num);font-variant-numeric:tabular-nums}
+  .refresh-btn{position:relative;display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);
+    border-radius:999px;padding:9px 20px;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;
+    backdrop-filter:blur(10px);transition:border-color .2s,box-shadow .2s;overflow:hidden}
+  .refresh-btn:hover{border-color:var(--indigo);box-shadow:0 0 0 3px rgba(99,102,241,.18)}
+  .refresh-btn .ico{display:inline-block;font-size:15px;line-height:1}
+  .refresh-btn.spinning .ico{animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
 
-    .toast{
-      position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;
-      padding:12px 24px;border-radius:8px;font-size:14px;font-weight:500;
-      animation:toastIn .3s ease,toastOut .3s ease 2.7s forwards;
-      pointer-events:none;
-    }
-    .toast.success{background:#1a3a2a;color:var(--green);border:1px solid var(--green)}
-    .toast.info{background:#1a2a3a;color:var(--cyan);border:1px solid var(--cyan)}
-    .toast.error{background:#3a1a1a;color:var(--red);border:1px solid var(--red)}
-    @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-    @keyframes toastOut{from{opacity:1}to{opacity:0}}
+  /* ===== 指标卡 ===== */
+  .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:26px}
+  .metric-card{position:relative;overflow:hidden;padding:22px 24px;border-radius:var(--radius);
+    background:var(--card);border:1px solid var(--border);backdrop-filter:blur(14px);
+    box-shadow:0 10px 30px rgba(0,0,0,.28);transition:transform .25s ease,border-color .25s,box-shadow .25s}
+  .metric-card:hover{transform:translateY(-4px);border-color:var(--border-strong);box-shadow:0 18px 44px rgba(0,0,0,.42)}
+  .metric-card::after{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;pointer-events:none;
+    background:radial-gradient(320px 120px at 80% -20%,rgba(255,255,255,.08),transparent 70%)}
+  .metric-card:hover::after{opacity:1}
+  .metric-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .metric-ico{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px}
+  .metric-value{font-family:var(--font-num);font-size:38px;font-weight:700;letter-spacing:-1px;line-height:1.1;
+    font-variant-numeric:tabular-nums}
+  .metric-value .unit{font-size:14px;font-weight:500;color:var(--dim);margin-left:6px}
+  .metric-label{color:var(--dim);font-size:13px;margin-top:6px}
+  .bar-tip{position:absolute;right:18px;top:18px;font-size:11px;color:var(--dim);opacity:0;transition:opacity .25s}
+  .metric-card:hover .bar-tip{opacity:1}
+  .m-indigo .metric-ico{background:rgba(99,102,241,.18);color:#818cf8}
+  .m-indigo .metric-value{color:#a5b4fc}
+  .m-green .metric-ico{background:rgba(52,211,153,.15);color:#34d399}
+  .m-green .metric-value{color:#6ee7b7}
+  .m-cyan .metric-ico{background:rgba(34,211,238,.15);color:#22d3ee}
+  .m-cyan .metric-value{color:#67e8f9}
+  .m-yellow .metric-ico{background:rgba(251,191,36,.15);color:#fbbf24}
+  .m-yellow .metric-value{color:#fcd34d}
+  .m-purple .metric-ico{background:rgba(167,139,250,.16);color:#a78bfa}
+  .m-purple .metric-value{color:#c4b5fd}
+  .m-red .metric-ico{background:rgba(248,113,113,.15);color:#f87171}
+  .m-red .metric-value{color:#fca5a5}
+  .m-indigo{box-shadow:inset 0 2px 0 rgba(99,102,241,.55),0 10px 30px rgba(0,0,0,.28)}
+  .m-green{box-shadow:inset 0 2px 0 rgba(52,211,153,.55),0 10px 30px rgba(0,0,0,.28)}
+  .m-cyan{box-shadow:inset 0 2px 0 rgba(34,211,238,.55),0 10px 30px rgba(0,0,0,.28)}
+  .m-yellow{box-shadow:inset 0 2px 0 rgba(251,191,36,.55),0 10px 30px rgba(0,0,0,.28)}
+  .m-purple{box-shadow:inset 0 2px 0 rgba(167,139,250,.55),0 10px 30px rgba(0,0,0,.28)}
+  .m-red{box-shadow:inset 0 2px 0 rgba(248,113,113,.55),0 10px 30px rgba(0,0,0,.28)}
 
-    .login-overlay{
-      position:fixed;top:0;left:0;width:100%;height:100%;
-      background:var(--bg);z-index:10000;
-      display:flex;align-items:center;justify-content:center;
-    }
-    .login-box{
-      background:var(--card);border:1px solid var(--border);border-radius:16px;
-      padding:40px 36px;width:360px;max-width:90vw;text-align:center;
-    }
-    .login-box h2{font-size:20px;margin-bottom:8px}
-    .login-box .login-sub{color:var(--text-dim);font-size:13px;margin-bottom:24px}
-    .login-input{
-      width:100%;padding:12px 16px;background:var(--card-hover);border:1px solid var(--border);
-      border-radius:8px;color:var(--text);font-size:15px;outline:none;
-      margin-bottom:16px;transition:border-color .15s;
-    }
-    .login-input:focus{border-color:var(--accent)}
-    .login-btn{
-      width:100%;padding:12px;background:var(--accent);color:#fff;
-      border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;
-      transition:background .15s;
-    }
-    .login-btn:hover{background:#3d7aff}
-    .login-error{color:var(--red);font-size:13px;margin-top:12px;min-height:20px}
+  /* ===== 图表 ===== */
+  .charts{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:26px}
+  .chart-card{padding:22px 24px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);
+    backdrop-filter:blur(14px);box-shadow:0 10px 30px rgba(0,0,0,.28)}
+  .chart-card.full{grid-column:1/-1}
+  .chart-title{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:9px}
+  .chart-title .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;box-shadow:0 0 8px currentColor}
+  .chart-wrap{position:relative;height:270px}
+  .chart-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;z-index:2}
+  .chart-center .cc-val{font-family:var(--font-num);font-size:32px;font-weight:700;color:var(--green);text-shadow:0 0 18px rgba(52,211,153,.5)}
+  .chart-center .cc-label{font-size:12px;color:var(--dim);margin-top:2px}
 
-    @media(max-width:900px){
-      .metrics{grid-template-columns:repeat(2,1fr)}
-      .charts{grid-template-columns:1fr}
-    }
-    @media(max-width:600px){
-      .metrics{grid-template-columns:1fr}
-      .container{padding:16px}
-      .header-left h1{font-size:20px}
-    }
-  </style>
+  /* ===== 表格 ===== */
+  .table-section{border-radius:var(--radius);background:var(--card);border:1px solid var(--border);
+    backdrop-filter:blur(14px);box-shadow:0 10px 30px rgba(0,0,0,.28);overflow:hidden}
+  .table-header{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;gap:14px;flex-wrap:wrap;
+    border-bottom:1px solid var(--border)}
+  .table-header h2{font-size:16px;font-weight:700;display:flex;align-items:center;gap:10px}
+  .count-badge{font-family:var(--font-num);font-size:12px;font-weight:600;color:#a5b4fc;background:rgba(99,102,241,.16);
+    border-radius:999px;padding:2px 10px}
+  .table-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .filter-btn{background:rgba(10,15,28,.6);border:1px solid var(--border);color:var(--dim);border-radius:999px;
+    padding:7px 15px;font-size:12.5px;cursor:pointer;transition:all .2s;white-space:nowrap}
+  .filter-btn:hover{border-color:var(--indigo);color:var(--text)}
+  .filter-btn.active{background:linear-gradient(92deg,rgba(99,102,241,.9),rgba(124,92,240,.9));border-color:transparent;color:#fff;
+    box-shadow:0 6px 18px rgba(99,102,241,.35)}
+  select.filter-btn{appearance:auto;padding-right:8px}
+  .search-input{background:rgba(10,15,28,.6);border:1px solid var(--border);color:var(--text);border-radius:999px;
+    padding:7px 16px;font-size:12.5px;width:190px;outline:none;transition:border-color .2s,box-shadow .2s}
+  .search-input:focus{border-color:var(--indigo);box-shadow:0 0 0 3px rgba(99,102,241,.18)}
+  .table-scroll{overflow:auto;max-height:560px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  thead th{position:sticky;top:0;z-index:3;background:rgba(15,22,36,.96);backdrop-filter:blur(8px);text-align:left;
+    padding:13px 16px;font-weight:600;color:var(--dim);white-space:nowrap;border-bottom:1px solid var(--border);font-size:12px;letter-spacing:.3px}
+  tbody tr{border-bottom:1px solid rgba(148,163,184,.08);transition:background .18s}
+  tbody tr:hover{background:rgba(99,102,241,.07)}
+  tbody td{padding:11px 16px;white-space:nowrap;vertical-align:middle}
+  .td-wrap{white-space:normal;word-break:break-word;min-width:190px;max-width:330px;line-height:1.5}
+  .tag{display:inline-flex;align-items:center;gap:5px;padding:3px 11px;border-radius:999px;font-size:12px;font-weight:600}
+  .tag-blue{background:rgba(96,165,250,.14);color:#93c5fd}
+  .tag-green{background:rgba(52,211,153,.14);color:#6ee7b7}
+  .tag-yellow{background:rgba(251,191,36,.13);color:#fcd34d}
+  .tag-orange{background:rgba(251,146,60,.13);color:#fdba74}
+  .tag-gray{background:rgba(148,163,184,.13);color:#cbd5e1}
+  .tag-red{background:rgba(248,113,113,.14);color:#fca5a5}
+  .tag-purple{background:rgba(167,139,250,.14);color:#c4b5fd}
+  .tag-cyan{background:rgba(34,211,238,.13);color:#67e8f9}
+  .progress-bar{display:inline-block;width:64px;height:6px;background:rgba(148,163,184,.18);border-radius:4px;
+    vertical-align:middle;margin:0 8px 0 4px;overflow:hidden}
+  .progress-fill{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#6366f1,#22d3ee)}
+  .link{color:#93c5fd;text-decoration:none;font-size:12px;font-weight:500;border-bottom:1px dashed rgba(147,197,253,.4);
+    padding-bottom:1px;transition:color .2s}
+  .link:hover{color:#fff;border-bottom-color:#fff}
+  .save-high{color:#6ee7b7;font-weight:600}
+  .save-mid{color:#fcd34d;font-weight:600}
+  .save-low{color:var(--dim)}
+
+  /* ===== 页脚 ===== */
+  footer{display:flex;justify-content:space-between;align-items:center;margin-top:30px;padding-top:20px;
+    border-top:1px solid var(--border);color:var(--dim);font-size:12.5px;flex-wrap:wrap;gap:10px}
+  footer a{color:var(--dim);text-decoration:none;border-bottom:1px dashed rgba(139,150,168,.4)}
+  footer a:hover{color:var(--text)}
+
+  /* ===== Toast ===== */
+  .toast{position:fixed;bottom:26px;right:26px;z-index:9998;display:flex;align-items:center;gap:9px;
+    background:rgba(15,22,36,.94);border:1px solid var(--border);border-radius:13px;padding:13px 20px;font-size:13px;
+    box-shadow:0 16px 44px rgba(0,0,0,.5);backdrop-filter:blur(12px);pointer-events:none}
+  .toast .t-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+  .toast.error .t-dot{background:var(--red);box-shadow:0 0 8px var(--red)}
+
+  @media(max-width:1024px){
+    .metrics{grid-template-columns:repeat(2,1fr)}
+    .charts{grid-template-columns:1fr}
+  }
+  @media(max-width:640px){
+    .container{padding:18px 14px 32px}
+    .metrics{grid-template-columns:1fr}
+    .header-left h1{font-size:21px}
+    .metric-value{font-size:32px}
+    .table-header{padding:16px}
+  }
+</style>
 </head>
 <body>
-  <!-- 登录遮罩 -->
-  <div class="login-overlay" id="loginOverlay">
-    <div class="login-box">
-      <h2>GOFO AI 项目看板</h2>
-      <div class="login-sub">请输入访问密码</div>
-      <input type="password" class="login-input" id="loginInput" placeholder="输入密码..." autofocus>
-      <button class="login-btn" id="loginBtn">进入看板</button>
-      <div class="login-error" id="loginError"></div>
-    </div>
+
+<!-- 滚动进度条 -->
+<div id="progressBar"></div>
+
+<!-- 背景装饰 -->
+<div class="bg-grid"></div>
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+<div class="orb o3"></div>
+
+<!-- 登录遮罩 -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div class="login-logo">G</div>
+    <h2>GOFO AI 提效看板</h2>
+    <div class="login-sub">数据来自飞书多维表 · 请输入访问密码</div>
+    <input type="password" class="login-input" id="loginInput" placeholder="访问密码" autocomplete="current-password" onkeypress="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">进入看板</button>
+    <div class="login-error" id="loginError"></div>
   </div>
+</div>
 
-  <div class="container">
-    <!-- Header -->
-    <div class="header">
-      <div class="header-left">
-        <h1>GOFO AI 项目跟踪看板</h1>
-        <div class="subtitle">飞书多维表数据驱动  |  自动每5分钟同步</div>
-      </div>
-      <div class="header-right">
-        <div class="update-badge" id="updateBadge">
-          <span class="live-dot"></span>
-          <span id="updateTime">--:--:--</span>
-        </div>
-        <button class="refresh-btn" id="refreshBtn" title="从 GitHub Pages 拉取最新数据（Actions 每5分钟自动构建）">
-          <span class="refresh-icon" id="refreshIcon">🔄</span> 刷新数据
-        </button>
+<div class="container" id="app">
+  <!-- 顶栏 -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-badge">G</div>
+      <div>
+        <h1>GOFO <span class="gradient-text">AI 提效看板</span></h1>
+        <div class="subtitle">飞书多维表数据驱动 · GSAP 动效 · 自动实时同步</div>
       </div>
     </div>
+    <div class="header-right">
+      <div class="pill"><span class="live-dot"></span>数据已更新 <strong id="updateTime">--</strong></div>
+      <div class="pill">自动刷新 <strong id="countdown">05:00</strong></div>
+      <button class="refresh-btn" id="refreshBtn"><span class="ico">⟳</span>刷新数据</button>
+    </div>
+  </header>
 
-    <!-- Metric Cards -->
-    <div class="metrics" id="metrics">
-      <div class="metric-card blue">
-        <span class="metric-icon">📋</span>
-        <div class="metric-value" id="m-total">--</div>
-        <div class="metric-label">AI 项目总数</div>
-      </div>
-      <div class="metric-card green">
-        <span class="metric-icon">🚀</span>
-        <div class="metric-value" id="m-online">--</div>
-        <div class="metric-label">已上线项目</div>
-      </div>
-      <div class="metric-card orange">
-        <span class="metric-icon">👥</span>
-        <div class="metric-value" id="m-groups">--</div>
-        <div class="metric-label">覆盖小组数</div>
-      </div>
-      <div class="metric-card yellow">
-        <span class="metric-icon">⏱️</span>
-        <div class="metric-value" id="m-saved">--<span class="unit">H/月</span></div>
-        <div class="metric-label">AI 节省工时</div>
-      </div>
-      <div class="metric-card cyan">
-        <span class="metric-icon">📈</span>
-        <div class="metric-value" id="m-ratio">--</div>
-        <div class="metric-label">AI 提效率</div>
+  <!-- KPI 指标 -->
+  <section class="metrics" id="metrics"></section>
+
+  <!-- 图表 -->
+  <section class="charts">
+    <div class="chart-card" data-scroll>
+      <div class="chart-title"><span class="dot" style="color:#818cf8;background:#818cf8"></span>各小组项目分布</div>
+      <div class="chart-wrap"><canvas id="chartGroup"></canvas></div>
+    </div>
+    <div class="chart-card" data-scroll>
+      <div class="chart-title"><span class="dot" style="color:#34d399;background:#34d399"></span>项目状态分布</div>
+      <div class="chart-wrap">
+        <canvas id="chartStatus"></canvas>
+        <div class="chart-center" id="statusCenter"><div class="cc-val">--</div><div class="cc-label">完成率</div></div>
       </div>
     </div>
-
-    <!-- Charts -->
-    <div class="charts">
-      <div class="chart-card">
-        <div class="chart-title"><span class="dot" style="background:var(--blue)"></span>各小组项目分布</div>
-        <div class="chart-wrap"><canvas id="chartGroup"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title"><span class="dot" style="background:var(--orange)"></span>项目状态分布</div>
-        <div class="chart-wrap"><canvas id="chartStatus"></canvas></div>
-      </div>
+    <div class="chart-card full" data-scroll>
+      <div class="chart-title"><span class="dot" style="color:#22d3ee;background:#22d3ee"></span>分组提效对比 <span style="font-weight:500;color:var(--dim);font-size:12.5px">(H/月)</span></div>
+      <div class="chart-wrap"><canvas id="chartEfficiency"></canvas></div>
     </div>
-
-    <!-- Project Table -->
-    <div class="table-section">
-      <div class="table-header">
-        <h2>项目明细</h2>
-        <div class="table-controls">
-          <select class="filter-select" id="blockerFilter">
-            <option value="all">卡点：全部</option>
-            <option value="是">有卡点</option>
-            <option value="否">无卡点</option>
-          </select>
-          <select class="filter-select" id="statusFilter">
-            <option value="all">进度：全部</option>
-            <option value="进行中">进行中</option>
-            <option value="待启动">待启动</option>
-            <option value="已完成">已完成</option>
-            <option value="暂停">暂停</option>
-            <option value="关闭">关闭</option>
-          </select>
-          <button class="filter-btn active" data-filter="all">全部</button>
-          <div id="groupFilters"></div>
-          <input type="text" class="search-input" id="searchInput" placeholder="搜索项目名称/负责人...">
-        </div>
-      </div>
-      <div class="table-scroll">
-        <table id="dataTable">
-          <thead>
-            <tr>
-              <th>AI 项目名称</th>
-              <th>所属小组</th>
-              <th>当前进度</th>
-              <th>负责人</th>
-              <th>预计完成</th>
-              <th>AI 节省(H/月)</th>
-              <th>卡点</th>
-              <th>卡点问题</th>
-              <th>可复用SKILL</th>
-              <th>成果</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-      </div>
+    <div class="chart-card full" data-scroll>
+      <div class="chart-title"><span class="dot" style="color:#a78bfa;background:#a78bfa"></span>Top 提效项目</div>
+      <div class="chart-wrap"><canvas id="chartTop"></canvas></div>
     </div>
-  </div>
+  </section>
 
-  <!-- 内嵌数据（由 fetch-and-build.js 在构建时注入） -->
-  <script>
-    var LOGIN_HASH = "6ce20308599f0bbb871c115b0243197ea6177d56b9913ed2da6fa8e1c8dfe04e";
-    var BUILD_TIMESTAMP = "2026-08-19 03:58:46";
-  </script>
+  <!-- 明细表格 -->
+  <section class="table-section" data-scroll>
+    <div class="table-header">
+      <h2>项目明细 <span class="count-badge" id="tableCount">--</span></h2>
+      <div class="table-controls" id="tableControls"></div>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>项目名称</th>
+            <th>小组</th>
+            <th>状态</th>
+            <th>负责人</th>
+            <th>预计完成</th>
+            <th>提效(H/月)</th>
+            <th>提效率</th>
+            <th>卡点</th>
+            <th>SKILL</th>
+            <th>成果链接</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </section>
 
-  <script>
-    // ============================================================
-    // 登录验证
-    // ============================================================
-    (function checkAuth() {
-      if (sessionStorage.getItem("gofo_authed") === "1") {
+  <footer>
+    <div>数据源：飞书多维表 · <a href="https://acnjh1thgeif.larkenterprise.com/base/UpCxbXml4a6u9us4BwCcRdGDnPg" target="_blank" rel="noopener">打开多维表 ↗</a></div>
+    <div>同步周期 5 分钟 · 实时接口优先 · GSAP + Chart.js 渲染</div>
+  </footer>
+</div>
+
+<div class="toast" id="toast"><span class="t-dot"></span><span id="toastMsg"></span></div>
+
+<script>
+// ============================================================
+// 构建时注入占位符 (fetch-and-build.js 替换)
+// ============================================================
+var LOGIN_HASH = "6ce20308599f0bbb871c115b0243197ea6177d56b9913ed2da6fa8e1c8dfe04e";
+var BUILD_TIMESTAMP = "2026-08-27 08:37:25";
+var EMBEDDED_DATA = {"total":42,"updated_at":"2026-08-27 08:35:23","records":[{"title":"AIGUS正式工考勤数据晾晒","group":"系统组","status":"已完成","owner":"@Mchester Zhang","deadline":"2026-06-19","has_blocker":"否","has_skill":"是","online":"","ai_hours":3.8,"orig_hours":80.5,"efficiency_hours":76.7,"progress":1,"result_link":"https://personnel-platform-orpin.vercel.app","blocker_detail":"","lessons":"1、vecel部署在海外，GF需要更改DNS才能访问；2、github代码托管规范，减少仓库建设减轻服务对接难度","results":"正职工考勤日晾晒 SOP链接","calibration":"排班率数据准确度100%，排班正确率、打卡率、缺卡数误差控制在0-2%","style_tuning":"调整前端界面和功能优化，1、功能优化，固定文件上传样式，优化权限授权方式；2样式优化：增加GSAP样式组件，提高界面交互感","data_input":"投5.30-6.10de 考勤数据，让AI处理数据生成html表，与人工处理数据进行对比"},{"title":"AI核算补贴类","group":"薪酬组","status":"已完成","owner":"@Liping Xu","deadline":"2026-05-22","has_blocker":"否","has_skill":"是","online":"true","ai_hours":0.2,"orig_hours":6,"efficiency_hours":5.8,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按补贴类计算规则","calibration":"准确率100%","style_tuning":"明细和汇总表","data_input":"目前四个补贴均投喂完成数据生成，新增一个补贴待投喂验证"},{"title":"AI进行系统视频培训","group":"系统组","status":"已完成","owner":"@Ilyth An@Ann Ma","deadline":"2026-06-30","has_blocker":"否","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"参照集团敏捷培训视频skill生产视频","calibration":"","style_tuning":"","data_input":""},{"title":"AI核算1099司机工时","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-05-15","has_blocker":"否","has_skill":"是","online":"true","ai_hours":56,"orig_hours":60,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按1099司机工时核算规则","calibration":"偶有四舍五入0.01的工时差异，不影响整体","style_tuning":"样式和工资表一致","data_input":"先投喂两个区试算，然后再全部区域投喂试算一期"},{"title":"AI提取意大利PDF工资单为EXCEL表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-05-15","has_blocker":"否","has_skill":"是","online":"true","ai_hours":18.5,"orig_hours":22.5,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按数据需求提取","calibration":"多次调整数据位置的准确度，以及漏人的情况，现基本能全部提取","style_tuning":"样式无要求，能区分数据即可","data_input":"先投喂两份数据调试"},{"title":"AI进行GUS劳务工考勤数据晾晒","group":"报账组","status":"已完成","owner":"@Mchester Zhang","deadline":"2026-08-05","has_blocker":"否","has_skill":"否","online":"","ai_hours":1.9,"orig_hours":18,"efficiency_hours":17.1,"progress":1,"result_link":"https://a4073c6d60bf4842b324f7adbdbe7b7b.app.codebuddy.work","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI 提升人事服务台机器人拦截情况","group":"支持组","status":"已完成","owner":"@Owen Yuan@Zoe Tian","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"true","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"1.服务台链接ai，通过直连服务台无法直接输出图片回复。需要单独加云文档才可以实现图片回复","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行OA系统组织架构表匹配ehr系统表单，导入提效","group":"支持组","status":"关闭","owner":"@Owen Yuan@Zhiqing Guo","deadline":"2026-06-30","has_blocker":"是","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"OA流程提交的表单每人填写情况不一致（名字可能是重名、没提供工号），暂时无法高正确率输出对应数据","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行人力成本打标提效","group":"支持组","status":"已完成","owner":"@Owen Yuan@Ziwei Wang","deadline":"2026-07-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":8,"orig_hours":24,"efficiency_hours":16,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行月度绩效晾晒展现效果优化","group":"支持组","status":"已完成","owner":"@Owen Yuan@Zoe Tian","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"true","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"http://【WorkBuddy】performance_report.html","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行招聘达成率数据统计提效","group":"支持组","status":"关闭","owner":"@Owen Yuan@Clara Li","deadline":"2026-06-30","has_blocker":"是","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行薪资流水数据提取、信息核对","group":"支持组","status":"暂停","owner":"@Owen Yuan@Ziwei Wang","deadline":"2026-07-31","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"薪资流水改革为 5年社保+1年流水，暂时无需ai识别1年流水","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行美区各大区劳务报账晾晒","group":"支持组","status":"已完成","owner":"@Ziwei Wang","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"http://美区劳务付款看板技能-安装包.zip","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行招聘积分晾晒","group":"支持组","status":"已完成","owner":"@Ziwei Wang@Clara Li","deadline":"2026-07-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":2,"orig_hours":4,"efficiency_hours":2,"progress":1,"result_link":"https://workbuddy.link/p/JccGLnooiO1WBx5SgvIKIh?ext2=copy_link","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行供应商门户区域月度供应商派遣达标率汇总报告","group":"系统组","status":"已完成","owner":"@Ann Ma","deadline":"2026-07-31","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"OTWS无法直接导出数据报表分析，需要AI从网页直接获取数据生成报表","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行自动更新考勤机状态","group":"系统组","status":"待启动","owner":"@Ann Ma","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"研究aily自动回复群任务","group":"系统组","status":"待启动","owner":"@Ann Ma","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行自动生成培训ppt","group":"系统组","status":"已完成","owner":"@Ilyth An","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0.5,"orig_hours":1,"efficiency_hours":0.5,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI根据投喂SOP、问题自动生成对应FAQ","group":"系统组","status":"已完成","owner":"@Beverly Lin","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"搜索不够智能；图片与问题和答案对不上；交互有些卡顿","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GUS新班次使用情况季度晾晒","group":"系统组","status":"已完成","owner":"@Ilyth An@Mchester Zhang","deadline":"2026-07-15","has_blocker":"否","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"1.首先剔除工号为GL0开头的国内员工\n2.对班次数据进行清理，改成需要展示的56班次名称\n3.按照区域进行拆分，分别进行数据展示和图标展示\n4.将大区数据进行整理","calibration":"基本准确","style_tuning":"正在优化前端UI展示","data_input":"已投喂5月班次数据"},{"title":"AI进行需求仪表盘展示","group":"系统组","status":"待启动","owner":"@Beverly Lin@Mchester Zhang@Ilyth An","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行需求状态、内容机器人推送","group":"系统组","status":"待启动","owner":"@Beverly Lin@Mchester Zhang@Ilyth An@Ann Ma","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":0,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI提取荷兰PDF账单养老金数据","group":"薪酬组","status":"已完成","owner":"@Yuxia Lai","deadline":"2026-06-30","has_blocker":"否","has_skill":"否","online":"","ai_hours":1,"orig_hours":2,"efficiency_hours":1,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI生成1099司机月度薪酬看板","group":"薪酬组","status":"已完成","owner":"@Anni Liu","deadline":"2026-06-10","has_blocker":"否","has_skill":"是","online":"true","ai_hours":0.5,"orig_hours":1,"efficiency_hours":0.5,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按看报要求提取数据","calibration":"多次调整看板图表的准确度，现数据基本准确","style_tuning":"固定看板模板","data_input":"投喂2026年1-4月数据"},{"title":"AI实现机器人每日自动推送数据卡片","group":"系统组","status":"已完成","owner":"@Mchester Zhang","deadline":"2026-08-01","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI校准GEU考勤签到表和AI识别小程序工时","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-17","has_blocker":"是","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"CodeBuddy没有OCR引擎，它只能逐条读取并理解，数据量大时非常耗时且耗积分","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI提取法国PDF劳务费发票为excel表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-14","has_blocker":"否","has_skill":"是","online":"false","ai_hours":6,"orig_hours":12,"efficiency_hours":6,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按数据需求提取","calibration":"多次调整数据位置的准确度，以及漏人的情况，现基本能全部提取","style_tuning":"","data_input":"先投喂两份数据调试"},{"title":"AI提取意大利PDF劳务费发票为excel表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-14","has_blocker":"否","has_skill":"是","online":"false","ai_hours":16,"orig_hours":20,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"按数据需求提取","calibration":"多次调整数据位置的准确度，以及漏人的情况，现基本能全部提取","style_tuning":"","data_input":"先投喂两份数据调试"},{"title":"AI进行GUS考勤确认&补签数据日晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GUS报账节点数据月晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GUS劳务工签署率数据周晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AIGEU四个国家正式工考勤数据晾晒","group":"系统组","status":"已完成","owner":"@Mchester Zhang","deadline":"2026-08-14","has_blocker":"否","has_skill":"否","online":"","ai_hours":2,"orig_hours":32,"efficiency_hours":30,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GUS考勤确认&补签数据周晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行海外劳务报账运营质量报告月晾晒","group":"报账组","status":"已完成","owner":"@Xiaohua Lin","deadline":"","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行半年度绩效晾晒","group":"支持组","status":"已完成","owner":"@Zoe Tian@Owen Yuan","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"true","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行上半年等级分布晾晒","group":"支持组","status":"已完成","owner":"@Zoe Tian@Owen Yuan","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI合并花名册、入职/待入职/取消入职名单、调动报告","group":"支持组","status":"已完成","owner":"@Ziwei Wang","deadline":"2026-08-31","has_blocker":"否","has_skill":"是","online":"","ai_hours":20,"orig_hours":40,"efficiency_hours":20,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI进行GEU各大区劳务费用实发晾晒","group":"支持组","status":"已完成","owner":"@Ziwei Wang","deadline":"2026-08-31","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI提取法国PDF工资单数据为excel表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-15","has_blocker":"否","has_skill":"否","online":"","ai_hours":8,"orig_hours":12,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI提取荷兰PDF工资单数据为excel表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-07-17","has_blocker":"否","has_skill":"否","online":"","ai_hours":16,"orig_hours":20,"efficiency_hours":4,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI生成1099司机周薪酬勘误看板","group":"薪酬组","status":"已完成","owner":"@Anni Liu","deadline":"2026-07-31","has_blocker":"否","has_skill":"否","online":"","ai_hours":0.5,"orig_hours":1,"efficiency_hours":0.5,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""},{"title":"AI生成法国劳务工时汇总表","group":"薪酬组","status":"已完成","owner":"@Suxian Yu","deadline":"2026-08-11","has_blocker":"否","has_skill":"否","online":"","ai_hours":0,"orig_hours":0,"efficiency_hours":0,"progress":1,"result_link":"","blocker_detail":"","lessons":"","results":"","calibration":"","style_tuning":"","data_input":""}]};
+
+// ============================================================
+// 配置区
+// ============================================================
+
+// Cloudflare Worker 地址 (可选)。留空则走 data.json 降级刷新。
+// 部署 Worker 后填: "https://你的子域.workers.dev"
+var WORKER_URL = "https://gofo-dashboard-api.chengzai456.workers.dev";
+
+var REFRESH_INTERVAL = 5 * 60 * 1000;   // 自动刷新间隔 5 分钟
+
+// 小组配色
+var GROUP_COLORS = ["#6366f1", "#22d3ee", "#f59e0b", "#ec4899", "#34d399", "#a78bfa", "#f87171", "#fb923c"];
+
+// 状态配置: 颜色 + 标签样式
+var STATUS_CONFIG = {
+  "进行中": { color: "#60a5fa", cls: "tag-blue" },
+  "待启动": { color: "#fbbf24", cls: "tag-yellow" },
+  "已完成": { color: "#34d399", cls: "tag-green" },
+  "暂停":   { color: "#fb923c", cls: "tag-orange" },
+  "关闭":   { color: "#9ca3af", cls: "tag-gray" }
+};
+var statusOrder = { "进行中": 0, "待启动": 1, "已完成": 2, "暂停": 3, "关闭": 4 };
+
+// ============================================================
+// 状态
+// ============================================================
+var currentData = (EMBEDDED_DATA && EMBEDDED_DATA.records) ? EMBEDDED_DATA : { total: 0, updated_at: "", records: [] };
+var charts = {};
+var filters = { group: "all", status: "all", blocker: "all", search: "" };
+var nextRefreshAt = Date.now() + REFRESH_INTERVAL;
+var started = false;
+
+gsap.registerPlugin(ScrollTrigger);
+
+// 登录框入场
+gsap.from(".login-box", { y: 40, opacity: 0, duration: 0.6, ease: "power3.out" });
+
+// ============================================================
+// 工具函数
+// ============================================================
+function escapeHtml(s) {
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+function normYes(v) { return v === "是" || v === "true" || v === "1" || v === true; }
+
+function showToast(msg, type) {
+  var t = document.getElementById("toast");
+  document.getElementById("toastMsg").textContent = msg;
+  t.className = "toast" + (type === "error" ? " error" : "");
+  gsap.fromTo(t, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" });
+  clearTimeout(t._tm);
+  t._tm = setTimeout(function() {
+    gsap.to(t, { y: 24, opacity: 0, duration: 0.3, onComplete: function() { t.style.opacity = ""; } });
+  }, 3200);
+}
+
+async function sha256(msg) {
+  var buf = new TextEncoder().encode(msg);
+  var hash = await crypto.subtle.digest("SHA-256", buf);
+  return Array.from(new Uint8Array(hash)).map(function(b) {
+    return b.toString(16).padStart(2, "0");
+  }).join("");
+}
+
+function groupColor(name) {
+  var list = Object.keys(aggregate(currentData.records).groups);
+  var i = list.indexOf(name);
+  return GROUP_COLORS[(i >= 0 ? i : 0) % GROUP_COLORS.length];
+}
+
+// ============================================================
+// 登录
+// ============================================================
+(function checkAuth() {
+  if (sessionStorage.getItem("dashboard_authed") === "1") {
+    document.getElementById("loginOverlay").style.display = "none";
+    initDashboard();
+  }
+})();
+
+async function doLogin() {
+  var pw = document.getElementById("loginInput").value.trim();
+  if (!pw) return;
+  var hash = await sha256(pw);
+  if (hash === LOGIN_HASH) {
+    sessionStorage.setItem("dashboard_authed", "1");
+    gsap.to("#loginOverlay", {
+      opacity: 0, duration: 0.5, ease: "power2.inOut",
+      onComplete: function() {
         document.getElementById("loginOverlay").style.display = "none";
-        return;
+        document.getElementById("loginOverlay").style.opacity = "";
+        initDashboard();
       }
+    });
+  } else {
+    var err = document.getElementById("loginError");
+    err.textContent = "密码错误，请重试";
+    gsap.fromTo(err, { x: -8 }, { x: 0, duration: 0.45, ease: "elastic.out(1,0.35)" });
+  }
+}
 
-      async function doLogin() {
-        var pw = document.getElementById("loginInput").value.trim();
-        if (!pw) return;
-        var hash = await sha256(pw);
-        if (hash === LOGIN_HASH) {
-          sessionStorage.setItem("gofo_authed", "1");
-          document.getElementById("loginOverlay").style.display = "none";
-          document.getElementById("loginError").textContent = "";
-        } else {
-          document.getElementById("loginError").textContent = "密码错误，请重试";
-          document.getElementById("loginInput").value = "";
-          document.getElementById("loginInput").focus();
+// ============================================================
+// 数据聚合
+// ============================================================
+function aggregate(records) {
+  var groups = {}, statuses = {}, groupEff = {};
+  records.forEach(function(r) {
+    var g = r.group || "未分组";
+    groups[g] = (groups[g] || 0) + 1;
+    var s = r.status || "未知";
+    statuses[s] = (statuses[s] || 0) + 1;
+    groupEff[g] = (groupEff[g] || 0) + (parseFloat(r.efficiency_hours) || 0);
+  });
+  return { groups: groups, statuses: statuses, groupEff: groupEff };
+}
+
+function computeKPIs(records) {
+  var total = records.length;
+  var online = records.filter(function(r) { return normYes(r.online); }).length;
+  var effTotal = records.reduce(function(s, r) { return s + (parseFloat(r.efficiency_hours) || 0); }, 0);
+  var origTotal = records.reduce(function(s, r) { return s + (parseFloat(r.orig_hours) || 0); }, 0);
+  var aiTotal = records.reduce(function(s, r) { return s + (parseFloat(r.ai_hours) || 0); }, 0);
+  var saveRate = origTotal > 0 ? (origTotal - aiTotal) / origTotal * 100 : 0;
+  var skillCount = records.filter(function(r) { return r.has_skill === "是"; }).length;
+  var blockerCount = records.filter(function(r) { return r.has_blocker === "是"; }).length;
+  var groupCount = Object.keys(aggregate(records).groups).length;
+  return {
+    total: total, online: online, effTotal: effTotal,
+    saveRate: saveRate, skillCount: skillCount, blockerCount: blockerCount, groupCount: groupCount
+  };
+}
+
+// ============================================================
+// 渲染: KPI 指标卡 (GSAP 数字滚动)
+// ============================================================
+function renderMetrics() {
+  var k = computeKPIs(currentData.records);
+  var cards = [
+    { icon: "📋", label: "项目总数", value: k.total, dec: 0, cls: "m-indigo" },
+    { icon: "🚀", label: "已上线项目", value: k.online, dec: 0, cls: "m-green" },
+    { icon: "⚡", label: "累计提效", value: k.effTotal, dec: 1, unit: "H/月", cls: "m-cyan" },
+    { icon: "📈", label: "平均提效率", value: k.saveRate, dec: 1, unit: "%", cls: "m-yellow" },
+    { icon: "🧩", label: "可复用 SKILL", value: k.skillCount, dec: 0, cls: "m-purple" },
+    { icon: "⚠️", label: "卡点项目", value: k.blockerCount, dec: 0, cls: "m-red" }
+  ];
+  document.getElementById("metrics").innerHTML = cards.map(function(c) {
+    return '<div class="metric-card ' + c.cls + '">' +
+      '<div class="metric-top"><div class="metric-ico">' + c.icon + '</div>' +
+      '<div class="bar-tip">实时统计</div></div>' +
+      '<div class="metric-value"><span class="num" data-target="' + c.value + '" data-dec="' + c.dec + '">0</span>' +
+      (c.unit ? '<span class="unit">' + c.unit + '</span>' : '') + '</div>' +
+      '<div class="metric-label">' + c.label + '</div></div>';
+  }).join("");
+
+  // 入场动效 + 数字滚动
+  gsap.fromTo("#metrics .metric-card",
+    { y: 46, opacity: 0, scale: 0.96 },
+    { y: 0, opacity: 1, scale: 1, duration: 0.7, stagger: 0.09, ease: "power3.out", clearProps: "transform" });
+  document.querySelectorAll("#metrics .num").forEach(function(el) {
+    var target = parseFloat(el.getAttribute("data-target"));
+    var dec = parseInt(el.getAttribute("data-dec"), 10);
+    var proxy = { v: 0 };
+    gsap.to(proxy, {
+      v: target, duration: 1.3, ease: "power2.out",
+      onUpdate: function() { el.textContent = proxy.v.toFixed(dec); }
+    });
+  });
+}
+
+// ============================================================
+// 渲染: 图表
+// ============================================================
+function chartOpts() {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 900, easing: "easeOutQuart" },
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: "#8b96a8", font: { size: 11 } }, grid: { color: "rgba(148,163,184,.10)" } },
+      y: { ticks: { color: "#8b96a8", font: { size: 11 } }, grid: { color: "rgba(148,163,184,.10)" } }
+    }
+  };
+}
+
+function barGrad(ctx, color) {
+  var h = ctx.canvas.clientHeight || 300, w = ctx.canvas.clientWidth || 600;
+  var g = ctx.createLinearGradient(0, 0, 0, h);
+  g.addColorStop(0, color);
+  g.addColorStop(1, color + "33");
+  return g;
+}
+function barGradH(ctx, color) {
+  var w = ctx.canvas.clientWidth || 600;
+  var g = ctx.createLinearGradient(0, 0, w, 0);
+  g.addColorStop(0, color + "55");
+  g.addColorStop(1, color);
+  return g;
+}
+
+function renderCharts() {
+  var records = currentData.records || [];
+  var agg = aggregate(records);
+  var o = chartOpts();
+
+  // 1. 各小组项目分布 (柱状图)
+  var gKeys = Object.keys(agg.groups);
+  if (charts.group) charts.group.destroy();
+  charts.group = new Chart(document.getElementById("chartGroup"), {
+    type: "bar",
+    data: {
+      labels: gKeys,
+      datasets: [{
+        data: gKeys.map(function(k) { return agg.groups[k]; }),
+        backgroundColor: function(c) { return barGrad(c.chart.ctx, groupColor(gKeys[c.dataIndex])); },
+        hoverBackgroundColor: function(c) { return groupColor(gKeys[c.dataIndex]); },
+        borderRadius: 10, barThickness: 42, maxBarThickness: 54
+      }]
+    },
+    options: Object.assign({}, o, { plugins: { legend: { display: false } } })
+  });
+
+  // 2. 项目状态分布 (环形图) + 中心完成率
+  var sKeys = Object.keys(agg.statuses);
+  if (charts.status) charts.status.destroy();
+  charts.status = new Chart(document.getElementById("chartStatus"), {
+    type: "doughnut",
+    data: {
+      labels: sKeys,
+      datasets: [{
+        data: sKeys.map(function(k) { return agg.statuses[k]; }),
+        backgroundColor: sKeys.map(function(k) { return (STATUS_CONFIG[k] || { color: "#9ca3af" }).color; }),
+        borderColor: "#0d1424", borderWidth: 3, hoverOffset: 8
+      }]
+    },
+    options: Object.assign({}, o, {
+      cutout: "64%",
+      scales: {},
+      plugins: {
+        legend: { display: true, position: "bottom", labels: { color: "#8b96a8", padding: 14, usePointStyle: true, pointStyle: "circle", font: { size: 12 } } }
+      }
+    })
+  });
+  var done = agg.statuses["已完成"] || 0;
+  var rate = records.length ? Math.round(done / records.length * 100) : 0;
+  document.getElementById("statusCenter").innerHTML =
+    '<div class="cc-val">' + rate + '%</div><div class="cc-label">完成率</div>';
+
+  // 3. 分组提效对比 (横向柱状图)
+  var eKeys = Object.keys(agg.groupEff).sort(function(a, b) { return agg.groupEff[b] - agg.groupEff[a]; });
+  if (charts.efficiency) charts.efficiency.destroy();
+  charts.efficiency = new Chart(document.getElementById("chartEfficiency"), {
+    type: "bar",
+    data: {
+      labels: eKeys,
+      datasets: [{
+        label: "提效 (H/月)",
+        data: eKeys.map(function(k) { return +agg.groupEff[k].toFixed(1); }),
+        backgroundColor: function(c) { return barGradH(c.chart.ctx, groupColor(eKeys[c.dataIndex])); },
+        hoverBackgroundColor: function(c) { return groupColor(eKeys[c.dataIndex]); },
+        borderRadius: 9, barThickness: 26, maxBarThickness: 32
+      }]
+    },
+    options: Object.assign({}, o, {
+      indexAxis: "y",
+      scales: {
+        x: { ticks: { color: "#8b96a8", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(148,163,184,.10)" } },
+        y: { ticks: { color: "#8b96a8", font: { size: 12 } }, grid: { display: false } }
+      }
+    })
+  });
+
+  // 4. Top 提效项目 (横向柱状图)
+  var top = records.slice().sort(function(a, b) {
+    return (parseFloat(b.efficiency_hours) || 0) - (parseFloat(a.efficiency_hours) || 0);
+  }).slice(0, 8);
+  var topKeys = top.map(function(r) { return r.title.length > 14 ? r.title.slice(0, 14) + "…" : r.title; });
+  if (charts.top) charts.top.destroy();
+  charts.top = new Chart(document.getElementById("chartTop"), {
+    type: "bar",
+    data: {
+      labels: topKeys,
+      datasets: [{
+        label: "提效 (H/月)",
+        data: top.map(function(r) { return parseFloat(r.efficiency_hours) || 0; }),
+        backgroundColor: function(c) { return barGradH(c.chart.ctx, "#a78bfa"); },
+        hoverBackgroundColor: "#c4b5fd",
+        borderRadius: 9, barThickness: 22, maxBarThickness: 28
+      }]
+    },
+    options: Object.assign({}, o, {
+      indexAxis: "y",
+      scales: {
+        x: { ticks: { color: "#8b96a8", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(148,163,184,.10)" } },
+        y: { ticks: { color: "#cbd5e1", font: { size: 11.5 } }, grid: { display: false } }
+      }
+    })
+  });
+
+  ScrollTrigger.refresh();
+}
+
+// ============================================================
+// 渲染: 明细表格
+// ============================================================
+function buildControls() {
+  var records = currentData.records || [];
+  var groups = {};
+  records.forEach(function(r) { var g = r.group || "未分组"; groups[g] = (groups[g] || 0) + 1; });
+  var html = '<button class="filter-btn active" data-g="all" onclick="setFilter(\'group\',\'all\')">全部</button>';
+  Object.keys(groups).forEach(function(g) {
+    html += '<button class="filter-btn" data-g="' + escapeHtml(g) + '" onclick="setFilter(\'group\',\'' + escapeHtml(g) + '\')">' +
+      escapeHtml(g) + ' <span style="opacity:.65">' + groups[g] + '</span></button>';
+  });
+  html += '<select class="filter-btn" onchange="setFilter(\'status\',this.value)"><option value="all">状态: 全部</option>' +
+    Object.keys(STATUS_CONFIG).map(function(s) { return '<option value="' + s + '">' + s + '</option>'; }).join("") + '</select>';
+  html += '<select class="filter-btn" onchange="setFilter(\'blocker\',this.value)">' +
+    '<option value="all">卡点: 全部</option><option value="是">有卡点</option><option value="否">无卡点</option></select>';
+  html += '<input type="text" class="search-input" placeholder="搜索项目 / 负责人 / 小组..." oninput="setFilter(\'search\',this.value)">';
+  document.getElementById("tableControls").innerHTML = html;
+}
+
+function setFilter(key, val) {
+  filters[key] = key === "search" ? val.toLowerCase() : val;
+  renderTable();
+}
+
+function filteredRecords() {
+  var records = currentData.records || [];
+  if (filters.group !== "all") records = records.filter(function(r) { return (r.group || "未分组") === filters.group; });
+  if (filters.status !== "all") records = records.filter(function(r) { return r.status === filters.status; });
+  if (filters.blocker !== "all") records = records.filter(function(r) { return r.has_blocker === filters.blocker; });
+  if (filters.search) {
+    records = records.filter(function(r) {
+      return (r.title || "").toLowerCase().includes(filters.search) ||
+             (r.owner || "").toLowerCase().includes(filters.search) ||
+             (r.group || "").toLowerCase().includes(filters.search);
+    });
+  }
+  records.sort(function(a, b) {
+    var sa = statusOrder[a.status] !== undefined ? statusOrder[a.status] : 5;
+    var sb = statusOrder[b.status] !== undefined ? statusOrder[b.status] : 5;
+    if (sa !== sb) return sa - sb;
+    return (b.deadline || "").localeCompare(a.deadline || "");
+  });
+  return records;
+}
+
+function renderTable() {
+  var list = filteredRecords();
+  document.getElementById("tableCount").textContent = list.length + " / " + (currentData.records || []).length;
+
+  document.querySelectorAll("[data-g]").forEach(function(btn) {
+    btn.classList.toggle("active", btn.getAttribute("data-g") === filters.group);
+  });
+
+  var rows = list.map(function(r) {
+    var sc = STATUS_CONFIG[r.status] || { cls: "tag-gray" };
+    var pct = Math.max(0, Math.min(100, Math.round((parseFloat(r.progress) || 0) * 100)));
+    var bar = '<span class="progress-bar"><span class="progress-fill" style="width:' + pct + '%"></span></span>' +
+      '<span style="font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums">' + pct + '%</span>';
+    var onlineBadge = normYes(r.online) ? '<span title="已上线" style="margin-left:7px;font-size:12px">🚀</span>' : "";
+    var save = 0;
+    if (parseFloat(r.orig_hours) > 0) {
+      save = Math.round((parseFloat(r.orig_hours) - (parseFloat(r.ai_hours) || 0)) / parseFloat(r.orig_hours) * 100);
+    }
+    var saveCls = save >= 70 ? "save-high" : (save >= 40 ? "save-mid" : "save-low");
+    var blockerTd = r.has_blocker === "是"
+      ? '<span class="tag tag-red" title="' + escapeHtml(r.blocker_detail || "卡点详情未填写") + '">有</span>'
+      : '<span class="tag tag-gray" style="opacity:.6">无</span>';
+    var skillTd = r.has_skill === "是"
+      ? '<span class="tag tag-purple">SKILL</span>'
+      : '<span style="color:var(--dim);opacity:.55">—</span>';
+    var link = r.result_link
+      ? '<a class="link" href="' + escapeHtml(r.result_link) + '" target="_blank" rel="noopener">查看 ↗</a>'
+      : '<span style="color:var(--dim);opacity:.5">—</span>';
+
+    return '<tr>' +
+      '<td class="td-wrap"><span title="' + escapeHtml(r.title) + '">' + escapeHtml(r.title || "—") + '</span>' + onlineBadge + '</td>' +
+      '<td><span class="tag" style="color:' + groupColor(r.group || "未分组") + ';background:' + groupColor(r.group || "未分组") + '1f">' + escapeHtml(r.group || "—") + '</span></td>' +
+      '<td><span class="tag ' + sc.cls + '">' + escapeHtml(r.status || "—") + '</span> ' + bar + '</td>' +
+      '<td>' + escapeHtml(r.owner || "—") + '</td>' +
+      '<td style="font-variant-numeric:tabular-nums">' + escapeHtml(r.deadline || "—") + '</td>' +
+      '<td style="font-family:var(--font-num);font-weight:600">' + (parseFloat(r.efficiency_hours) ? parseFloat(r.efficiency_hours).toFixed(1) : "—") + '</td>' +
+      '<td class="' + saveCls + '">' + (parseFloat(r.orig_hours) > 0 ? save + "%" : "—") + '</td>' +
+      '<td>' + blockerTd + '</td>' +
+      '<td>' + skillTd + '</td>' +
+      '<td>' + link + '</td>' +
+    '</tr>';
+  }).join("");
+
+  document.getElementById("tableBody").innerHTML = rows;
+  // GSAP 行级入场动画
+  gsap.fromTo("#tableBody tr",
+    { y: 14, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.4, stagger: 0.02, ease: "power2.out", clearProps: "transform" });
+}
+
+// ============================================================
+// 渲染: 全部
+// ============================================================
+function renderAll() {
+  renderMetrics();
+  renderCharts();
+  buildControls();
+  renderTable();
+  document.getElementById("updateTime").textContent = currentData.updated_at || BUILD_TIMESTAMP || "--";
+}
+
+// ============================================================
+// 数据刷新 (双路径: Worker 实时优先 → 降级 data.json)
+// ============================================================
+function refreshData(silent) {
+  var btn = document.getElementById("refreshBtn");
+  btn.classList.add("spinning");
+  var oldKey = currentData.records ? JSON.stringify(currentData.records) : "";
+
+  function done() { btn.classList.remove("spinning"); }
+
+  function apply(data, source) {
+    var changed = JSON.stringify(data.records) !== oldKey;
+    currentData = data;
+    renderAll();
+    done();
+    if (!silent) showToast(changed ? "数据已刷新 · " + source : "数据已是最新", changed ? "" : "error");
+  }
+
+  if (WORKER_URL) {
+    fetch(WORKER_URL + "/api/refresh", { cache: "no-store", mode: "cors" })
+      .then(function(res) { return res.json().then(function(j) { return { status: res.status, body: j }; }); })
+      .then(function(r) {
+        if (r.body && r.body.ok && r.body.data && r.body.data.records) {
+          apply(r.body.data, "实时接口");
+          return;
         }
-      }
+        throw new Error("HTTP " + r.status);
+      })
+      .catch(function() { return fetchFromJson(silent, done); });
+  } else {
+    fetchFromJson(silent, done);
+  }
+}
 
-      async function sha256(msg) {
-        var buf = new TextEncoder().encode(msg);
-        var hash = await crypto.subtle.digest("SHA-256", buf);
-        return Array.from(new Uint8Array(hash)).map(function(b) { return b.toString(16).padStart(2, "0"); }).join("");
-      }
-
-      document.getElementById("loginBtn").addEventListener("click", doLogin);
-      document.getElementById("loginInput").addEventListener("keydown", function(e) {
-        if (e.key === "Enter") doLogin();
-      });
-    })();
-
-    // ============================================================
-    // 内嵌数据
-    // ============================================================
-    var EMBEDDED_DATA = {"total": 34, "updated_at": "2026-08-19 03:58:46", "records": [{"title": "AIGUS正式工考勤数据晾晒", "group": "系统组", "status": "已完成", "owner": "@Mchester Zhang", "deadline": "2026-06-19", "has_blocker": "否", "has_skill": "是", "online": "", "ai_hours": 3.8, "orig_hours": 80.5, "efficiency_hours": 76.7, "progress": 1, "result_link": "https://personnel-platform-orpin.vercel.app", "blocker_detail": "", "lessons": "1、vecel部署在海外，GF需要更改DNS才能访问；2、github代码托管规范，减少仓库建设减轻服务对接难度", "results": "正职工考勤日晾晒 SOP链接", "calibration": "排班率数据准确度100%，排班正确率、打卡率、缺卡数误差控制在0-2%", "style_tuning": "调整前端界面和功能优化，1、功能优化，固定文件上传样式，优化权限授权方式；2样式优化：增加GSAP样式组件，提高界面交互感", "data_input": "投5.30-6.10de 考勤数据，让AI处理数据生成html表，与人工处理数据进行对比"}, {"title": "AI核算补贴类", "group": "薪酬组", "status": "已完成", "owner": "@Liping Xu", "deadline": "2026-05-22", "has_blocker": "否", "has_skill": "是", "online": "true", "ai_hours": 0.2, "orig_hours": 6, "efficiency_hours": 5.8, "progress": 1, "result_link": "", "blocker_detail": "", "lessons": "", "results": "按补贴类计算规则", "calibration": "准确率100%", "style_tuning": "明细和汇总表", "data_input": "目前四个补贴均投喂完成数据生成，新增一个补贴待投喂验证"}, {"title": "AI进行系统视频培训", "group": "系统组", "status": "已完成", "owner": "@Ilyth An@Ann Ma", "deadline": "2026-06-30", "has_blocker": "否", "has_skill": "是", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 1, "result_link": "", "blocker_detail": "", "lessons": "", "results": "参照集团敏捷培训视频skill生产视频", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI核算1099司机工时", "group": "薪酬组", "status": "已完成", "owner": "@Suxian Yu", "deadline": "2026-05-15", "has_blocker": "否", "has_skill": "是", "online": "true", "ai_hours": 56, "orig_hours": 60, "efficiency_hours": 4, "progress": 1, "result_link": "", "blocker_detail": "", "lessons": "", "results": "按1099司机工时核算规则", "calibration": "偶有四舍五入0.01的工时差异，不影响整体", "style_tuning": "样式和工资表一致", "data_input": "先投喂两个区试算，然后再全部区域投喂试算一期"}, {"title": "AI提取意大利PDF工资单为EXCEL表", "group": "薪酬组", "status": "已完成", "owner": "@Suxian Yu", "deadline": "2026-05-15", "has_blocker": "否", "has_skill": "是", "online": "true", "ai_hours": 18.5, "orig_hours": 22.5, "efficiency_hours": 4, "progress": 1, "result_link": "", "blocker_detail": "", "lessons": "", "results": "按数据需求提取", "calibration": "多次调整数据位置的准确度，以及漏人的情况，现基本能全部提取", "style_tuning": "样式无要求，能区分数据即可", "data_input": "先投喂两份数据调试"}, {"title": "AI进行GUS考勤数据晾晒", "group": "报账组", "status": "进行中", "owner": "@Suxian Yu", "deadline": "2026-08-05", "has_blocker": "否", "has_skill": "否", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 1, "result_link": "https://a4073c6d60bf4842b324f7adbdbe7b7b.app.codebuddy.work", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI 提升人事服务台机器人拦截情况", "group": "支持组", "status": "已完成", "owner": "@Owen Yuan@Zoe Tian", "deadline": "2026-06-30", "has_blocker": "否", "has_skill": "否", "online": "true", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 1, "result_link": "", "blocker_detail": "", "lessons": "1.服务台链接ai，通过直连服务台无法直接输出图片回复。需要单独加云文档才可以实现图片回复", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI进行OA系统组织架构表匹配ehr系统表单，导入提效", "group": "支持组", "status": "关闭", "owner": "@Owen Yuan@Zhiqing Guo", "deadline": "2026-06-30", "has_blocker": "是", "has_skill": "否", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 0, "result_link": "", "blocker_detail": "OA流程提交的表单每人填写情况不一致（名字可能是重名、没提供工号），暂时无法高正确率输出对应数据", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI进行人力成本打标提效", "group": "支持组", "status": "进行中", "owner": "@Owen Yuan@Ziwei Wang", "deadline": "2026-07-31", "has_blocker": "否", "has_skill": "是", "online": "", "ai_hours": 8, "orig_hours": 24, "efficiency_hours": 16, "progress": 0.9, "result_link": "", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI进行绩效晾晒展现效果优化", "group": "支持组", "status": "进行中", "owner": "@Owen Yuan@Zoe Tian", "deadline": "2026-08-31", "has_blocker": "是", "has_skill": "是", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 0.9, "result_link": "http://【WorkBuddy】performance_report.html https://codebuddy.work/agents/share/33k7N6DoBrOWNUjIp9iLNR3I4Ab68pBUxWbmWqVOqm8cmODB1NltiUnPw-Dwfwv4?platform=workbuddy", "blocker_detail": "生成的控权看板链接只能用公司网或者海外的网打开", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI进行招聘达成率数据统计提效", "group": "支持组", "status": "关闭", "owner": "@Owen Yuan@Clara Li", "deadline": "2026-06-30", "has_blocker": "是", "has_skill": "否", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 0, "result_link": "", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI进行薪资流水数据提取、信息核对", "group": "支持组", "status": "暂停", "owner": "@Owen Yuan@Ziwei Wang", "deadline": "2026-07-31", "has_blocker": "否", "has_skill": "否", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 0, "result_link": "", "blocker_detail": "薪资流水改革为 5年社保+1年流水，暂时无需ai识别1年流水", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI进行美区各大区劳务报账晾晒", "group": "支持组", "status": "已完成", "owner": "@Ziwei Wang", "deadline": "2026-08-31", "has_blocker": "否", "has_skill": "是", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 1, "result_link": "http://美区劳务付款看板技能-安装包.zip", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI进行招聘积分晾晒", "group": "支持组", "status": "已完成", "owner": "@Ziwei Wang@Clara Li", "deadline": "2026-07-31", "has_blocker": "否", "has_skill": "是", "online": "", "ai_hours": 2, "orig_hours": 4, "efficiency_hours": 2, "progress": 1, "result_link": "https://workbuddy.link/p/JccGLnooiO1WBx5SgvIKIh?ext2=copy_link", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI进行供应商门户区域月度供应商派遣达标率汇总报告", "group": "系统组", "status": "已完成", "owner": "@Ann Ma", "deadline": "2026-07-31", "has_blocker": "否", "has_skill": "否", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 1, "result_link": "", "blocker_detail": "OTWS无法直接导出数据报表分析，需要AI从网页直接获取数据生成报表", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI进行自动更新考勤机状态", "group": "系统组", "status": "待启动", "owner": "@Ann Ma", "deadline": "2026-06-30", "has_blocker": "否", "has_skill": "否", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 0, "result_link": "", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "研究aily自动回复群任务", "group": "系统组", "status": "进行中", "owner": "@Ann Ma", "deadline": "2026-06-30", "has_blocker": "否", "has_skill": "否", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 0.1, "result_link": "", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI进行自动生成培训ppt", "group": "系统组", "status": "已完成", "owner": "@Ilyth An", "deadline": "2026-06-30", "has_blocker": "否", "has_skill": "否", "online": "", "ai_hours": 0.5, "orig_hours": 1, "efficiency_hours": 0.5, "progress": 1, "result_link": "", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI根据投喂SOP、问题自动生成对应FAQ", "group": "系统组", "status": "进行中", "owner": "@Beverly Lin", "deadline": "2026-06-30", "has_blocker": "是", "has_skill": "否", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 0.8, "result_link": "", "blocker_detail": "搜索不够智能；图片与问题和答案对不上；交互有些卡顿", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI进行GUS新班次使用情况季度晾晒", "group": "系统组", "status": "已完成", "owner": "@Ilyth An@Mchester Zhang", "deadline": "2026-07-15", "has_blocker": "否", "has_skill": "是", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 1, "result_link": "", "blocker_detail": "", "lessons": "", "results": "1.首先剔除工号为GL0开头的国内员工\n2.对班次数据进行清理，改成需要展示的56班次名称\n3.按照区域进行拆分，分别进行数据展示和图标展示\n4.将大区数据进行整理", "calibration": "基本准确", "style_tuning": "正在优化前端UI展示", "data_input": "已投喂5月班次数据"}, {"title": "AI进行需求仪表盘展示", "group": "系统组", "status": "待启动", "owner": "@Beverly Lin@Mchester Zhang@Ilyth An", "deadline": "2026-06-30", "has_blocker": "否", "has_skill": "否", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 0, "result_link": "", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI进行需求状态、内容机器人推送", "group": "系统组", "status": "待启动", "owner": "@Beverly Lin@Mchester Zhang@Ilyth An@Ann Ma", "deadline": "2026-06-30", "has_blocker": "否", "has_skill": "否", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 0, "result_link": "", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI提取荷兰PDF账单养老金数据", "group": "薪酬组", "status": "已完成", "owner": "@Yuxia Lai", "deadline": "2026-06-30", "has_blocker": "否", "has_skill": "否", "online": "", "ai_hours": 1, "orig_hours": 2, "efficiency_hours": 1, "progress": 1, "result_link": "", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI生成1099司机月度薪酬看板", "group": "薪酬组", "status": "已完成", "owner": "@Anni Liu", "deadline": "2026-06-10", "has_blocker": "否", "has_skill": "是", "online": "true", "ai_hours": 0.5, "orig_hours": 1, "efficiency_hours": 0.5, "progress": 1, "result_link": "", "blocker_detail": "", "lessons": "", "results": "按看报要求提取数据", "calibration": "多次调整看板图表的准确度，现数据基本准确", "style_tuning": "固定看板模板", "data_input": "投喂2026年1-4月数据"}, {"title": "AI实现机器人每日自动推送数据卡片", "group": "系统组", "status": "已完成", "owner": "@Mchester Zhang", "deadline": "2026-08-01", "has_blocker": "否", "has_skill": "否", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 1, "result_link": "", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI校准GEU考勤签到表和AI识别小程序工时", "group": "薪酬组", "status": "已完成", "owner": "@Suxian Yu", "deadline": "2026-07-17", "has_blocker": "是", "has_skill": "是", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 1, "result_link": "", "blocker_detail": "CodeBuddy没有OCR引擎，它只能逐条读取并理解，数据量大时非常耗时且耗积分", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI提取法国PDF劳务费发票为excel表", "group": "薪酬组", "status": "已完成", "owner": "@Suxian Yu", "deadline": "2026-07-14", "has_blocker": "否", "has_skill": "是", "online": "false", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 1, "result_link": "", "blocker_detail": "", "lessons": "", "results": "按数据需求提取", "calibration": "多次调整数据位置的准确度，以及漏人的情况，现基本能全部提取", "style_tuning": "", "data_input": "先投喂两份数据调试"}, {"title": "AI提取意大利PDF劳务费发票为excel表", "group": "薪酬组", "status": "已完成", "owner": "@Suxian Yu", "deadline": "2026-07-14", "has_blocker": "否", "has_skill": "是", "online": "false", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 1, "result_link": "", "blocker_detail": "", "lessons": "", "results": "按数据需求提取", "calibration": "多次调整数据位置的准确度，以及漏人的情况，现基本能全部提取", "style_tuning": "", "data_input": "先投喂两份数据调试"}, {"title": "AI进行GUS考勤确认&补签数据日晾晒", "group": "报账组", "status": "已完成", "owner": "@Xiaohua Lin", "deadline": "", "has_blocker": "否", "has_skill": "否", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 1, "result_link": "", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI进行GUS报账节点数据晾晒", "group": "报账组", "status": "已完成", "owner": "@Xiaohua Lin", "deadline": "", "has_blocker": "否", "has_skill": "否", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 1, "result_link": "", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI进行GUS劳务工签署率数据晾晒", "group": "报账组", "status": "已完成", "owner": "@Xiaohua Lin", "deadline": "", "has_blocker": "否", "has_skill": "否", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 1, "result_link": "", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AIGEU四个国家正式工考勤数据晾晒", "group": "系统组", "status": "进行中", "owner": "@Mchester Zhang", "deadline": "2026-08-14", "has_blocker": "否", "has_skill": "否", "online": "", "ai_hours": 2, "orig_hours": 1.5, "efficiency_hours": 1, "progress": 0.3, "result_link": "", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI进行GUS考勤确认&补签数据周晾晒", "group": "报账组", "status": "已完成", "owner": "@Xiaohua Lin", "deadline": "", "has_blocker": "否", "has_skill": "否", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 1, "result_link": "", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}, {"title": "AI进行海外劳务报账运营质量报告月晾晒", "group": "未分组", "status": "已完成", "owner": "@Xiaohua Lin", "deadline": "", "has_blocker": "否", "has_skill": "否", "online": "", "ai_hours": 0, "orig_hours": 0, "efficiency_hours": 0, "progress": 1, "result_link": "", "blocker_detail": "", "lessons": "", "results": "", "calibration": "", "style_tuning": "", "data_input": ""}]};
-  </script>
-
-  <script>
-    var API_URL = "./data.json";
-    var WORKER_URL = "https://gofo-dashboard-api.chengzai456.workers.dev";
-
-    // ============================================================
-    // 颜色 & 状态配置
-    // ============================================================
-    var GROUP_COLORS = ["#4f8cff","#ff8c42","#42d39b","#ffd642","#c44fff","#ff6b6b","#64b4ff","#40e0d0"];
-    var STATUS_CONFIG = {
-      "已完成": { color: "#42d39b", cls: "tag-green" },
-      "进行中": { color: "#4f8cff", cls: "tag-blue" },
-      "待启动": { color: "#8b949e", cls: "tag-gray" },
-      "关闭":   { color: "#ff6b6b", cls: "tag-red" },
-      "暂停":   { color: "#ffd642", cls: "tag-yellow" },
-    };
-
-    var charts = {};
-    var currentFilter = "all";
-    var searchQuery = "";
-    var blockerFilter = "all";
-    var statusFilter = "all";
-    var currentData = EMBEDDED_DATA;
-
-    // ============================================================
-    // 数据聚合
-    // ============================================================
-    function aggregate(records) {
-      var groups = {};
-      var statuses = {};
-      var onlineCount = 0;
-      var totalOrigHours = 0;
-      var totalAiHours = 0;
-      var totalEfficiencyHours = 0;
-      var owners = {};
-
-      records.forEach(function(r) {
-        var g = r.group || "未分组";
-        groups[g] = (groups[g] || 0) + 1;
-        var s = r.status || "待启动";
-        statuses[s] = (statuses[s] || 0) + 1;
-        if (r.online === "true") onlineCount++;
-        totalOrigHours += r.orig_hours || 0;
-        totalAiHours += r.ai_hours || 0;
-        totalEfficiencyHours += r.efficiency_hours || 0;
-        if (r.owner) {
-          // 负责人可能是 @张三@李四 格式
-          r.owner.replace(/@/g, " ").trim().split(/\s+/).forEach(function(n) {
-            if (n) owners[n] = (owners[n] || 0) + 1;
-          });
-        }
-      });
-
-      return {
-        groups: groups,
-        statuses: statuses,
-        onlineCount: onlineCount,
-        totalOrigHours: totalOrigHours,
-        totalAiHours: totalAiHours,
-        aiSavedHours: totalEfficiencyHours,
-        aiRatio: totalOrigHours > 0 ? totalEfficiencyHours / totalOrigHours : 0,
-        totalRecords: records.length,
-        groupCount: Object.keys(groups).length,
-        owners: owners
-      };
-    }
-
-    // ============================================================
-    // 渲染
-    // ============================================================
-    function renderMetrics(agg) {
-      document.getElementById("m-total").textContent = agg.totalRecords;
-      document.getElementById("m-online").textContent = agg.onlineCount;
-      document.getElementById("m-groups").textContent = agg.groupCount;
-      document.getElementById("m-saved").innerHTML = agg.aiSavedHours.toFixed(1) + '<span class="unit">H/月</span>';
-      document.getElementById("m-ratio").textContent = Math.round(agg.aiRatio * 100) + "%";
-    }
-
-    function renderCharts(agg) {
-      var cd = {
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { position: "right", labels: { color: "#8b949e", font: { size: 12 }, padding: 12, usePointStyle: true, pointStyle: "circle" } },
-          tooltip: { backgroundColor: "#161b22", titleColor: "#e6edf3", bodyColor: "#e6edf3", borderColor: "#30363d", borderWidth: 1, padding: 12, cornerRadius: 8 },
-        },
-      };
-
-      // 小组柱状图
-      var gKeys = Object.keys(agg.groups);
-      if (charts.group) charts.group.destroy();
-      charts.group = new Chart(document.getElementById("chartGroup"), {
-        type: "bar",
-        data: {
-          labels: gKeys,
-          datasets: [{
-            data: gKeys.map(function(k) { return agg.groups[k]; }),
-            backgroundColor: gKeys.map(function(_, i) { return GROUP_COLORS[i % GROUP_COLORS.length]; }),
-            borderRadius: 8, barThickness: 44
-          }]
-        },
-        options: Object.assign({}, cd, {
-          plugins: Object.assign({}, cd.plugins, { legend: { display: false } }),
-          scales: {
-            x: { ticks: { color: "#8b949e", font: { size: 12 } }, grid: { display: false } },
-            y: { beginAtZero: true, ticks: { color: "#8b949e", stepSize: 1, font: { size: 12 } }, grid: { color: "#21262d" } }
-          }
-        })
-      });
-
-      // 状态环形图
-      var sKeys = Object.keys(agg.statuses);
-      if (charts.status) charts.status.destroy();
-      charts.status = new Chart(document.getElementById("chartStatus"), {
-        type: "doughnut",
-        data: {
-          labels: sKeys,
-          datasets: [{
-            data: sKeys.map(function(k) { return agg.statuses[k]; }),
-            backgroundColor: sKeys.map(function(k) { return (STATUS_CONFIG[k] || {}).color || "#8b949e"; }),
-            borderColor: "#161b22", borderWidth: 3
-          }]
-        },
-        options: Object.assign({}, cd, { cutout: "60%" })
-      });
-    }
-
-    function renderTable(records) {
-      var tbody = document.getElementById("tableBody");
-      var filtered = records;
-      if (currentFilter !== "all") filtered = filtered.filter(function(r) { return r.group === currentFilter; });
-      if (blockerFilter !== "all") filtered = filtered.filter(function(r) { return r.has_blocker === blockerFilter; });
-      if (statusFilter !== "all") filtered = filtered.filter(function(r) { return r.status === statusFilter; });
-      if (searchQuery) {
-        var q = searchQuery.toLowerCase();
-        filtered = filtered.filter(function(r) {
-          return r.title.toLowerCase().includes(q) ||
-                 (r.owner || "").toLowerCase().includes(q) ||
-                 (r.group || "").toLowerCase().includes(q) ||
-                 (r.status || "").toLowerCase().includes(q) ||
-                 (r.blocker_detail || "").toLowerCase().includes(q);
-        });
-      }
-      // 按状态优先级 + 预计完成时间排序
-      var statusOrder = { "进行中": 0, "待启动": 1, "已完成": 2, "暂停": 3, "关闭": 4 };
-      filtered.sort(function(a, b) {
-        var sa = statusOrder[a.status] !== undefined ? statusOrder[a.status] : 5;
-        var sb = statusOrder[b.status] !== undefined ? statusOrder[b.status] : 5;
-        if (sa !== sb) return sa - sb;
-        return (b.deadline || "").localeCompare(a.deadline || "");
-      });
-
-      tbody.innerHTML = filtered.length ? filtered.map(function(r) {
-        var sc = STATUS_CONFIG[r.status] || { cls: "tag-gray", color: "#8b949e" };
-        var pct = Math.max(0, Math.min(100, Math.round((r.progress || 0) * 100)));
-        var progressBar = '<span class="progress-bar" title="进度 ' + pct + '%"><span class="progress-fill" style="width:' + pct + '%"></span></span><span class="progress-pct">' + pct + '%</span>';
-        var savedHours = r.efficiency_hours || null;
-        return '<tr>' +
-          '<td title="' + escapeHtml(r.title) + '">' + (r.title || "—") + '</td>' +
-          '<td><span class="tag tag-blue">' + (r.group || "—") + '</span></td>' +
-          '<td><span class="tag ' + sc.cls + '">' + (r.status || "—") + '</span> ' + progressBar + '</td>' +
-          '<td>' + (r.owner || "—") + '</td>' +
-          '<td>' + formatDeadline(r.deadline) + '</td>' +
-          '<td title="提效时间 ' + (r.efficiency_hours || 0) + ' H">' + (savedHours !== null ? savedHours.toFixed(1) + " H" : "—") + '</td>' +
-          '<td>' + (r.has_blocker === "是" ? '<span style="color:var(--red)">有</span>' : '<span style="color:var(--text-dim)">无</span>') + '</td>' +
-          '<td><div class="td-wrap" title="' + escapeHtml(r.blocker_detail) + '">' + (r.blocker_detail ? escapeHtml(r.blocker_detail) : "—") + '</div></td>' +
-          '<td>' + (r.has_skill === "是" ? '<span style="color:var(--green)">有</span>' : '<span style="color:var(--text-dim)">无</span>') + '</td>' +
-          '<td>' + (r.result_link ? '<a href="' + escapeHtml(r.result_link) + '" target="_blank" class="link">查看</a>' : "—") + '</td>' +
-        '</tr>';
-      }).join("") : '<tr><td colspan="10" style="text-align:center;padding:40px;color:var(--text-dim)">没有匹配的项目</td></tr>';
-    }
-
-    function formatDeadline(v) {
-      if (!v) return "—";
-      // 飞书返回毫秒时间戳或 "2026-06-19 00:00:00" 格式
-      var n = Number(v);
-      if (!isNaN(n) && n > 100000000000) {
-        var d = new Date(n);
-        return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
-      }
-      if (typeof v === "string" && v.includes(" ")) return v.split(" ")[0];
-      if (typeof v === "string" && v.length >= 10) return v.substring(0, 10);
-      return String(v);
-    }
-
-    function escapeHtml(s) {
-      return String(s == null ? "" : s)
-        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
-    }
-
-    function updateTimestamp(iso) {
-      var d = new Date(iso);
-      var pad = function(n) { return String(n).padStart(2, "0"); };
-      document.getElementById("updateTime").textContent =
-        d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate()) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
-    }
-
-    // ============================================================
-    // 动态生成小组筛选按钮
-    // ============================================================
-    function buildGroupFilters(records) {
-      var groups = {};
-      records.forEach(function(r) { if (r.group) groups[r.group] = true; });
-      var container = document.getElementById("groupFilters");
-      container.innerHTML = "";
-      Object.keys(groups).sort().forEach(function(g) {
-        var btn = document.createElement("button");
-        btn.className = "filter-btn";
-        btn.dataset.filter = g;
-        btn.textContent = g;
-        container.appendChild(btn);
-      });
-      // 重新绑定事件
-      document.querySelectorAll(".filter-btn").forEach(function(btn) {
-        btn.addEventListener("click", function() {
-          document.querySelectorAll(".filter-btn").forEach(function(b) { b.classList.remove("active"); });
-          btn.classList.add("active");
-          currentFilter = btn.dataset.filter;
-          renderTable(currentData.records);
-        });
-      });
-    }
-
-    // ============================================================
-    // 搜索
-    // ============================================================
-    document.getElementById("searchInput").addEventListener("input", function(e) {
-      searchQuery = e.target.value.trim();
-      renderTable(currentData.records);
+function fetchFromJson(silent, done) {
+  fetch("./data.json?t=" + Date.now(), { cache: "no-store" })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data && data.records) {
+        currentData = data;
+        renderAll();
+        done();
+        if (!silent) showToast("数据已刷新 · 定时同步源");
+      } else { throw new Error("数据格式异常"); }
+    })
+    .catch(function(err) {
+      done();
+      if (!silent) showToast("刷新失败: " + err.message, "error");
     });
+}
 
-    // 卡点筛选
-    document.getElementById("blockerFilter").addEventListener("change", function(e) {
-      blockerFilter = e.target.value;
-      renderTable(currentData.records);
+// ============================================================
+// 倒计时
+// ============================================================
+function startCountdown() {
+  setInterval(function() {
+    var remain = Math.max(0, Math.round((nextRefreshAt - Date.now()) / 1000));
+    var m = Math.floor(remain / 60), s = remain % 60;
+    document.getElementById("countdown").textContent =
+      (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+    if (remain <= 0) {
+      nextRefreshAt = Date.now() + REFRESH_INTERVAL;
+      refreshData(true);
+    }
+  }, 1000);
+}
+
+// ============================================================
+// GSAP 交互动效
+// ============================================================
+function bindEffects() {
+  // 滚动进度条
+  gsap.to("#progressBar", {
+    scaleX: 1, ease: "none",
+    scrollTrigger: { trigger: document.body, start: 0, end: "max", scrub: 0.3 }
+  });
+
+  // 磁吸按钮
+  function magnetic(el, strength) {
+    if (window.matchMedia("(hover:none)").matches) return;
+    el.addEventListener("mousemove", function(e) {
+      var r = el.getBoundingClientRect();
+      var x = e.clientX - (r.left + r.width / 2);
+      var y = e.clientY - (r.top + r.height / 2);
+      gsap.to(el, { x: x * strength, y: y * strength, duration: 0.3, ease: "power2.out" });
     });
-
-    // 进度筛选
-    document.getElementById("statusFilter").addEventListener("change", function(e) {
-      statusFilter = e.target.value;
-      renderTable(currentData.records);
+    el.addEventListener("mouseleave", function() {
+      gsap.to(el, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1,0.35)" });
     });
+  }
+  magnetic(document.getElementById("refreshBtn"), 0.25);
+  magnetic(document.getElementById("loginBtn"), 0.2);
 
-    // ============================================================
-    // 刷新
-    // ============================================================
-    function showToast(msg, type) {
-      var t = document.createElement("div");
-      t.className = "toast " + type;
-      t.textContent = msg;
-      // 多 toast 错开垂直堆叠(每个约 56px 高, 避免相互遮挡)
-      var existing = document.querySelectorAll(".toast").length;
-      t.style.top = (20 + existing * 56) + "px";
-      document.body.appendChild(t);
-      setTimeout(function() { t.remove(); }, 3000);
-    }
+  // 顶栏入场
+  gsap.from(".header", { y: -30, opacity: 0, duration: 0.7, ease: "power3.out" });
 
-    function refreshData(silent) {
-      var btn = document.getElementById("refreshBtn");
-      var icon = document.getElementById("refreshIcon");
-      var startTime = Date.now();
-      if (!silent) { btn.classList.add("loading"); icon.textContent = "⏳"; }
+  // 图表卡片滚动出现
+  document.querySelectorAll("[data-scroll]").forEach(function(el) {
+    gsap.fromTo(el, { y: 44, opacity: 0 }, {
+      y: 0, opacity: 1, duration: 0.75, ease: "power3.out",
+      scrollTrigger: { trigger: el, start: "top 88%" }
+    });
+  });
 
-      // 记录刷新前的数据签名，用于判断数据是否真的变了
-      var oldKey = currentData && currentData.records ? JSON.stringify(currentData.records) : "";
+  // 刷新按钮
+  document.getElementById("refreshBtn").addEventListener("click", function() {
+    nextRefreshAt = Date.now() + REFRESH_INTERVAL;
+    refreshData(false);
+  });
+}
 
-      // 路径1: Worker 实时接口(秒级; 网络能连 workers.dev 时生效)
-      // 路径2: 降级到同源 data.json(GitHub Pages 已部署最新, 无 CORS 问题)
-      fetch(WORKER_URL + "/api/refresh", { cache: "no-store", mode: "cors" })
-        .then(function(res) {
-          return res.json().then(function(j) { return { status: res.status, body: j }; });
-        })
-        .then(function(r) {
-          if (r.body && r.body.ok && r.body.data) {
-            var newData = r.body.data;
-            var changed = JSON.stringify(newData.records) !== oldKey;
-            currentData = newData;
-            renderAll();
-            if (!silent) {
-              if (changed) {
-                showToast(
-                  "已刷新：" + newData.total + " 条记录（耗时 " + ((Date.now() - startTime) / 1000).toFixed(1) + "s）",
-                  "success"
-                );
-              } else {
-                showToast("数据已是最新：" + newData.total + " 条记录", "info");
-              }
-            }
-            return;
-          }
-          throw new Error("HTTP " + r.status);
-        })
-        .catch(function() {
-          // 路径2: 降级 data.json（同源，GitHub Pages 已部署的最新数据）
-          return fetch(API_URL + "?t=" + Date.now())
-            .then(function(res) { return res.json(); })
-            .then(function(data) {
-              if (data && data.records) {
-                var changed = JSON.stringify(data.records) !== oldKey;
-                currentData = data;
-                renderAll();
-                if (!silent) {
-                  if (changed) {
-                    showToast(
-                      "已刷新：" + data.total + " 条记录（耗时 " + ((Date.now() - startTime) / 1000).toFixed(1) + "s）",
-                      "success"
-                    );
-                  } else {
-                    showToast("数据已是最新：" + data.total + " 条记录", "info");
-                  }
-                }
-              } else {
-                throw new Error("数据格式异常");
-              }
-            });
-        })
-        .catch(function(err) {
-          if (!silent) {
-            showToast("刷新失败：" + err.message, "error");
-          }
-        })
-        .finally(function() {
-          if (!silent) { btn.classList.remove("loading"); icon.textContent = "🔄"; }
-        });
-    }
-
-    function renderAll() {
-      var agg = aggregate(currentData.records);
-      renderMetrics(agg);
-      renderCharts(agg);
-      renderTable(currentData.records);
-      updateTimestamp(currentData.updated_at || BUILD_TIMESTAMP);
-    }
-
-    // ============================================================
-    // 启动
-    // ============================================================
-    (function init() {
-      buildGroupFilters(currentData.records);
-      renderAll();
-      // "刷新数据" = 先试 Worker 实时(秒级)，失败自动降级同源 data.json
-      document.getElementById("refreshBtn").addEventListener("click", function() { refreshData(false); });
-      // 每 5 分钟静默轮询（与 Worker cron 每5分钟同步对齐，保持数据与飞书一致）
-      setInterval(function() { refreshData(true); }, 5 * 60 * 1000);
-    })();
-  </script>
+// ============================================================
+// 初始化
+// ============================================================
+function initDashboard() {
+  if (started) return;
+  started = true;
+  bindEffects();
+  renderAll();
+  startCountdown();
+  setInterval(function() { refreshData(true); }, REFRESH_INTERVAL);
+}
+</script>
 </body>
 </html>
