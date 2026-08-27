@@ -154,6 +154,17 @@
   .refresh-btn .ico{display:inline-block;font-size:15px;line-height:1}
   .refresh-btn.spinning .ico{animation:spin .8s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
+  .link-btn{position:relative;display:flex;align-items:center;gap:8px;border:none;border-radius:999px;
+    padding:9px 20px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;
+    background:linear-gradient(92deg,#2970ff,#00c2ff);background-size:180% 100%;
+    box-shadow:0 8px 22px rgba(41,112,255,.35);transition:background-position .35s,box-shadow .35s,transform .2s;overflow:hidden}
+  .link-btn:hover{background-position:100% 0;box-shadow:0 10px 28px rgba(0,194,255,.45);transform:translateY(-1px)}
+  .link-btn:active{transform:translateY(0) scale(.97)}
+  .link-btn .ico{display:inline-block;font-size:14px;line-height:1}
+  .link-btn .shine{position:absolute;top:0;left:-60%;width:40%;height:100%;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);
+    transform:skewX(-20deg);animation:btnShine 3.2s ease-in-out infinite}
+  @keyframes btnShine{0%,55%{left:-60%}85%,100%{left:130%}}
 
   /* ===== 指标卡 ===== */
   .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:26px}
@@ -316,6 +327,9 @@
   .pill{background:rgba(10,13,26,.8);border-color:rgba(168,85,247,.22)}
   .refresh-btn{background:rgba(10,13,26,.8);border-color:rgba(168,85,247,.28);color:#e0e7ff}
   .refresh-btn:hover{border-color:#22d3ee;box-shadow:0 0 0 3px rgba(34,211,238,.16),0 0 20px rgba(34,211,238,.2)}
+  .link-btn{background:linear-gradient(92deg,#6366f1,#a855f7 45%,#22d3ee);background-size:180% 100%;
+    box-shadow:0 8px 24px rgba(168,85,247,.4)}
+  .link-btn:hover{box-shadow:0 10px 30px rgba(34,211,238,.5)}
 
   .metric-card{background:var(--card);border:1px solid var(--border);
     box-shadow:0 0 26px rgba(168,85,247,.07),0 10px 30px rgba(0,0,0,.4)}
@@ -404,6 +418,7 @@
     <div class="header-right">
       <div class="pill"><span class="live-dot"></span>数据已更新 <strong id="updateTime">--</strong></div>
       <div class="pill">自动刷新 <strong id="countdown">05:00</strong></div>
+      <a class="link-btn" id="feishuLink" href="https://acnjh1thgeif.larkenterprise.com/base/UpCxbXml4a6u9us4BwCcRdGDnPg?table=tblSr9y6Wf811s7z&view=vewROr9AXR" target="_blank" rel="noopener"><span class="shine"></span><span class="ico">🔗</span>飞书数据源</a>
       <button class="refresh-btn" id="refreshBtn"><span class="ico">⟳</span>刷新数据</button>
     </div>
   </header>
@@ -1124,6 +1139,7 @@ function bindEffects() {
     });
   }
   magnetic(document.getElementById("refreshBtn"), 0.25);
+  magnetic(document.getElementById("feishuLink"), 0.25);
   magnetic(document.getElementById("loginBtn"), 0.2);
 
   // 顶栏入场
