@@ -286,20 +286,20 @@
 
   /* ===== 浅棕暖调主题 ===== */
   :root{
-    --bg:#f7f2ec; --bg2:#efe7dd;
-    --card:rgba(255,255,255,.84); --card-hover:rgba(255,255,255,.96);
-    --border:rgba(176,137,104,.28); --border-strong:rgba(176,137,104,.55);
-    --text:#4a3f35; --dim:#9a8878;
-    --indigo:#b08968; --cyan:#6f9a94; --green:#7d9b76; --yellow:#d4a373; --red:#c4745e;
-    --purple:#8d8698; --orange:#c98d6b; --pink:#b08968;
+    --bg:#ece4d8; --bg2:#e2d8ca;
+    --card:rgba(252,249,245,.9); --card-hover:rgba(255,255,255,.98);
+    --border:rgba(140,105,75,.42); --border-strong:rgba(120,88,60,.65);
+    --text:#352c23; --dim:#6f5f50;
+    --indigo:#a0794f; --cyan:#5c847e; --green:#6a8a63; --yellow:#c0904f; --red:#b4634c;
+    --purple:#7c7389; --orange:#b5764f; --pink:#a0794f;
     --radius:18px;
     --font-num:'Baloo 2','Inter',-apple-system,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif;
   }
   body{background:
-    radial-gradient(1100px 560px at 82% -10%, rgba(176,137,104,.18), transparent 62%),
-    radial-gradient(900px 500px at -12% 32%, rgba(141,134,152,.12), transparent 60%),
-    radial-gradient(860px 460px at 55% 112%, rgba(111,154,148,.12), transparent 60%),
-    #f7f2ec;
+    radial-gradient(1100px 560px at 82% -10%, rgba(140,105,75,.16), transparent 62%),
+    radial-gradient(900px 500px at -12% 32%, rgba(124,115,137,.12), transparent 60%),
+    radial-gradient(860px 460px at 55% 112%, rgba(92,132,126,.10), transparent 60%),
+    #ece4d8;
     color:var(--text)}
   ::selection{background:rgba(176,137,104,.3)}
   /* 细波点（暖棕） */
@@ -308,7 +308,7 @@
       radial-gradient(rgba(176,137,104,.10) 2.6px,transparent 2.6px),
       radial-gradient(rgba(141,134,152,.08) 2.2px,transparent 2.2px);
     background-size:48px 48px,48px 48px;background-position:0 0,24px 24px}
-  .bg-grid{background-image:radial-gradient(rgba(176,137,104,.14) 1.6px,transparent 1.6px);background-size:34px 34px}
+  .bg-grid{background-image:radial-gradient(rgba(140,105,75,.18) 1.6px,transparent 1.6px);background-size:34px 34px}
   /* 暖调星点 */
   .bg-stars{background-image:
       radial-gradient(1.7px 1.7px at 8% 18%,rgba(176,137,104,.55),transparent 55%),
@@ -352,7 +352,7 @@
   .login-btn:hover{background-position:100% 0;box-shadow:0 14px 38px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.18)}
 
   .logo-badge{background:linear-gradient(135deg,#c9a88c,#a4785a);box-shadow:0 10px 32px rgba(164,120,90,.4);border-radius:16px;color:#fff}
-  .gradient-text{background:linear-gradient(92deg,#8a6248,#8d8698 45%,#6f8a84 80%);background-size:220% 100%;
+  .gradient-text{background:linear-gradient(92deg,#6d4c37,#6b6478 45%,#4d7a74 80%);background-size:220% 100%;
     -webkit-background-clip:text;background-clip:text;color:transparent}
   .pill{background:rgba(255,255,255,.85);border-color:rgba(176,137,104,.3)}
   .refresh-btn{background:linear-gradient(180deg,#2b2b2b,#111 60%,#000);border:1px solid #000;color:#fff}
@@ -362,10 +362,10 @@
     box-shadow:0 8px 24px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.12);border:1px solid #000}
   .link-btn:hover{box-shadow:0 10px 30px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.18);background:linear-gradient(180deg,#3a3a3a,#1c1c1c 60%,#0a0a0a)}
 
-  .metric-card{background:var(--card);border:1px solid var(--border);
-    box-shadow:0 12px 32px rgba(176,137,104,.1),0 4px 14px rgba(141,134,152,.08)}
-  .metric-card:hover{transform:translateY(-4px);border-color:var(--border-strong);
-    box-shadow:0 18px 44px rgba(176,137,104,.18),0 6px 18px rgba(141,134,152,.12)}
+  .metric-card{background:var(--card);border:1px solid rgba(140,105,75,.42);
+    box-shadow:0 12px 32px rgba(120,88,60,.12),0 4px 14px rgba(124,115,137,.08)}
+  .metric-card:hover{transform:translateY(-4px);border-color:rgba(120,88,60,.7);
+    box-shadow:0 18px 44px rgba(120,88,60,.2),0 6px 18px rgba(124,115,137,.12)}
   .metric-card::after{background:radial-gradient(320px 120px at 80% -20%,rgba(212,163,115,.16),transparent 70%)}
   .metric-value{text-shadow:none}
   .m-indigo .metric-ico{background:rgba(176,137,104,.16);color:#8a6248}
@@ -387,12 +387,12 @@
   .m-purple{box-shadow:inset 0 3px 0 rgba(141,134,152,.65),0 12px 32px rgba(176,137,104,.1)}
   .m-red{box-shadow:inset 0 3px 0 rgba(196,116,94,.65),0 12px 32px rgba(176,137,104,.1)}
 
-  .chart-card,.table-section{background:var(--card);border:1px solid var(--border);box-shadow:0 12px 32px rgba(176,137,104,.08),0 4px 14px rgba(141,134,152,.06)}
-  .chart-card:hover{border-color:rgba(176,137,104,.5)}
+  .chart-card,.table-section{background:var(--card);border:1px solid rgba(140,105,75,.5);box-shadow:0 12px 32px rgba(120,88,60,.12),0 4px 14px rgba(124,115,137,.08)}
+  .chart-card:hover{border-color:rgba(120,88,60,.75)}
   .chart-center .cc-val{color:#5c7a55;text-shadow:none}
-  thead th{background:rgba(247,242,236,.97);color:#9a8878;border-bottom:1px solid rgba(176,137,104,.2)}
-  tbody tr{border-bottom:1px solid rgba(176,137,104,.12)}
-  tbody tr:hover{background:rgba(176,137,104,.07)}
+  thead th{background:rgba(236,228,216,.97);color:#5f5347;border-bottom:2px solid rgba(140,105,75,.4)}
+  tbody tr{border-bottom:1px solid rgba(140,105,75,.2)}
+  tbody tr:hover{background:rgba(140,105,75,.07)}
   .progress-fill{background:linear-gradient(90deg,#a4785a,#8d8698)}
   .filter-btn{background:rgba(255,255,255,.85);border-color:rgba(176,137,104,.3);color:#5f5347}
   .filter-btn:hover{border-color:#1a1a1a;color:#1a1a1a}
@@ -401,7 +401,7 @@
   .search-input{background:rgba(255,255,255,.85);border-color:rgba(176,137,104,.3);color:var(--text)}
   .search-input::placeholder{color:#bda893}
   .search-input:focus{border-color:#b08968;box-shadow:0 0 0 3px rgba(176,137,104,.15)}
-  .count-badge{color:#8a6248;background:rgba(176,137,104,.14)}
+  .count-badge{color:#8a6248;background:rgba(140,105,75,.18)}
   .tag-blue{background:rgba(127,159,185,.18);color:#4a7391}
   .tag-green{background:rgba(125,155,118,.16);color:#5c7a55}
   .tag-yellow{background:rgba(212,163,115,.2);color:#a06d2c}
@@ -876,8 +876,8 @@ function chartOpts() {
     animation: { duration: 900, easing: "easeOutQuart" },
     plugins: { legend: { display: false } },
     scales: {
-      x: { ticks: { color: "#9a8878", font: { size: 11 } }, grid: { color: "rgba(176,137,104,.14)" } },
-      y: { ticks: { color: "#9a8878", font: { size: 11 } }, grid: { color: "rgba(176,137,104,.14)" } }
+      x: { ticks: { color: "#5f5347", font: { size: 11 } }, grid: { color: "rgba(140,105,75,.18)" } },
+      y: { ticks: { color: "#5f5347", font: { size: 11 } }, grid: { color: "rgba(140,105,75,.18)" } }
     }
   };
 }
@@ -911,23 +911,25 @@ function renderCharts() {
     data: {
       labels: gKeys,
       datasets: stackStatuses.map(function(s) {
-        var color = (STATUS_CONFIG[s] || { color: "#9a8878" }).color;
+        var color = (STATUS_CONFIG[s] || { color: "#7a6a5b" }).color;
         return {
           label: s,
           data: gKeys.map(function(g) { return (agg.groupStatus[g] && agg.groupStatus[g][s]) || 0; }),
-          backgroundColor: color + "d9",
+          backgroundColor: color + "cc",
           hoverBackgroundColor: color,
+          borderColor: "#5a4632",
+          borderWidth: 1.5,
           borderRadius: 6, barThickness: 42, maxBarThickness: 54
         };
       })
     },
     options: Object.assign({}, o, {
       scales: {
-        x: { stacked: true, ticks: { color: "#9a8878", font: { size: 11 } }, grid: { display: false } },
-        y: { stacked: true, beginAtZero: true, ticks: { color: "#9a8878", precision: 0, font: { size: 11 } }, grid: { color: "rgba(176,137,104,.14)" } }
+        x: { stacked: true, ticks: { color: "#5f5347", font: { size: 11 } }, grid: { display: false } },
+        y: { stacked: true, beginAtZero: true, ticks: { color: "#5f5347", precision: 0, font: { size: 11 } }, grid: { color: "rgba(140,105,75,.18)" } }
       },
       plugins: {
-        legend: { display: true, position: "bottom", labels: { color: "#9a8878", padding: 12, usePointStyle: true, pointStyle: "circle", font: { size: 12 } } },
+        legend: { display: true, position: "bottom", labels: { color: "#5f5347", padding: 12, usePointStyle: true, pointStyle: "circle", font: { size: 12 } } },
         tooltip: {
           callbacks: {
             footer: function(items) {
@@ -949,14 +951,14 @@ function renderCharts() {
       datasets: [{
         data: sKeys.map(function(k) { return agg.statuses[k]; }),
         backgroundColor: sKeys.map(function(k) { return (STATUS_CONFIG[k] || { color: "#9ca3af" }).color; }),
-        borderColor: "#f7f2ec", borderWidth: 3, hoverOffset: 8
+        borderColor: "#5a4632", borderWidth: 1.5, hoverOffset: 8
       }]
     },
     options: Object.assign({}, o, {
       cutout: "64%",
       scales: {},
       plugins: {
-        legend: { display: true, position: "bottom", labels: { color: "#9a8878", padding: 14, usePointStyle: true, pointStyle: "circle", font: { size: 12 } } }
+        legend: { display: true, position: "bottom", labels: { color: "#5f5347", padding: 14, usePointStyle: true, pointStyle: "circle", font: { size: 12 } } }
       }
     })
   });
@@ -983,8 +985,8 @@ function renderCharts() {
     options: Object.assign({}, o, {
       indexAxis: "y",
       scales: {
-        x: { ticks: { color: "#9a8878", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(176,137,104,.14)" } },
-        y: { ticks: { color: "#9a8878", font: { size: 12 } }, grid: { display: false } }
+        x: { ticks: { color: "#5f5347", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(140,105,75,.18)" } },
+        y: { ticks: { color: "#5f5347", font: { size: 12 } }, grid: { display: false } }
       }
     })
   });
@@ -1010,7 +1012,7 @@ function renderCharts() {
     options: Object.assign({}, o, {
       indexAxis: "y",
       scales: {
-        x: { ticks: { color: "#9a8878", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(176,137,104,.14)" } },
+        x: { ticks: { color: "#5f5347", callback: function(v) { return v + " H"; }, font: { size: 11 } }, grid: { color: "rgba(140,105,75,.18)" } },
         y: { ticks: { color: "#7a6a5b", font: { size: 11.5 } }, grid: { display: false } }
       }
     })
