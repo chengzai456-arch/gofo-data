@@ -42,6 +42,38 @@
     -webkit-mask-image:radial-gradient(ellipse 90% 65% at 50% 0%,#000 25%,transparent 78%);
     mask-image:radial-gradient(ellipse 90% 65% at 50% 0%,#000 25%,transparent 78%);
   }
+  /* 星点层 */
+  .bg-stars{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      radial-gradient(1.6px 1.6px at 8% 18%,rgba(255,255,255,.55),transparent 55%),
+      radial-gradient(1.2px 1.2px at 24% 62%,rgba(196,181,253,.5),transparent 55%),
+      radial-gradient(1.8px 1.8px at 38% 12%,rgba(255,255,255,.45),transparent 55%),
+      radial-gradient(1.2px 1.2px at 52% 44%,rgba(125,211,252,.45),transparent 55%),
+      radial-gradient(1.5px 1.5px at 64% 28%,rgba(255,255,255,.5),transparent 55%),
+      radial-gradient(1.2px 1.2px at 76% 70%,rgba(240,171,252,.45),transparent 55%),
+      radial-gradient(1.7px 1.7px at 88% 16%,rgba(255,255,255,.5),transparent 55%),
+      radial-gradient(1.2px 1.2px at 94% 58%,rgba(196,181,253,.4),transparent 55%),
+      radial-gradient(1.4px 1.4px at 16% 86%,rgba(255,255,255,.35),transparent 55%),
+      radial-gradient(1.3px 1.3px at 44% 92%,rgba(125,211,252,.4),transparent 55%),
+      radial-gradient(1.2px 1.2px at 70% 88%,rgba(255,255,255,.35),transparent 55%);
+    animation:starTwinkle 5s ease-in-out infinite alternate;
+  }
+  @keyframes starTwinkle{0%,100%{opacity:.55}50%{opacity:1}}
+  /* 极光光带 */
+  .bg-aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+    background:
+      radial-gradient(60% 38% at 50% 108%,rgba(168,85,247,.16),transparent 70%),
+      radial-gradient(46% 30% at 18% -6%,rgba(34,211,238,.12),transparent 70%),
+      radial-gradient(44% 30% at 88% 26%,rgba(236,72,153,.10),transparent 70%);
+    animation:auroraShift 16s ease-in-out infinite alternate;
+  }
+  @keyframes auroraShift{
+    0%{transform:translate3d(0,0,0) scale(1);filter:hue-rotate(0deg)}
+    50%{transform:translate3d(-24px,12px,0) scale(1.04);filter:hue-rotate(14deg)}
+    100%{transform:translate3d(20px,-10px,0) scale(1.02);filter:hue-rotate(-8deg)}
+  }
+  /* 粒子画布 */
+  .bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55}
   .orb{position:fixed;border-radius:50%;filter:blur(90px);opacity:.45;pointer-events:none;z-index:0;animation:float 18s ease-in-out infinite}
   .orb.o1{width:430px;height:430px;background:rgba(99,102,241,.38);top:-140px;right:-90px}
   .orb.o2{width:360px;height:360px;background:rgba(34,211,238,.22);bottom:-120px;left:-110px;animation-delay:-6s}
@@ -57,27 +89,45 @@
 
   /* ===== 登录 ===== */
   .login-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
-    background:radial-gradient(900px 500px at 50% -10%,rgba(99,102,241,.22),transparent 60%),var(--bg)}
-  .login-box{position:relative;width:380px;max-width:92vw;padding:44px 40px;text-align:center;
+    background:radial-gradient(900px 500px at 50% -10%,rgba(99,102,241,.22),transparent 60%),var(--bg);overflow:hidden}
+  .login-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:auto}
+  .login-box{position:relative;z-index:2;width:380px;max-width:92vw;padding:44px 40px;text-align:center;
     background:var(--card);border:1px solid var(--border);border-radius:22px;backdrop-filter:blur(18px);
-    box-shadow:0 24px 70px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06)}
+    box-shadow:0 24px 70px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06);
+    transition:box-shadow .4s,transform .4s,border-color .4s}
+  .login-box:hover{border-color:rgba(168,85,247,.55);box-shadow:0 0 60px rgba(168,85,247,.28),0 24px 70px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06)}
   .login-box::before{content:'';position:absolute;inset:-1px;border-radius:22px;padding:1px;
     background:linear-gradient(135deg,rgba(99,102,241,.65),transparent 40%,transparent 60%,rgba(34,211,238,.6));
     -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
     -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
   .login-logo{width:64px;height:64px;margin:0 auto 18px;border-radius:18px;display:flex;align-items:center;justify-content:center;
     font-family:var(--font-num);font-size:30px;font-weight:700;color:#fff;
-    background:linear-gradient(135deg,#6366f1,#22d3ee);box-shadow:0 10px 30px rgba(99,102,241,.45)}
+    background:linear-gradient(135deg,#6366f1,#22d3ee);box-shadow:0 10px 30px rgba(99,102,241,.45);
+    animation:logoBreathe 3.2s ease-in-out infinite}
+  @keyframes logoBreathe{0%,100%{transform:scale(1);box-shadow:0 10px 30px rgba(99,102,241,.45)}50%{transform:scale(1.06);box-shadow:0 10px 42px rgba(34,211,238,.6)}}
   .login-box h2{font-size:21px;font-weight:700;margin-bottom:6px}
   .login-box .login-sub{color:var(--dim);font-size:13px;margin-bottom:26px}
-  .login-input{width:100%;padding:13px 16px;background:rgba(10,15,28,.7);border:1px solid var(--border);border-radius:12px;
-    color:var(--text);font-size:14px;outline:none;margin-bottom:14px;transition:border-color .2s,box-shadow .2s}
+  .login-field{position:relative;margin-bottom:14px}
+  .login-input{width:100%;padding:13px 46px 13px 16px;background:rgba(10,15,28,.7);border:1px solid var(--border);border-radius:12px;
+    color:var(--text);font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s,transform .2s}
   .login-input:focus{border-color:var(--indigo);box-shadow:0 0 0 3px rgba(99,102,241,.22)}
+  .login-input.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(251,113,133,.22);animation:inputShake .45s}
+  @keyframes inputShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
+  .login-eye{position:absolute;top:50%;right:12px;transform:translateY(-50%);background:none;border:none;cursor:pointer;
+    color:var(--dim);padding:5px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    transition:color .2s,background .2s}
+  .login-eye:hover{color:var(--text);background:rgba(255,255,255,.06)}
   .login-btn{position:relative;width:100%;padding:13px;border:none;border-radius:12px;color:#fff;font-size:14px;font-weight:600;
-    cursor:pointer;background:linear-gradient(92deg,#6366f1,#7c5cf0 55%,#22d3ee);background-size:180% 100%;
-    box-shadow:0 10px 26px rgba(99,102,241,.4);transition:background-position .4s}
-  .login-btn:hover{background-position:100% 0}
-  .login-error{color:var(--red);font-size:13px;margin-top:12px;min-height:20px}
+    cursor:pointer;overflow:hidden;background:linear-gradient(92deg,#6366f1,#7c5cf0 55%,#22d3ee);background-size:180% 100%;
+    box-shadow:0 10px 26px rgba(99,102,241,.4);transition:background-position .4s,transform .15s,box-shadow .3s}
+  .login-btn:hover{background-position:100% 0;box-shadow:0 14px 34px rgba(99,102,241,.55)}
+  .login-btn:active{transform:scale(.97)}
+  .login-btn .btn-text{position:relative;z-index:2}
+  .login-btn::after{content:'';position:absolute;top:0;left:-80%;width:55%;height:100%;z-index:1;
+    background:linear-gradient(105deg,transparent,rgba(255,255,255,.32),transparent);
+    animation:btnShine 2.8s ease-in-out infinite}
+  @keyframes btnShine{0%{left:-80%}55%,100%{left:130%}}
+  .login-error{color:var(--red);font-size:13px;margin-top:12px;min-height:20px;transition:opacity .3s}
 
   /* ===== 顶栏 ===== */
   .header{display:flex;justify-content:space-between;align-items:flex-start;margin:8px 0 30px;flex-wrap:wrap;gap:16px}
@@ -248,15 +298,17 @@
   #progressBar{background:linear-gradient(90deg,#a855f7,#22d3ee,#f472b6);box-shadow:0 0 14px rgba(168,85,247,.9);height:3px}
   .container{max-width:1400px;padding:28px 24px 44px}
 
-  .login-overlay{background:radial-gradient(800px 460px at 50% -10%,rgba(168,85,247,.3),transparent 60%),#05060c}
+  .login-overlay{background:radial-gradient(900px 520px at 50% -10%,rgba(168,85,247,.32),transparent 62%),radial-gradient(700px 420px at 85% 115%,rgba(236,72,153,.16),transparent 60%),#05060c}
   .login-box{background:rgba(10,13,26,.9);border:1px solid rgba(168,85,247,.35);border-radius:20px;
     box-shadow:0 0 44px rgba(168,85,247,.18),0 24px 70px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06)}
   .login-box::before{background:linear-gradient(135deg,rgba(168,85,247,.8),transparent 40%,transparent 60%,rgba(34,211,238,.75))}
-  .login-logo{background:linear-gradient(135deg,#a855f7,#22d3ee);box-shadow:0 10px 32px rgba(168,85,247,.55)}
+  .login-logo{background:linear-gradient(135deg,#a855f7,#22d3ee)}
   .login-input{background:rgba(8,10,22,.8);border-color:rgba(168,85,247,.25);color:var(--text)}
   .login-input:focus{border-color:#22d3ee;box-shadow:0 0 0 3px rgba(34,211,238,.18)}
+  .login-input.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(251,113,133,.25)}
+  .login-eye:hover{color:#22d3ee;background:rgba(34,211,238,.12)}
   .login-btn{background:linear-gradient(92deg,#a855f7,#d946ef 45%,#22d3ee);box-shadow:0 10px 28px rgba(168,85,247,.5)}
-  .login-btn:hover{background-position:100% 0}
+  .login-btn:hover{background-position:100% 0;box-shadow:0 14px 38px rgba(168,85,247,.68)}
 
   .logo-badge{background:linear-gradient(135deg,#a855f7,#22d3ee);box-shadow:0 10px 32px rgba(168,85,247,.5)}
   .gradient-text{background:linear-gradient(92deg,#c084fc,#22d3ee 45%,#f472b6 80%)}
@@ -313,18 +365,28 @@
 
 <!-- 背景装饰 -->
 <div class="bg-grid"></div>
+<div class="bg-stars"></div>
+<div class="bg-aurora"></div>
+<canvas class="bg-canvas" id="bgCanvas"></canvas>
 <div class="orb o1"></div>
 <div class="orb o2"></div>
 <div class="orb o3"></div>
 
 <!-- 登录遮罩 -->
 <div class="login-overlay" id="loginOverlay">
+  <canvas class="login-canvas" id="loginCanvas"></canvas>
   <div class="login-box">
-    <div class="login-logo">G</div>
+    <div class="login-logo" id="loginLogo">G</div>
     <h2>GOFO AI 提效看板</h2>
     <div class="login-sub">数据来自飞书多维表 · 请输入访问密码</div>
-    <input type="password" class="login-input" id="loginInput" placeholder="访问密码" autocomplete="current-password" onkeypress="if(event.key==='Enter')doLogin()">
-    <button class="login-btn" id="loginBtn" onclick="doLogin()">进入看板</button>
+    <div class="login-field">
+      <input type="password" class="login-input" id="loginInput" placeholder="访问密码" autocomplete="current-password">
+      <button type="button" class="login-eye" id="loginEye" onclick="togglePw()" aria-label="显示/隐藏密码">
+        <svg class="eye-open" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7.5 11-7.5 11 7.5 11 7.5-4 7.5-11 7.5S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg class="eye-closed" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+      </button>
+    </div>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()"><span class="btn-text">进入看板</span></button>
     <div class="login-error" id="loginError"></div>
   </div>
 </div>
@@ -336,7 +398,7 @@
       <div class="logo-badge">G</div>
       <div>
         <h1>GOFO <span class="gradient-text">AI 提效看板</span></h1>
-        <div class="subtitle">飞书多维表数据驱动 · 霓虹赛博主题</div>
+        <div class="subtitle">飞书多维表数据驱动 · 自动实时同步</div>
       </div>
     </div>
     <div class="header-right">
@@ -449,8 +511,72 @@ var started = false;
 
 gsap.registerPlugin(ScrollTrigger);
 
-// 登录框入场
-gsap.from(".login-box", { y: 40, opacity: 0, duration: 0.6, ease: "power3.out" });
+// ============================================================
+// 登录
+// ============================================================
+// 登录框分层入场
+gsap.from(".login-box", { y: 44, opacity: 0, duration: 0.65, ease: "power3.out" });
+gsap.from(".login-logo", { scale: .4, opacity: 0, duration: .6, ease: "back.out(2)", delay: .15 });
+gsap.from(".login-box h2", { y: 16, opacity: 0, duration: .5, ease: "power2.out", delay: .25 });
+gsap.from(".login-sub", { y: 14, opacity: 0, duration: .5, ease: "power2.out", delay: .33 });
+gsap.from(".login-field", { y: 12, opacity: 0, duration: .5, ease: "power2.out", delay: .42 });
+gsap.from(".login-btn", { y: 12, opacity: 0, duration: .5, ease: "power2.out", delay: .5 });
+
+function togglePw() {
+  var inp = document.getElementById("loginInput");
+  var open = document.querySelector(".eye-open");
+  var closed = document.querySelector(".eye-closed");
+  var isPw = inp.type === "password";
+  inp.type = isPw ? "text" : "password";
+  open.style.display = isPw ? "none" : "";
+  closed.style.display = isPw ? "" : "none";
+  inp.focus();
+}
+
+(function checkAuth() {
+  if (sessionStorage.getItem("dashboard_authed") === "1") {
+    document.getElementById("loginOverlay").style.display = "none";
+    initDashboard();
+  } else {
+    initLoginParticles();
+  }
+})();
+
+document.getElementById("loginInput").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") doLogin();
+});
+
+async function doLogin() {
+  var inp = document.getElementById("loginInput");
+  var pw = inp.value.trim();
+  if (!pw) return;
+  if (inp.classList.contains("error")) inp.classList.remove("error");
+  var hash = await sha256(pw);
+  if (hash === LOGIN_HASH) {
+    sessionStorage.setItem("dashboard_authed", "1");
+    // 成功: logo 脉冲 + 粒子绽放
+    var canvas = document.getElementById("loginCanvas");
+    if (canvas && canvas._fx) canvas._fx.burst();
+    gsap.to(".login-logo", { scale: 1.25, duration: .3, ease: "power2.out", yoyo: true, repeat: 1 });
+    gsap.to("#loginOverlay", {
+      opacity: 0, duration: 0.55, ease: "power2.inOut", delay: .3,
+      onComplete: function() {
+        document.getElementById("loginOverlay").style.display = "none";
+        document.getElementById("loginOverlay").style.opacity = "";
+        if (canvas && canvas._fx) canvas._fx.stop();
+        initDashboard();
+      }
+    });
+  } else {
+    var err = document.getElementById("loginError");
+    err.textContent = "密码错误，请重试";
+    inp.classList.add("error");
+    gsap.fromTo(err, { x: -8, opacity: .4 }, { x: 0, opacity: 1, duration: 0.45, ease: "elastic.out(1,0.35)" });
+    var box = document.querySelector(".login-box");
+    gsap.fromTo(box, { x: 0 }, { x: -7, duration: .07, repeat: 3, yoyo: true, onComplete: function() { gsap.set(box, { x: 0 }); } });
+    inp.select();
+  }
+}
 
 // ============================================================
 // 工具函数
@@ -489,34 +615,114 @@ function groupColor(name) {
 }
 
 // ============================================================
-// 登录
+// 粒子背景系统 (全局 + 登录页)
 // ============================================================
-(function checkAuth() {
-  if (sessionStorage.getItem("dashboard_authed") === "1") {
-    document.getElementById("loginOverlay").style.display = "none";
-    initDashboard();
+function createParticleField(canvas, opts) {
+  if (!canvas || !canvas.getContext) return null;
+  var ctx = canvas.getContext("2d");
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var o = Object.assign({
+    count: 60, linkDist: 130, speed: .35, color: "168,85,247",
+    color2: "34,211,238", interactive: true, lineOpacity: .32
+  }, opts || {});
+  var w, h, parts = [], mouse = { x: -9999, y: -9999 }, raf = null, running = true;
+  function resize() {
+    w = canvas.clientWidth || canvas.parentElement.clientWidth || window.innerWidth;
+    h = canvas.clientHeight || canvas.parentElement.clientHeight || window.innerHeight;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
-})();
-
-async function doLogin() {
-  var pw = document.getElementById("loginInput").value.trim();
-  if (!pw) return;
-  var hash = await sha256(pw);
-  if (hash === LOGIN_HASH) {
-    sessionStorage.setItem("dashboard_authed", "1");
-    gsap.to("#loginOverlay", {
-      opacity: 0, duration: 0.5, ease: "power2.inOut",
-      onComplete: function() {
-        document.getElementById("loginOverlay").style.display = "none";
-        document.getElementById("loginOverlay").style.opacity = "";
-        initDashboard();
+  function make() {
+    return {
+      x: Math.random() * w, y: Math.random() * h,
+      vx: (Math.random() - .5) * o.speed, vy: (Math.random() - .5) * o.speed,
+      r: Math.random() * 1.8 + .6,
+      c: Math.random() < .75 ? o.color : o.color2
+    };
+  }
+  function step() {
+    ctx.clearRect(0, 0, w, h);
+    for (var i = 0; i < parts.length; i++) {
+      var p = parts[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < -12) p.x = w + 12; if (p.x > w + 12) p.x = -12;
+      if (p.y < -12) p.y = h + 12; if (p.y > h + 12) p.y = -12;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(" + p.c + ",.85)";
+      ctx.fill();
+    }
+    var dist, dx, dy;
+    for (var i = 0; i < parts.length; i++) {
+      for (var j = i + 1; j < parts.length; j++) {
+        var a = parts[i], b = parts[j];
+        dx = a.x - b.x; dy = a.y - b.y; dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < o.linkDist) {
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = "rgba(" + o.color + "," + (o.lineOpacity * (1 - dist / o.linkDist)) + ")";
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
       }
-    });
-  } else {
-    var err = document.getElementById("loginError");
-    err.textContent = "密码错误，请重试";
-    gsap.fromTo(err, { x: -8 }, { x: 0, duration: 0.45, ease: "elastic.out(1,0.35)" });
+    }
+    if (o.interactive) {
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        dx = p.x - mouse.x; dy = p.y - mouse.y; dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 160) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y); ctx.lineTo(mouse.x, mouse.y);
+          ctx.strokeStyle = "rgba(" + o.color2 + "," + (o.lineOpacity * (1 - dist / 160)) + ")";
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+    }
+    raf = requestAnimationFrame(step);
   }
+  function onMove(e) {
+    var r = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+  }
+  function onLeave() { mouse.x = -9999; mouse.y = -9999; }
+  resize();
+  for (var i = 0; i < o.count; i++) parts.push(make());
+  if (o.interactive) {
+    canvas.addEventListener("mousemove", onMove);
+    canvas.addEventListener("mouseleave", onLeave);
+  }
+  step();
+  window.addEventListener("resize", resize);
+  return {
+    burst: function() {
+      for (var i = 0; i < 26; i++) {
+        parts.push({
+          x: w / 2 + (Math.random() - .5) * 160, y: h / 2 + (Math.random() - .5) * 120,
+          vx: (Math.random() - .5) * 2.2, vy: (Math.random() - .5) * 2.2,
+          r: Math.random() * 2 + 1, c: Math.random() < .5 ? o.color2 : "236,72,153"
+        });
+      }
+      if (parts.length > o.count + 60) parts.splice(0, parts.length - o.count - 30);
+    },
+    stop: function() {
+      running = false;
+      if (raf) cancelAnimationFrame(raf);
+      window.removeEventListener("resize", resize);
+      if (o.interactive) {
+        canvas.removeEventListener("mousemove", onMove);
+        canvas.removeEventListener("mouseleave", onLeave);
+      }
+    }
+  };
+}
+
+function initLoginParticles() {
+  var cv = document.getElementById("loginCanvas");
+  cv._fx = createParticleField(cv, {
+    count: 80, linkDist: 140, speed: .45,
+    color: "168,85,247", color2: "34,211,238", interactive: true, lineOpacity: .4
+  });
 }
 
 // ============================================================
@@ -944,6 +1150,12 @@ function bindEffects() {
 function initDashboard() {
   if (started) return;
   started = true;
+  // 全局背景粒子
+  var bg = document.getElementById("bgCanvas");
+  if (bg) bg._fx = createParticleField(bg, {
+    count: 55, linkDist: 120, speed: .3,
+    color: "139,92,246", color2: "34,211,238", interactive: false, lineOpacity: .22
+  });
   bindEffects();
   renderAll();
   startCountdown();
