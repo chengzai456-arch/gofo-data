@@ -1002,6 +1002,10 @@ function renderCharts() {
   // 1. 各小组项目分布 (按状态堆叠柱状图)
   var gKeys = Object.keys(agg.groups);
   var stackStatuses = ["已完成", "进行中", "待启动", "暂停"];
+  var gTotals = gKeys.map(function(g) {
+    return stackStatuses.reduce(function(s, st) { return s + ((agg.groupStatus[g] && agg.groupStatus[g][st]) || 0); }, 0);
+  });
+  var gMaxTotal = Math.max.apply(null, gTotals.length ? gTotals : [0]);
   if (charts.group) charts.group.destroy();
   charts.group = new Chart(document.getElementById("chartGroup"), {
     type: "bar",
@@ -1023,7 +1027,7 @@ function renderCharts() {
     options: Object.assign({}, o, {
       scales: {
         x: { stacked: true, ticks: { color: "#5f5347", font: { size: 11 } }, grid: { display: false } },
-        y: { stacked: true, beginAtZero: true, ticks: { color: "#5f5347", precision: 0, font: { size: 11 } }, grid: { color: "rgba(140,105,75,.18)" } }
+        y: { stacked: true, beginAtZero: true, suggestedMax: gMaxTotal + 2, ticks: { color: "#5f5347", precision: 0, font: { size: 11 } }, grid: { color: "rgba(140,105,75,.18)" } }
       },
       plugins: {
         legend: { display: true, position: "bottom", labels: { color: "#5f5347", padding: 12, usePointStyle: true, pointStyle: "circle", font: { size: 12 } } },
