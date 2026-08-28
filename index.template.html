@@ -286,20 +286,20 @@
 
   /* ===== 浅棕暖调主题 ===== */
   :root{
-    --bg:#ece4d8; --bg2:#e2d8ca;
-    --card:rgba(252,249,245,.9); --card-hover:rgba(255,255,255,.98);
-    --border:rgba(140,105,75,.42); --border-strong:rgba(120,88,60,.65);
-    --text:#352c23; --dim:#6f5f50;
-    --indigo:#a0794f; --cyan:#5c847e; --green:#6a8a63; --yellow:#c0904f; --red:#b4634c;
-    --purple:#7c7389; --orange:#b5764f; --pink:#a0794f;
+    --bg:#e4d9c8; --bg2:#d8cbb8;
+    --card:rgba(250,245,238,.93); --card-hover:rgba(255,252,248,.98);
+    --border:rgba(128,94,63,.5); --border-strong:rgba(105,76,50,.72);
+    --text:#2c241c; --dim:#5f5142;
+    --indigo:#96703f; --cyan:#52796f; --green:#5c7a4f; --yellow:#b0823d; --red:#a55840;
+    --purple:#6e6478; --orange:#a8683d; --pink:#96703f;
     --radius:18px;
     --font-num:'Baloo 2','Inter',-apple-system,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif;
   }
   body{background:
-    radial-gradient(1100px 560px at 82% -10%, rgba(140,105,75,.16), transparent 62%),
-    radial-gradient(900px 500px at -12% 32%, rgba(124,115,137,.12), transparent 60%),
-    radial-gradient(860px 460px at 55% 112%, rgba(92,132,126,.10), transparent 60%),
-    #ece4d8;
+    radial-gradient(1100px 560px at 82% -10%, rgba(128,94,63,.18), transparent 62%),
+    radial-gradient(900px 500px at -12% 32%, rgba(110,100,120,.14), transparent 60%),
+    radial-gradient(860px 460px at 55% 112%, rgba(82,121,111,.12), transparent 60%),
+    #e4d9c8;
     color:var(--text)}
   ::selection{background:rgba(176,137,104,.3)}
   /* 细波点（暖棕） */
@@ -368,6 +368,11 @@
     box-shadow:0 18px 44px rgba(120,88,60,.2),0 6px 18px rgba(124,115,137,.12)}
   .metric-card::after{background:radial-gradient(320px 120px at 80% -20%,rgba(212,163,115,.16),transparent 70%)}
   .metric-value{text-shadow:none}
+  /* 数字/文字描边: 浅色勾边衬托深色文字 */
+  .metric-value,.metric-value .unit,.cc-val,.pill strong,.chart-title,.table-header h2,.count-badge,.toast strong{
+    -webkit-text-stroke:.45px rgba(255,252,247,.6);
+    text-shadow:-1px 0 0 rgba(255,252,247,.7),1px 0 0 rgba(255,252,247,.7),0 -1px 0 rgba(255,252,247,.7),0 1px 0 rgba(255,252,247,.7);
+  }
   .m-indigo .metric-ico{background:rgba(176,137,104,.16);color:#8a6248}
   .m-indigo .metric-value{color:#8a6248}
   .m-green .metric-ico{background:rgba(125,155,118,.15);color:#5c7a55}
@@ -566,6 +571,14 @@ var statusOrder = { "进行中": 0, "待启动": 1, "已完成": 2, "暂停": 3,
 // 状态
 // ============================================================
 var currentData = (EMBEDDED_DATA && EMBEDDED_DATA.records) ? EMBEDDED_DATA : { total: 0, updated_at: "", records: [] };
+
+// 剔除「关闭」项目 (不做的不统计)
+function sanitizeData(data) {
+  if (!data || !data.records) return { total: 0, updated_at: "", records: [] };
+  var recs = data.records.filter(function(r) { return (r.status || "").trim() !== "关闭"; });
+  return Object.assign({}, data, { records: recs, total: recs.length });
+}
+currentData = sanitizeData(currentData);
 var charts = {};
 var filters = { group: "all", status: "all", blocker: "all", search: "" };
 var nextRefreshAt = Date.now() + REFRESH_INTERVAL;
@@ -897,6 +910,90 @@ function barGradH(ctx, color) {
   return g;
 }
 
+// ============================================================
+// 图表数值标注插件: 柱状图标数值 + 圆环图标数值 (带描边)
+// ============================================================
+var valueLabelsPlugin = {
+  id: "valueLabels",
+  afterDatasetsDraw: function(chart) {
+    var ctx = chart.ctx;
+    ctx.save();
+    var fontSm = '700 11px Inter, "PingFang SC", "Microsoft YaHei", sans-serif';
+    var fontLg = '800 12px Inter, "PingFang SC", "Microsoft YaHei", sans-serif';
+    var type = chart.config.type;
+
+    function label(txt, x, y, inside) {
+      // inside=true: 白字深描边(色块上); inside=false: 深字浅描边(浅底上)
+      ctx.lineWidth = 2.6;
+      if (inside) {
+        ctx.fillStyle = "#fff"; ctx.strokeStyle = "rgba(74,58,43,.85)";
+      } else {
+        ctx.fillStyle = "#4a3a2b"; ctx.strokeStyle = "rgba(250,246,240,.92)";
+      }
+      ctx.strokeText(txt, x, y);
+      ctx.fillText(txt, x, y);
+    }
+
+    if (type === "doughnut") {
+      var dData = chart.data.datasets[0].data;
+      chart.getDatasetMeta(0).data.forEach(function(el, i) {
+        var v = dData[i];
+        if (!v) return;
+        var a = (el.startAngle + el.endAngle) / 2;
+        var r = (el.outerRadius + el.innerRadius) / 2;
+        ctx.font = fontSm; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        label(String(v), el.x + Math.cos(a) * r, el.y + Math.sin(a) * r, true);
+      });
+    } else if (type === "bar") {
+      var stacked = chart.options.scales && chart.options.scales.y && chart.options.scales.y.stacked;
+      var horizontal = chart.options.indexAxis === "y";
+      chart.data.datasets.forEach(function(ds, di) {
+        var meta = chart.getDatasetMeta(di);
+        if (meta.hidden) return;
+        meta.data.forEach(function(el, i) {
+          var v = ds.data[i];
+          if (!v) return;
+          ctx.font = fontSm;
+          if (horizontal) {
+            ctx.textAlign = "left"; ctx.textBaseline = "middle";
+            var t = (+v).toFixed(1).replace(/\.0$/, "");
+            label(t, el.x + 5, el.y, false);
+          } else if (stacked) {
+            // 段高足够才标在段内
+            if (Math.abs(el.base - el.y) >= 13) {
+              ctx.textAlign = "center"; ctx.textBaseline = "middle";
+              label(String(v), el.x, (el.y + el.base) / 2, true);
+            }
+          }
+        });
+      });
+      // 堆叠柱顶标合计
+      if (stacked && !horizontal) {
+        var totals = [];
+        chart.data.datasets.forEach(function(ds, di) {
+          var meta = chart.getDatasetMeta(di);
+          if (meta.hidden) return;
+          ds.data.forEach(function(v, i) { totals[i] = (totals[i] || 0) + (v || 0); });
+        });
+        chart.getDatasetMeta(0).data.forEach(function(el, i) {
+          var t = totals[i];
+          if (!t) return;
+          var topY = Infinity;
+          chart.data.datasets.forEach(function(ds, di) {
+            var m = chart.getDatasetMeta(di);
+            if (m.hidden || !m.data[i]) return;
+            topY = Math.min(topY, m.data[i].y);
+          });
+          ctx.font = fontLg; ctx.textAlign = "center"; ctx.textBaseline = "bottom";
+          label(String(t), el.x, topY - 4, false);
+        });
+      }
+    }
+    ctx.restore();
+  }
+};
+if (window.Chart) Chart.register(valueLabelsPlugin);
+
 function renderCharts() {
   var records = currentData.records || [];
   var agg = aggregate(records);
@@ -904,7 +1001,7 @@ function renderCharts() {
 
   // 1. 各小组项目分布 (按状态堆叠柱状图)
   var gKeys = Object.keys(agg.groups);
-  var stackStatuses = ["已完成", "进行中", "待启动", "暂停", "关闭"];
+  var stackStatuses = ["已完成", "进行中", "待启动", "暂停"];
   if (charts.group) charts.group.destroy();
   charts.group = new Chart(document.getElementById("chartGroup"), {
     type: "bar",
@@ -1034,7 +1131,7 @@ function buildControls() {
       escapeHtml(g) + ' <span style="opacity:.65">' + groups[g] + '</span></button>';
   });
   html += '<select class="filter-btn" onchange="setFilter(\'status\',this.value)"><option value="all">状态: 全部</option>' +
-    Object.keys(STATUS_CONFIG).map(function(s) { return '<option value="' + s + '">' + s + '</option>'; }).join("") + '</select>';
+    Object.keys(STATUS_CONFIG).filter(function(s) { return s !== "关闭"; }).map(function(s) { return '<option value="' + s + '">' + s + '</option>'; }).join("") + '</select>';
   html += '<select class="filter-btn" onchange="setFilter(\'blocker\',this.value)">' +
     '<option value="all">卡点: 全部</option><option value="是">有卡点</option><option value="否">无卡点</option></select>';
   html += '<input type="text" class="search-input" placeholder="搜索项目 / 负责人 / 小组..." oninput="setFilter(\'search\',this.value)">';
@@ -1139,7 +1236,7 @@ function refreshData(silent) {
   function done() { btn.classList.remove("spinning"); }
 
   function apply(data, source) {
-    currentData = data;
+    currentData = sanitizeData(data);
     var changed = JSON.stringify(currentData.records) !== oldKey;
     renderAll();
     done();
@@ -1167,7 +1264,7 @@ function fetchFromJson(silent, done) {
     .then(function(res) { return res.json(); })
     .then(function(data) {
       if (data && data.records) {
-        currentData = data;
+        currentData = sanitizeData(data);
         renderAll();
         done();
         if (!silent) showToast("数据已刷新 · 定时同步源");
