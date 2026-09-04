@@ -9,6 +9,9 @@ name: Rebuild Index
 on:
   schedule:
     - cron: "*/5 * * * *"
+  push:
+    branches: [main]
+    paths: [data.json]
   workflow_dispatch:
 
 permissions:
