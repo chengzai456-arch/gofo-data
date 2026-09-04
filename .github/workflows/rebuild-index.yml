@@ -1,0 +1,32 @@
+# 内嵌数据自动对齐
+# index.html 的 EMBEDDED_DATA(离线兜底快照) 跟随 data.json 更新而重建。
+# data.json 由 Cloudflare Worker 每 5 分钟写回仓库，本 job 检测到业务记录变化时才重建，
+# 无变化则跳过（幂等，避免无意义提交与仓库膨胀）。
+# 不需要任何 GitHub Secrets / 飞书凭证。
+
+name: Rebuild Index
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: "rebuild-index"
+  cancel-in-progress: true
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Rebuild embedded data if changed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node rebuild-index.js
