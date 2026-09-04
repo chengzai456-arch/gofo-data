@@ -1230,8 +1230,15 @@ function renderAll() {
 }
 
 // ============================================================
-// 数据刷新 (双路径: Worker 实时优先 → 降级 data.json)
+// 数据刷新 (双路径: Worker 实时优先(6s超时) → 降级 data.json)
 // ============================================================
+function fetchWithTimeout(url, opts, ms) {
+  var ctrl = ("AbortController" in window) ? new AbortController() : null;
+  var p = fetch(url, Object.assign({}, opts, ctrl ? { signal: ctrl.signal } : {}));
+  if (ctrl) setTimeout(function() { ctrl.abort(); }, ms || 6000);
+  return p;
+}
+
 function refreshData(silent) {
   var btn = document.getElementById("refreshBtn");
   btn.classList.add("spinning");
@@ -1248,7 +1255,7 @@ function refreshData(silent) {
   }
 
   if (WORKER_URL) {
-    fetch(WORKER_URL + "/api/refresh", { cache: "no-store", mode: "cors" })
+    fetchWithTimeout(WORKER_URL + "/api/refresh", { cache: "no-store", mode: "cors" }, 6000)
       .then(function(res) { return res.json().then(function(j) { return { status: res.status, body: j }; }); })
       .then(function(r) {
         if (r.body && r.body.ok && r.body.data && r.body.data.records) {
@@ -1355,6 +1362,8 @@ function initDashboard() {
   });
   bindEffects();
   renderAll();
+  // 进入即拉取最新 data.json 覆盖陈旧内嵌快照，避免“每次登录数据回到旧版”
+  fetchFromJson(true, function() {});
   startCountdown();
   setInterval(function() { refreshData(true); }, REFRESH_INTERVAL);
 }
